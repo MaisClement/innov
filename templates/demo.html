@@ -1,0 +1,255 @@
+<html lang="fr">
+
+<head>
+    <title>APPFE</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#4f474e">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="APPFE">
+    <meta name="keywords" content="APPFE">
+    <meta name="author" content="Lowa">
+    <link href="{{ asset('css/color.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/form.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/index.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <form class="fluent_form">
+        <form class="fluent_form block">
+
+            <h2 class="left">Elements de formulaire</h2>
+            <h4 class="left">Zone de texte</h4>
+
+            <textarea maxlength="500" placeholder="Une petite description" type="text"></textarea>
+
+            <h4 class="left">Input</h4>
+
+            <input placeholder="Input" type="text" value="">
+            <input class="left blue" placeholder="Input blue" type="text" value="">
+            
+            <h4 class="left">Checkbox</h4>
+
+            <label class="checkbok-container undefined">
+                <span class="checkbok-label">
+                    <span>Je suis pas d'accord </span>
+                </span>
+                <input type="checkbox" checked="">
+                <span class="checkmark"></span>
+            </label>
+
+            <label class="checkbok-container undefined">
+                <span class="checkbok-label">
+                    <span>Je suis pas d'accord </span>
+                </span>
+                <input type="checkbox">
+                <span class="checkmark"></span>
+            </label>
+
+            <h4 class="left">Toogle</h4>
+
+            <div class="fluent_form block">
+                <label class="toggle-control" style="float : left;">
+                    <input type="checkbox" checked="true">
+                    <span class="control"></span>
+                </label>
+            </div>
+            <br />
+            <br />
+
+            <div class="fluent_form block">
+                <label class="toggle-control" style="float : left;">
+                    <input type="checkbox">
+                    <span class="control"></span>
+                </label>
+            </div>
+            <br />
+
+            <h2 class="left">Bouttons</h2>
+            <h4 class="left">Classique</h4>
+
+            <button class="blue" type="submit">
+                <span>Obtenir le code</span>
+            </button>
+            <button>
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Obtenir le code</span>
+            </button>
+            <button class="blue" type="submit">
+                <div>
+                    <svg fill="none" style="color: rgb(255, 255, 255); overflow: visible; width: 20px;"
+                        viewBox="0 0 66 66">
+                        <circle cx="33" cy="33" fill="none" r="28" stroke="transparent" stroke-width="6"></circle>
+                        <circle cx="33" cy="33" fill="none" r="28" stroke="currentColor" stroke-dasharray="40, 134"
+                            stroke-dashoffset="325" stroke-linecap="round" stroke-width="6"
+                            style="animation: 1.4s linear infinite spinners-circular-fixed;"></circle>
+                    </svg>
+                </div>
+            </button>
+            <button class="red" type="submit">
+                <span>Obtenir le code</span>
+            </button>
+            <button class="green" type="submit">
+                <img class="svg_white" src="{{ asset('img/key.svg') }}">
+                <span>Obtenir le code</span>
+            </button>
+            <button class="orange" type="submit">
+                <div>
+                    <svg fill="none" style="color: rgb(255, 255, 255); overflow: visible; width: 20px;"
+                        viewBox="0 0 66 66">
+                        <circle cx="33" cy="33" fill="none" r="28" stroke="transparent" stroke-width="6"></circle>
+                        <circle cx="33" cy="33" fill="none" r="28" stroke="currentColor" stroke-dasharray="40, 134"
+                            stroke-dashoffset="325" stroke-linecap="round" stroke-width="6"
+                            style="animation: 1.4s linear infinite spinners-circular-fixed;"></circle>
+                    </svg>
+                </div>
+            </button>
+            <h4 class="left">(with size)</h4>
+            <button style="width: 120px;">
+                <img alt="Fermer" class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Fermer</span>
+            </button>
+            <button style="width: 120px;">
+                <span>Fermer</span>
+            </button>
+            <button class="red" style="width: 120px;">
+                <img alt="Fermer" class="svg_white" src="{{ asset('img/key.svg') }}">
+                <span>Fermer</span>
+            </button>
+            <button class="blue" style="width: 120px;">
+                <img alt="Fermer" class="svg_white" src="{{ asset('img/key.svg') }}">
+                <span>Fermer</span>
+            </button>
+            <h4 class="left">Fluent</h4>
+            <button class="fluent_btn is-inline-flex left">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Ajouter une information</span>
+            </button>
+            <button class="fluent_btn is-inline-flex right">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Ajouter une information</span>
+            </button>
+            <button class="fluent_btn is-inline-flex">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Ajouter une information</span>
+            </button>
+            <button class="fluent_btn is-inline-flex left">
+                <svg fill="none" style="color: rgb(255, 255, 255); overflow: visible; width: 25px;" viewBox="0 0 66 66">
+                    <circle cx="33" cy="33" fill="none" r="28" stroke="transparent" stroke-width="6"></circle>
+                    <circle cx="33" cy="33" fill="none" r="28" stroke="currentColor" stroke-dasharray="40, 134"
+                        stroke-dashoffset="325" stroke-linecap="round" stroke-width="6"
+                        style="animation: 1.4s linear infinite spinners-circular-fixed;"></circle>
+                </svg>
+                <span>Ajouter une information</span>
+            </button>
+            <button class="fluent_btn is-inline-flex">
+                <svg fill="none" style="color: rgb(38, 116, 198); overflow: visible; width: 20px;" viewBox="0 0 66 66">
+                    <circle cx="33" cy="33" fill="none" r="28" stroke="transparent" stroke-width="8"></circle>
+                    <circle cx="33" cy="33" fill="none" r="28" stroke="currentColor" stroke-dasharray="40, 134"
+                        stroke-dashoffset="325" stroke-linecap="round" stroke-width="8"
+                        style="animation: 1.4s linear infinite spinners-circular-fixed;"></circle>
+                </svg>
+                <span>Ajouter une information</span>
+            </button>
+            <button class="blue">
+                <span>
+                    <img alt="Enregistré avec succès" class="check svg_white"
+                        src="{{ asset('img/check.svg') }}">
+                </span>
+            </button>
+            <br>
+            <h4 class="left">Mini</h4>
+            <a class="mini_btn" href="http://example.com">
+                <img class="svg" src="{{ asset('img/mail.svg') }}">
+            </a>
+            <a class="mini_btn red" href="http://example.com">
+                <img class="svg_white" src="{{ asset('img/mail.svg') }}">
+            </a>
+            <a class="mini_btn blue" href="http://example.com">
+                <img class="svg_white" src="{{ asset('img/mail.svg') }}">
+            </a>
+            <a class="mini_btn green" href="http://example.com">
+                <img class="svg_white" src="{{ asset('img/mail.svg') }}">
+            </a>
+            <a class="mini_btn orange" href="http://example.com">
+                <img class="svg_white" src="{{ asset('img/mail.svg') }}">
+            </a>
+            <button class="mini_btn">
+                <img class="svg" src="{{ asset('img/mail.svg') }}">
+            </button>
+            <button class="mini_btn red">
+                <img class="svg_white" src="{{ asset('img/mail.svg') }}">
+            </button>
+            <button class="mini_btn blue">
+                <img class="svg_white" src="{{ asset('img/mail.svg') }}">
+            </button>
+            <button class="mini_btn green">
+                <img class="svg_white" src="{{ asset('img/mail.svg') }}">
+            </button>
+            <button class="mini_btn orange">
+                <img class="svg_white" src="{{ asset('img/mail.svg') }}">
+            </button>
+            <h2 class="left">Block</h2>
+            <h4 class="left">In-Line</h4>
+            <span class="pill green">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Test</span>
+            </span>
+            <span class="pill blue">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Test</span>
+            </span>
+            <span class="pill blue">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>OULA IL Y A BEACOUP A DIRE ICI <br>OULA IL Y A BEACOUP A DIRE ICI <br>OULA IL Y A BEACOUP A DIRE
+                    ICI <br>
+                </span>
+            </span>
+            <span class="pill orange">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Test</span>
+            </span>
+            <span class="pill red">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Test</span>
+            </span>
+            <h2 class="left">Block</h2>
+            <h4 class="left">In-Line</h4>
+            <div class="green">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Test</span>
+            </div>
+            <div class="blue">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Test</span>
+            </div>
+            <div class="blue">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>OULA IL Y A BEACOUP A DIRE ICI <br>OULA IL Y A BEACOUP A DIRE ICI <br>OULA IL Y A BEACOUP A DIRE
+                    ICI <br>
+                </span>
+            </div>
+            <div class="orange">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Test</span>
+            </div>
+            <div class="red">
+                <img class="svg" src="{{ asset('img/key.svg') }}">
+                <span>Test</span>
+            </div>
+            <h4 class="left">In-Row</h4>
+            <div class="blue is-flex-direction-column is-align-items-start">
+                <u>
+                    <h3>Oh du texte !</h3>
+                </u>Ici on met de blabla, trop la flemme de copier / coller un lorem ipsum donc je raconte ma vie :D
+            </div>
+            <div class="green is-flex-direction-column">
+                <u>
+                    <h3>Oh du texte !</h3>
+                </u>Ici on met de blabla, trop la flemme de copier / coller un lorem ipsum donc je raconte ma vie :D
+            </div>
+        </form>
+        </div>
+</body>
+
+</html>
