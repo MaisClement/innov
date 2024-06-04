@@ -50,8 +50,11 @@ class Auth extends AbstractController
         $provider = new Azure([
             'clientId'          => $_ENV['AZURE_CLIENT_ID'],
             'clientSecret'      => $_ENV['AZURE_CLIENT_SECRET'],
-            'redirectUri'       => $_ENV['AZURE_REDIRECT_URI'],
+            'redirectUri'       => $_ENV['AZURE_REDIRECT_URI']
         ]);
+        
+        $baseGraphUri = $provider->getRootMicrosoftGraphUri(null);
+        $provider->scope = 'openid profile email offline_access ' . $baseGraphUri . '/User.Read';
 
         $code = $request->query->get('code');
         $state = $request->query->get('state');
