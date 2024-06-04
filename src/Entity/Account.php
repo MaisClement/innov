@@ -30,9 +30,6 @@ class Account
     #[ORM\Column]
     private ?bool $is_active = null;
 
-    #[ORM\OneToMany(targetEntity: RolesAccount::class, mappedBy: 'account_id', orphanRemoval: true)]
-    private Collection $roles_accounts;
-
     #[ORM\OneToMany(targetEntity: Login::class, mappedBy: 'account_id', orphanRemoval: true)]
     private Collection $logins;
 
@@ -47,7 +44,6 @@ class Account
 
     public function __construct()
     {
-        $this->roles_accounts = new ArrayCollection();
         $this->logins = new ArrayCollection();
         $this->ideas = new ArrayCollection();
         $this->comments = new ArrayCollection();
@@ -115,36 +111,6 @@ class Account
     public function setIsActive(bool $is_active): static
     {
         $this->is_active = $is_active;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, RolesAccount>
-     */
-    public function getRolesAccounts(): Collection
-    {
-        return $this->roles_accounts;
-    }
-
-    public function addRolesAccounts(RolesAccount $roleCode): static
-    {
-        if (!$this->roles_accounts->contains($roleCode)) {
-            $this->roles_accounts->add($roleCode);
-            $roleCode->setAccountId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRolesAccounts(RolesAccount $roleCode): static
-    {
-        if ($this->roles_accounts->removeElement($roleCode)) {
-            // set the owning side to null (unless already changed)
-            if ($roleCode->getAccountId() === $this) {
-                $roleCode->setAccountId(null);
-            }
-        }
 
         return $this;
     }
