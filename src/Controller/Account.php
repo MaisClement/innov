@@ -14,7 +14,6 @@ use App\Repository\AccountRepository;
 
 class Account extends AbstractController
 {
-    // Commentaires
     private Functions $functions;
 
     private AccountRepository $accountRepository;

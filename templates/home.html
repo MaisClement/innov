@@ -1,0 +1,94 @@
+<html lang="fr">
+    <head>
+        <title>APPFE</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="theme-color" content="#4f474e">
+        <meta name="color-scheme" content="dark light">
+        <meta name="description" content="APPFE">
+        <meta name="keywords" content="APPFE">
+        <meta name="author" content="Lowa">
+        <link href="{{ asset('css/color.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/form.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/index.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    </head>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">
+                <img src="img/logo.png" alt="Logo APPFE">
+            </a>
+            <a href="#" class="navbar-item is-active">Soumettre une idée</a>
+            <a href="#" class="navbar-item">En attente de validation</a>
+            <a href="#" class="navbar-item">En cours de validation</a>
+            <a href="#" class="navbar-item">Validés</a>
+        </div>
+        <div class="navbar-end">
+        <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-link">
+            <strong>Mon profil</strong>
+          </a>
+        </div>
+    </nav>
+    <div class="columns">
+        <div class="column is-8">
+            <!-- Afficher le nom et le prénom de la personne authentifié -->
+            <h1 class="title is-2 has-text-centered">Bienvenue (Prénom Nom) !</h1> 
+            <h1 class="subtitle is-5 has-text-centered">Proposez vos idées pour l'association !</h1>
+        </div>
+        <!-- Affichage des idées récentes -->
+        <div class="column is-4"> 
+            <div class="grid"></div>
+                <article class="panel is-link">
+                    <p class="panel-heading">Les dernières idées proposées</p>
+                    <div class="panel-block">
+                        <input class="input is-link" type="text" placeholder="Rechercher une idée" />
+                    </div>
+                    <a class="panel-block is-active">
+                        <span class="panel-icon">
+                      <i class="fas fa-book" aria-hidden="true"></i>
+                    </span>
+                    1ère idée
+                  </a>
+                  <a class="panel-block">
+                    <span class="panel-icon">
+                        <i class="fas fa-book" aria-hidden="true"></i>
+                    </span>
+                    2ème idée
+                  </a>
+                  <a class="panel-block">
+                    <span class="panel-icon">
+                        <i class="fas fa-book" aria-hidden="true"></i>
+                    </span>
+                    3ème idée
+                  </a>
+                  <a class="panel-block">
+                    <span class="panel-icon">
+                        <i class="fas fa-book" aria-hidden="true"></i>
+                    </span>
+                    4ème idée
+                  </a>
+            </article>
+            <!-- -->
+            <div class="column is-12">
+                <h1 class="title is-4">Envoyer un commentaire</h3>
+                <div class="media-content">
+                <div class="field">
+                    <p class="control">
+                        <textarea class="textarea" placeholder="Rédiger un message"></textarea>
+                    </p>
+                    <nav class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <br>
+                        <a class="button is-link">Envoyer</a><br><br>
+                            <input type="file">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+</html>
