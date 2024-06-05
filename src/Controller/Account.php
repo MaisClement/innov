@@ -1,237 +1,115 @@
 <?php
 
-namespace App\Entity;
+namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use League\OAuth2\Client\Provider\GenericProvider;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use TheNetworg\OAuth2\Client\Provider\Azure;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Service\Functions;
 use App\Repository\AccountRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AccountRepository::class)]
-class Account
+class Account extends AbstractController
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    private Functions $functions;
 
-    #[ORM\Column(length: 255)]
-    private ?string $family_name = null;
+    private AccountRepository $accountRepository;
 
-    #[ORM\Column(length: 255)]
-    private ?string $given_name = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $email = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $ms_oid = null;
-
-    #[ORM\Column]
-    private ?bool $is_active = null;
-
-    #[ORM\OneToMany(targetEntity: Login::class, mappedBy: 'account_id', orphanRemoval: true)]
-    private Collection $logins;
-
-    #[ORM\OneToMany(targetEntity: Idea::class, mappedBy: 'author')]
-    private Collection $ideas;
-
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author')]
-    private Collection $comments;
-
-    #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'auhtor')]
-    private Collection $votes;
-
-    public function __construct()
+    public function __construct(Functions $functions, AccountRepository $accountRepository)
     {
-        $this->logins = new ArrayCollection();
-        $this->ideas = new ArrayCollection();
-        $this->comments = new ArrayCollection();
-        $this->votes = new ArrayCollection();
+        session_start();
+
+        $this->functions = $functions; 
+
+        $this->accountRepository = $accountRepository; 
     }
 
-    public function getId(): ?int
+    #[Route('/account')]
+    public function account(): JsonResponse
     {
-        return $this->id;
-    }
+        $token = $_SESSION['token'] ?? null;
 
-    public function getFamilyName(): ?string
-    {
-        return $this->family_name;
-    }
+        if ($token == null) {
+            return new JsonResponse($this->functions->ErrorMessage(401, 'You are not logged'), 401);
+        }           
 
-    public function setFamilyName(string $family_name): static
-    {
-        $this->family_name = $family_name;
+        $provider = new Azure([
+            'clientId'          => $_ENV['AZURE_CLIENT_ID'],
+            'clientSecret'      => $_ENV['AZURE_CLIENT_SECRET'],
+            'redirectUri'       => $_ENV['AZURE_REDIRECT_URI'],
+        ]);
 
-        return $this;
-    }
+        try {
+            $user = $provider->getResourceOwner($token);
 
-    public function getGivenName(): ?string
-    {
-        return $this->given_name;
-    }
+            $json = array(
+                'user'  => $user->toArray(),
+            );
+            return $this->json($json);
 
-    public function setGivenName(string $given_name): static
-    {
-        $this->given_name = $given_name;
+            // import the given repository
+            // line13   use App\Repository\StationsRepository;
 
-        return $this;
-    }
+            // Define the repository
+            // line19   private AccountRepository $accountRepository;
+            
+            // Pass it to the constructor
+            // line21   
+            //  before  public function __construct(Functions $functions)
+            //  after   public function __construct(Functions $functions, AccountRepository $accountRepository)
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
+            // asign the repository as a class member (to be easily accesible)
+            // line 27  $this->accountRepository = $accountRepository;
 
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
+            // $this->accountRepository->findOneByMSOID()
 
-        return $this;
-    }
-
-    public function getMsOid(): ?string
-    {
-        return $this->ms_oid;
-    }
-
-    public function setMsOid(string $ms_oid): static
-    {
-        $this->ms_oid = $ms_oid;
-
-        return $this;
-    }
-
-    public function isIsActive(): ?bool
-    {
-        return $this->is_active;
-    }
-
-    public function setIsActive(bool $is_active): static
-    {
-        $this->is_active = $is_active;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Login>
-     */
-    public function getLogins(): Collection
-    {
-        return $this->logins;
-    }
-
-    public function addLogin(Login $login): static
-    {
-        if (!$this->logins->contains($login)) {
-            $this->logins->add($login);
-            $login->setAccountId($this);
+        } catch (\Exception $e) {
+            return new JsonResponse($this->functions->ErrorMessage(500, $e->getMessage()), 500);
         }
-
-        return $this;
     }
 
-    public function removeLogin(Login $login): static
+    public function createAccount(EntityManagerInterface $entityManager, Request $request): Response
     {
-        if ($this->logins->removeElement($login)) {
-            // set the owning side to null (unless already changed)
-            if ($login->getAccountId() === $this) {
-                $login->setAccountId(null);
-            }
-        }
+        $msoId = $request->get('mso_id');
 
-        return $this;
-    }
+        $account = $this->accountRepository->findOneMSOID($msoId);
 
-    /**
-     * @return Collection<int, Idea>
-     */
-    public function getIdeas(): Collection
-    {
-        return $this->ideas;
-    }
+        if($account) 
+        {         
+            $user = new Login();   
+            $user->setFamilyName($_SESSION->get('family_name'));
+            $user->setGivenName($_SESSION->get('given_name'));           
+            $user->setEmail($_SESSION->get('email'));
+            $user->setMsOid($account);
 
-    public function addIdea(Idea $idea): static
-    {
-        if (!$this->ideas->contains($idea)) {
-            $this->ideas->add($idea);
-            $idea->setAuthor($this);
-        }
+            $role = new Role();
 
-        return $this;
-    }
+            $role = setRole('default');
+            $user->setRole($role);
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-    public function removeIdea(Idea $idea): static
-    {
-        if ($this->ideas->removeElement($idea)) {
-            // set the owning side to null (unless already changed)
-            if ($idea->getAuthor() === $this) {
-                $idea->setAuthor(null);
-            }
-        }
+            $this->$_SESSION->set('user', $account);
+        } else {
+            $user = new Account();
+            $user->setMSOID($msoId);
+            $account->setRole($this->roleRepository->findOneByLabel('default'));
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-        return $this;
-    }
+            $login = new Login();
+            $login->setAccount($account);
+            $entityManager->persist($login);
+            $entityManager->flush();
 
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comment $comment): static
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): static
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getAuthor() === $this) {
-                $comment->setAuthor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Vote>
-     */
-    public function getVotes(): Collection
-    {
-        return $this->votes;
-    }
-
-    public function addVote(Vote $vote): static
-    {
-        if (!$this->votes->contains($vote)) {
-            $this->votes->add($vote);
-            $vote->setAuhtor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVote(Vote $vote): static
-    {
-        if ($this->votes->removeElement($vote)) {
-            // set the owning side to null (unless already changed)
-            if ($vote->getAuhtor() === $this) {
-                $vote->setAuhtor(null);
-            }
-        }
-
-        return $this;
+            // Création de la session
+            $this->session->set('user', $account);
+        
+            return new JsonResponse('New account created with id'.$user->getId());        
+        } 
+        return new RedirectResponse('/account');  
     }
 }
