@@ -18,7 +18,7 @@ class Role
     private ?Account $account_id = null;
 
     #[ORM\Column(length:255)]
-    private ?string $role = 'default';
+    private ?string $role = null;
 
     public function getId(): ?int
     {

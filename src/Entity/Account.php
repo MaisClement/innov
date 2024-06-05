@@ -237,4 +237,10 @@ class Account
 
         return $this;
     }
+
+    public function setRole(Role $role): static
+    {
+        $this->role = $role;
+        return $this;
+    }
 }

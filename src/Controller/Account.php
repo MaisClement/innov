@@ -14,7 +14,6 @@ use App\Repository\AccountRepository;
 
 class Account extends AbstractController
 {
-    // Commentaires
     private Functions $functions;
 
     private AccountRepository $accountRepository;
@@ -65,10 +64,35 @@ class Account extends AbstractController
             // asign the repository as a class member (to be easily accesible)
             // line 27  $this->accountRepository = $accountRepository;
 
-            // $this->accountRepository->findOneByMSOID(  )
+            // $this->accountRepository->findOneByMSOID()
 
         } catch (\Exception $e) {
             return new JsonResponse($this->functions->ErrorMessage(500, $e->getMessage()), 500);
         }
+    }
+
+    public function createAccount(EntityManagerInterface $entityManager): Response
+    {
+        $provider = new Azure([
+            'clientId'          => $_ENV['AZURE_CLIENT_ID'],
+            'clientSecret'      => $_ENV['AZURE_CLIENT_SECRET'],
+            'redirectUri'       => $_ENV['AZURE_REDIRECT_URI'],
+        ]);
+
+        if($this->accountRepository != $accountRepository) 
+        {
+            $user = new Account();
+            $_SESSION = $user;
+            $user->setRole('default');
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+            
+            return new Response('New account created with id'.$user->getId());        
+        }
+        else {
+            // Création de la session
+            $_SESSION = $user;
+        }   
     }
 }
