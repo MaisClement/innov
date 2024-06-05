@@ -39,7 +39,7 @@ class Account
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author')]
     private Collection $comments;
 
-    #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'author')]
+    #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'auhtor')]
     private Collection $votes;
 
     #[ORM\OneToMany(targetEntity: Role::class, mappedBy: 'account_id')]
