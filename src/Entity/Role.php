@@ -27,11 +27,11 @@ class Role
 
     public function getAccountId(): ?Account
     {
-        return $this->$account_id;
+        return $this->account_id;
     }
 
     public function getRole(): ?string
     {
-        return $this->$role;
+        return $this->role;
     }
 }
