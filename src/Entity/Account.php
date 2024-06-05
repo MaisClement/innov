@@ -39,8 +39,11 @@ class Account
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author')]
     private Collection $comments;
 
-    #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'auhtor')]
+    #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'author')]
     private Collection $votes;
+
+    #[ORM\OneToMany(targetEntity: Role::class, mappedBy: 'account_id')]
+    private Collection $roles;
 
     public function __construct()
     {
