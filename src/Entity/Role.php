@@ -17,7 +17,7 @@ class Role
     #[ORM\JoinColumn(nullable: false)]
     private ?Account $account_id = null;
 
-    #[ORM\Column(length:255)]
+    #[ORM\Column (length:255)]
     private ?string $role = null;
 
     public function getId(): ?int
@@ -30,8 +30,22 @@ class Role
         return $this->account_id;
     }
 
+    public function setAccountId($account_id): static
+    {
+        $this->account_id = $account_id;
+
+        return $this;
+    }
+
     public function getRole(): ?string
     {
         return $this->role;
+    }
+
+    public function setRole($role): static
+    {
+        $this->role = $role;
+        
+        return $this;
     }
 }

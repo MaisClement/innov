@@ -71,28 +71,45 @@ class Account extends AbstractController
         }
     }
 
-    public function createAccount(EntityManagerInterface $entityManager): Response
+    public function createAccount(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $provider = new Azure([
-            'clientId'          => $_ENV['AZURE_CLIENT_ID'],
-            'clientSecret'      => $_ENV['AZURE_CLIENT_SECRET'],
-            'redirectUri'       => $_ENV['AZURE_REDIRECT_URI'],
-        ]);
+        $msoId = $request->get('mso_id');
 
-        if($this->accountRepository != $accountRepository) 
-        {
-            $user = new Account();
-            $_SESSION = $user;
-            $user->setRole('default');
+        $account = $this->accountRepository->findOneMSOID($msoId);
 
+        if($account) 
+        {         
+            $user = new Login();   
+            $user->setFamilyName($_SESSION->get('family_name'));
+            $user->setGivenName($_SESSION->get('given_name'));           
+            $user->setEmail($_SESSION->get('email'));
+            $user->setMsOid($account);
+
+            $role = new Role();
+
+            $role = setRole('default');
+            $user->setRole($role);
             $entityManager->persist($user);
             $entityManager->flush();
-            
-            return new Response('New account created with id'.$user->getId());        
-        }
-        else {
+
+            $this->$_SESSION->set('user', $account);
+        } else {
+            $user = new Account();
+            $user->setMSOID($msoId);
+            $account->setRole($this->roleRepository->findOneByLabel('default'));
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $login = new Login();
+            $login->setAccount($account);
+            $entityManager->persist($login);
+            $entityManager->flush();
+
             // Création de la session
-            $_SESSION = $user;
-        }   
+            $this->session->set('user', $account);
+        
+            return new JsonResponse('New account created with id'.$user->getId());        
+        } 
+        return new RedirectResponse('/account');  
     }
 }

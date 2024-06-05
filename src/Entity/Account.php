@@ -42,15 +42,14 @@ class Account
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'auhtor')]
     private Collection $votes;
 
-    #[ORM\OneToMany(targetEntity: Role::class, mappedBy: 'account_id')]
-    private Collection $roles;
-
     public function __construct()
     {
         $this->logins = new ArrayCollection();
         $this->ideas = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->votes = new ArrayCollection();
+        $this->role = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -238,9 +237,34 @@ class Account
         return $this;
     }
 
-    public function setRole(Role $role): static
+    /**
+     * @return Collection<int, Roles>
+     */
+    public function getRoles(): Collection
     {
-        $this->role = $role;
+        return $this->roles;
+    }
+
+    public function addRole(Roles $role): static
+    {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+            $role->setAccountId($this);
+        }
+
         return $this;
     }
+
+    public function removeRole(Roles $role): static
+    {
+        if ($this->roles->removeElement($role)) {
+            // set the owning side to null (unless already changed)
+            if ($role->getAccountId() === $this) {
+                $role->setAccountId(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
