@@ -13,23 +13,25 @@ class Role
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $account_id = null;
+    #[ORM\ManyToOne(inversedBy: 'roles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Account $account_id = null;
+
+    #[ORM\Column(length:255)]
+    private ?string $role = 'default';
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getAccountId(): ?int
+    public function getAccountId(): ?Account
     {
-        return $this->account_id;
+        return $this->$account_id;
     }
 
-    public function setAccountId(int $account_id): static
+    public function getRole(): ?string
     {
-        $this->account_id = $account_id;
-
-        return $this;
+        return $this->$role;
     }
 }
