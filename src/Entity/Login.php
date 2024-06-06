@@ -29,12 +29,12 @@ class Login
         return $this->id;
     }
 
-    public function getAccountId(): ?Account
+    public function getAccount(): ?Account
     {
         return $this->account_id;
     }
 
-    public function setAccountId(?Account $account_id): static
+    public function setAccount(?Account $account_id): static
     {
         $this->account_id = $account_id;
 

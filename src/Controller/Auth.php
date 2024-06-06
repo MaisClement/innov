@@ -8,17 +8,34 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use League\OAuth2\Client\Provider\GenericProvider;
 use TheNetworg\OAuth2\Client\Provider\Azure;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Service\Functions;
+use App\Repository\AccountRepository;
+use App\Entity\Account;
+use App\Entity\Role;
+use App\Entity\Login;
+use DateTime;
 
 class Auth extends AbstractController
 {
+    private EntityManagerInterface $entityManager;
+
+    private Functions $functions;
+    private AccountRepository $accountRepository;
+
     private String $azureClientId;
     private String $azureClientSecret;
     private String $azureRedirectUri;
     private String $azureTenantId;
 
-    public function __construct(String $azureClientId, String $azureClientSecret, String $azureRedirectUri, String $azureTenantId)
+    public function __construct(Functions $functions, AccountRepository $accountRepository, EntityManagerInterface $entityManager, String $azureClientId, String $azureClientSecret, String $azureRedirectUri, String $azureTenantId)
     {
-        session_start();
+        $this->entityManager = $entityManager;
+
+        $this->functions = $functions;
+        $this->accountRepository = $accountRepository; 
+
         $this->azureClientId = $azureClientId;
         $this->azureClientSecret = $azureClientSecret;
         $this->azureRedirectUri = $azureRedirectUri;
@@ -68,8 +85,68 @@ class Auth extends AbstractController
             'code' => $code,
         ]);
 
-        $_SESSION['token'] = $token;
+        //--
+
+        $user = $provider->getResourceOwner($token)->toArray();
+        $msoId = $user['oid'];
+            
+        $account = $this->accountRepository->findOneByMSOID($msoId);
         
-        return $this->redirect('/account');
+        if ($account) // the user has an account, we open the session and register the connection
+        {         
+            // $user = new Login();
+            $login = new Login();
+            $date = new DateTime();
+            $login->setAccount($account);
+            $login->setDatetime($date);
+            $login->setIp($user['ipaddr']);
+
+            $this->entityManager->persist($login);  
+            // $user->setFamilyName($_SESSION->get('family_name')); // Le compte existe déja, pas besoin de remplir les infos
+            // $user->setGivenName($_SESSION->get('given_name'));   // Le compte existe déja, pas besoin de remplir les infos
+            // $user->setEmail($_SESSION->get('email'));            // Le compte existe déja, pas besoin de remplir les infos
+            // $user->setMsOid($account);                           // Le compte existe déja, pas besoin de remplir les infos
+        
+            // $role = new Role();                                  // Le compte existe déja, pas besoin de remplir les infos
+
+            // $role = setRole('default');                          // Le compte existe déja, pas besoin de remplir les infos
+            // $user->setRole($role);                               // Le compte existe déja, pas besoin de remplir les infos
+            // $entityManager->persist($user);                      // Le compte existe déja, pas besoin de remplir les infos
+            $this->entityManager->flush();                                
+        
+            // $this->$_SESSION->set('user', $account); // Ne fonctionne pas
+            $_SESSION = $account;
+
+            return new JsonResponse('Logged in !'.$account->getId());
+
+        } else { // the user doesn't have an account, so we create one for him and give him the ‘default’ role
+            $account = new Account();
+            $account->setMSOID($msoId);
+            $account->setFamilyName($user['family_name']);
+            $account->setGivenName($user['given_name']);
+            $account->setEmail($user['upn']);
+
+            $role = new Role();
+            $role->setRole('default');
+            $account->addRole($role);
+            
+            $login = new Login();
+            $date = new DateTime();
+            $login->setAccount($account);
+            $login->setDatetime($date);
+            $login->setIp($user['ipaddr']);
+            
+            $this->entityManager->persist($role);
+            $this->entityManager->persist($account);
+            $this->entityManager->persist($login);
+            $this->entityManager->flush();
+        
+            // Création de la session
+            $_SESSION = $account;
+        
+            return new JsonResponse('New account created with id'.$account->getId());
+        } 
+        
+        // return $this->redirect('/account');
     }
 }

@@ -10,7 +10,7 @@ class Home extends AbstractController
 {
     public function __construct()
     {
-        session_start();
+        
     }
 
     #[Route('/home')]
