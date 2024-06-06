@@ -3,7 +3,7 @@
 Aujourd'hui on va pouvoir attaquer le back... 😄
 
 
-> ℹ️ Avant de commencer, n'oublie de récupérer les dernieres modification du Github 😉
+> ℹ️ Avant de commencer, n'oublie pas de récupérer les dernieres modification du Github 😉
 
 
 ---
