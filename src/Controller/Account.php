@@ -18,10 +18,11 @@ class Account extends AbstractController
 
     private AccountRepository $accountRepository;
 
+    
     public function __construct(Functions $functions, AccountRepository $accountRepository)
     {
         session_start();
-        
+
         $this->functions = $functions; 
 
         $this->accountRepository = $accountRepository; 
