@@ -10,7 +10,7 @@ class Demo extends AbstractController
 {
     public function __construct()
     {
-        session_start();
+        
     }
 
     #[Route('/demo')]

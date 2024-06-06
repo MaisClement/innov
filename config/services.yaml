@@ -20,15 +20,9 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    
-    App\Controller\Account:
+    App\Controller\Auth:
         autowire: true
         tags: ['controller.service_arguments']
-        arguments:
-            $functions: '@App\Service\Functions'
-            $accountRepository: '@App\Repository\AccountRepository'
-
-    App\Controller\Auth:
         arguments:
             $azureClientId: '%env(AZURE_CLIENT_ID)%'
             $azureClientSecret: '%env(AZURE_CLIENT_SECRET)%'

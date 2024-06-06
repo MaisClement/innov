@@ -28,7 +28,7 @@ class Account
     private ?string $ms_oid = null;
 
     #[ORM\Column]
-    private ?bool $is_active = null;
+    private ?bool $is_active = true;
 
     #[ORM\OneToMany(targetEntity: Login::class, mappedBy: 'account_id', orphanRemoval: true)]
     private Collection $logins;
