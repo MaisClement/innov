@@ -49,7 +49,7 @@ class Account
         $this->comments = new ArrayCollection();
         $this->votes = new ArrayCollection();
         $this->role = new ArrayCollection();
-        $this->roles = new ArrayCollection();
+        $this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -65,7 +65,6 @@ class Account
     public function setFamilyName(string $family_name): static
     {
         $this->family_name = $family_name;
-
         return $this;
     }
 
@@ -238,26 +237,26 @@ class Account
     }
 
     /**
-     * @return Collection<int, Roles>
+     * @return Collection<int, Role>
      */
-    public function getRoles(): Collection
+    public function getRole(): Collection
     {
-        return $this->roles;
+        return $this->role;
     }
 
-    public function addRole(Roles $role): static
+    public function addRole(Role $role): static
     {
-        if (!$this->roles->contains($role)) {
-            $this->roles->add($role);
+        if (!$this->role->contains($role)) {
+            $this->role->add($role);
             $role->setAccountId($this);
         }
 
         return $this;
     }
 
-    public function removeRole(Roles $role): static
+    public function removeRole(Role $role): static
     {
-        if ($this->roles->removeElement($role)) {
+        if ($this->role->removeElement($role)) {
             // set the owning side to null (unless already changed)
             if ($role->getAccountId() === $this) {
                 $role->setAccountId(null);

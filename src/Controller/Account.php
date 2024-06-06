@@ -21,7 +21,7 @@ class Account extends AbstractController
     public function __construct(Functions $functions, AccountRepository $accountRepository)
     {
         session_start();
-
+        
         $this->functions = $functions; 
 
         $this->accountRepository = $accountRepository; 
@@ -42,13 +42,13 @@ class Account extends AbstractController
             'redirectUri'       => $_ENV['AZURE_REDIRECT_URI'],
         ]);
 
-        try {
+        // try {
             $user = $provider->getResourceOwner($token)->toArray();
 
-            $json = array(
-                'user'  => $user,
-            );
-            return $this->json($json);
+            //$json = array(
+             //   'user'  => $user,
+            //);
+            //return $this->json($json);
 
                 // import the given repository
                 // line13   use App\Repository\StationsRepository;
@@ -72,13 +72,14 @@ class Account extends AbstractController
 
             $msoId = $user['oid'];
             
-            $account = $this->accountRepository->findOneMSOID($msoId);
+            $account = $this->accountRepository->findOneByMSOID($msoId);
             
             if ($account) // the user has an account, we open the session and register the connection
             {         
                 // $user = new Login();
                 $login = new Login();
-                $login->setDatetime( new DateTime() );
+                $date = new DateTime();
+                $login->setDatetime($date);
                 $entityManager->persist($login);  
 
                 $account->addLogin($login);
@@ -100,28 +101,35 @@ class Account extends AbstractController
             } else { // the user doesn't have an account, so we create one for him and give him the ‘default’ role
                 $user = new Account();
                 $user->setMSOID($msoId);
-                $account->setRole($this->roleRepository->findOneByLabel('default'));
-                $entityManager->persist($user);
-                $entityManager->flush();
-            
+                $user->setFamilyName($user['family_name']);
+                $user->setGivenName($user['given_name']);
+                $user->setEmail($user['email']);
+
+                $role = new Role();
+                $role->setRole('default');
+                $user->setRole($role);
+
+                
+                
                 $login = new Login();
                 $login->setAccount($account);
+                $entityManager->persist($user);
                 $entityManager->persist($login);
                 $entityManager->flush();
             
                 // Création de la session
-                $this->session->set('user', $account);
+                $_SESSION = $user;
             
                 return new JsonResponse('New account created with id'.$user->getId());        
             } 
 
-        } catch (\Exception $e) {
-            return new JsonResponse($this->functions->ErrorMessage(500, $e->getMessage()), 500);
-        }
+       // } catch (\Exception $e) {
+          //  return new JsonResponse($this->functions->ErrorMessage(500, $e->getMessage()), 500);
+        //}
     }
 
     public function createAccount(EntityManagerInterface $entityManager, Request $request): Response
-    {
+   {
         // $msoId = $request->get('mso_id');
         //
         // $account = $this->accountRepository->findOneMSOID($msoId);

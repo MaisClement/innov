@@ -23,6 +23,9 @@ services:
     App\Controller\Account:
         autowire: true
         tags: ['controller.service_arguments']
+        arguments:
+            $functions: 'App\Service\Functions'
+            $accountRepository: 'App\Repository\AccountRepository'
 
     App\Controller\Auth:
         arguments:
