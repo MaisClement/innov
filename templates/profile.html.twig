@@ -1,0 +1,96 @@
+<html lang="fr">
+    <head>
+        <title>APPFE | Profil - {{ family_name }}</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="theme-color" content="#4f474e">
+        <meta name="color-scheme" content="dark light">
+        <meta name="description" content="APPFE">
+        <meta name="keywords" content="APPFE">
+        <meta name="author" content="Lowa">
+        <link href="{{ asset('css/color.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/form.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/index.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    </head>
+    <body>
+    <br>
+        <a href="/home" style ="margin-left: 10px;">
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
+          Retour à l'index
+        </a>
+        <br><br>
+        <h1 class="title is-3" style="text-align: left;margin-left: 15px;">Mon profil APPFE</h1>
+        <h1 class="is-size-2" style="text-align: left;margin-left: 15px;">Informations du profil</h1>
+          <h1 style="text-align: left; margin-left: 15px;">Nom : {{ family_name|escape }}</h1>
+          <h1 style="text-align: left;margin-left: 15px;">Prénom : {{ given_name|escape }}</h1>
+          <h1 style="text-align: left;margin-left: 15px;">Mail : {{ mail|escape }}</h1>
+        <div class="tabs is-centered is-boxed">
+          <ul>
+              <li class="tab">
+                <a onclick="openTab(event, 'mes-commentaires')">
+                  <span class="icon is-small">
+                    <i class="fas fa-comment" aria-hidden="true"></i>
+                  </span>
+                  <span>Mes commentaires</span>
+                </a> 
+              </li>
+              <li class="tab">
+                <a onclick="openTab(event, 'mes-idees')">
+                  <span class="icon is-small">
+                    <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                  </span>
+                  <span>Mes idées</span>
+                </a> 
+              </li>
+          </ul>
+        </div>
+        <div id="mes-commentaires" class="content-tab">
+          <h1 class="is-size-2" style="text-align: center;">Commentaires postées</h1>
+          {# Faire en sorte d'afficher les commentaires postées par l'utilisateur #}
+        </div>
+        <div id="mes-idees" class="content-tab">
+          <h1 class="is-size-2" style="text-align: center;">Mes idées proposées</h1>
+          {# Faire en sorte d'afficher les idées proposées par l'utilisateur #}
+        </div>
+        <script>
+          function openTab(evt, tabName) {
+              var i, x, tablinks;
+              x = document.getElementsByClassName("content-tab");
+              for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+              }
+              tablinks = document.getElementsByClassName("tab");
+              for (i = 0; i < x.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" is-active", "");
+              }
+              document.getElementById(tabName).style.display = "block";
+              evt.currentTarget.className += " is-active";
+            }
+
+            // Ajout de la fonctionnalité de changement de classe sur mouseover et mouseout
+            var tabs = document.getElementsByClassName("tab");
+            for (var i = 0; i < tabs.length; i++) {
+              tabs[i].addEventListener("mouseover", function() {
+                this.className += " is-active";
+              });
+              tabs[i].addEventListener("mouseout", function() {
+                this.className = this.className.replace(" is-active", "");
+              });
+            }
+
+            // Fonction pour rendre vide la page lorsqu'elle est rafraîchie
+            window.onload = function() {
+              var x = document.getElementsByClassName("content-tab");
+              for (var i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+              }
+              var tablinks = document.getElementsByClassName("tab");
+              for (var i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" is-active", "");
+              }
+            }
+        </script>
+    </body>
+</html>

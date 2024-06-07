@@ -62,7 +62,7 @@ class Auth extends AbstractController
     }
 
     #[Route('/login/microsoft/callback')]
-    public function microsoftCallback(Request $request): RedirectResponse
+    public function microsoftCallback(Request $request): JsonResponse
     {
         $provider = new Azure([
             'clientId'          => $_ENV['AZURE_CLIENT_ID'],
@@ -94,7 +94,7 @@ class Auth extends AbstractController
         
         if ($account) // the user has an account, we open the session and register the connection
         {         
-            // $user = new Login();
+            // Est ce que le compte est bien actif ? (getIsActive)
             $login = new Login();
             $date = new DateTime();
             $login->setAccount($account);
@@ -115,9 +115,13 @@ class Auth extends AbstractController
             $this->entityManager->flush();                                
         
             // $this->$_SESSION->set('user', $account); // Ne fonctionne pas
-            $_SESSION = $account;
+            $_SESSION['account_id'] = $account->getId();
+            $_SESSION['family_name'] = $account->getFamilyName();
+            $_SESSION['given_name'] = $account->getGivenName();
+            $_SESSION['upn'] = $account->getEmail();
 
-            return new JsonResponse('Logged in !'.$account->getId());
+
+            return new JsonResponse('Logged in ! '.$account->getId());
 
         } else { // the user doesn't have an account, so we create one for him and give him the ‘default’ role
             $account = new Account();
@@ -142,11 +146,14 @@ class Auth extends AbstractController
             $this->entityManager->flush();
         
             // Création de la session
-            $_SESSION = $account;
-        
+            $_SESSION['account_id'] = $account->getId(); 
+            $_SESSION['family_name'] = $account->getFamilyName();
+            $_SESSION['given_name'] = $account->getGivenName(); 
+            $_SESSION['upn'] = $account->getEmail();
+
             return new JsonResponse('New account created with id'.$account->getId());
         } 
         
-        // return $this->redirect('/account');
+        return $this->redirect('/account');
     }
 }

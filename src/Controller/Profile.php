@@ -6,20 +6,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class Home extends AbstractController
+class Profile extends AbstractController
 {
     public function __construct()
     {
         
     }
 
-    #[Route('/home')]
-    public function home()
-    {
+    #[Route('/profile')]
+    public function profile()
+    {   
         $data = [ 
-                  'family_name'=>$_SESSION['family_name'], 
-                  'given_name' => $_SESSION['given_name'],
-                ];
-        return $this->render('home.html.twig', $data);
+            'family_name'=>$_SESSION['family_name'], 
+            'given_name' => $_SESSION['given_name'],
+            'mail' => $_SESSION['upn'],
+          ];
+        return $this->render('profile.html.twig', $data);
     }
 }

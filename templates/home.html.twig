@@ -1,0 +1,71 @@
+<html lang="fr">
+    <head>
+        <title>APPFE | Home</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="theme-color" content="#4f474e">
+        <meta name="color-scheme" content="dark light">
+        <meta name="description" content="APPFE">
+        <meta name="keywords" content="APPFE">
+        <meta name="author" content="Lowa">
+        <link href="{{ asset('css/color.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/form.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/index.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+        <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
+    </head>
+    <nav class="navbar is-light">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">
+                <img src="img/logo.png" alt="Logo APPFE">
+            </a>
+            <a href="#" class="navbar-item">En attente de validation</a>
+            <a href="#" class="navbar-item">En cours de validation</a>
+            <a href="#" class="navbar-item">Validés</a>
+            <a href="#" class="button is-link is-rounded">Soumettre une idée</a>
+        </div>
+        <div class="navbar-end">
+        <div class="navbar-item">
+        <div class="buttons">
+          <a href="/profile" class="button is-link is-rounded">
+            <strong>Mon profil</strong>
+          </a>
+        </div>
+    </nav>
+    <h1 class="title is-3 has-text-centered" style="margin-top: 10px">Bienvenue {{ given_name|escape }} {{ family_name|escape }} !</h1> 
+    <h1 class="subtitle is-6 has-text-centered">Proposez vos idées pour l'association !</h1>
+    <br>
+    <div class="columns">
+        <div class="column is-5">
+            <i class="fa-solid fa-arrow-right fa-2xl" style="color: rgb(255, 166, 0); margin-left: 15px"></i>
+            <h1 class="title is-3" style="margin-left:50px; margin-top: -22px;">Idées en cours de réalisation</h1>
+        <div class="card" style=" padding: 0; background-color: #FFFFFF; width:550px; height: 280px; border: solid,rgb(72,199,142), 5px;">
+            <h1 class="title is-5" style="color:black; margin: 15px;">Mettre en place une plateforme d'innovation</h1>
+                <div class="tags has-addons">
+                    <span class="tag is-success" style="margin-left:10px">Approuvé</span>
+                    <span class="tag">En cours de réalisation</span>
+                </div>
+                    <p style="color:rgb(82, 79, 79); margin:10px;">Créer une plateforme pour que tout le monde puisse<br>proposer leurs idées</p>
+                <p style="margin: 0; color: black; margin: 10px;">Proposé par : Robert de la Compta<br>Crée le : 17/05/2024</p>
+            <a class="button" style="margin-left: 10px;">En savoir plus</a>
+        </div>
+        <div class="card" style=" padding: 0; background-color: #FFFFFF; width:550px; height: 280px; border: solid, rgb(255,183,15), 5px;">
+            <h1 class="title is-5" style="color:black; margin: 15px;">Mettre en place une plateforme d'innovation</h1>
+                    <span class="tag is-warning" style="margin-left:10px">En cours d'approbation</span>
+                    <p style="color:rgb(82, 79, 79); margin:10px;">Créer une plateforme pour que tout le monde puisse<br>proposer leurs idées</p>
+                <p style="margin: 0; color: black; margin: 10px;">Proposé par : Robert de la Compta<br>Crée le : 17/05/2024</p>
+            <a class="button" style="margin-left: 10px;">En savoir plus</a>
+        </div>
+        <div class="card" style=" padding: 0; background-color: #FFFFFF; width:550px; height: 280px; border: solid, rgb(255,102,133), 5px;">
+            <h1 class="title is-5" style="color:black; margin: 15px;">Mettre en place une plateforme d'innovation</h1>
+                <div class="tags has-addons">
+                    <span class="tag is-danger" style="margin-left:10px">Non approuvé</span>
+                    <span class="tag">Non réalisable</span>
+                </div>
+                    <p style="color:rgb(82, 79, 79); margin:10px;">Créer une plateforme pour que tout le monde puisse<br>proposer leurs idées</p>
+                <p style="margin: 0; color: black; margin: 10px;">Proposé par : Robert de la Compta<br>Crée le : 17/05/2024</p>
+            <a class="button" style="margin-left: 10px;">En savoir plus</a>
+        </div>
+    </div>
+    </body>
+</html>
