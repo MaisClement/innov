@@ -1,71 +1,283 @@
-<html lang="fr">
-    <head>
-        <title>APPFE | Home</title>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <meta name="theme-color" content="#4f474e">
-        <meta name="color-scheme" content="dark light">
-        <meta name="description" content="APPFE">
-        <meta name="keywords" content="APPFE">
-        <meta name="author" content="Lowa">
-        <link href="{{ asset('css/color.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/form.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/index.css') }}" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-        <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
-    </head>
-    <nav class="navbar is-light">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="#">
-                <img src="img/logo.png" alt="Logo APPFE">
-            </a>
-            <a href="#" class="navbar-item">En attente de validation</a>
-            <a href="#" class="navbar-item">En cours de validation</a>
-            <a href="#" class="navbar-item">Validés</a>
-            <a href="#" class="button is-link is-rounded">Soumettre une idée</a>
-        </div>
-        <div class="navbar-end">
+<html lang="fr" class="has-navbar-fixed-top">
+
+<head>
+    <title>APPFE | Home</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#4f474e">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="APPFE">
+    <meta name="keywords" content="APPFE">
+    <meta name="author" content="Lowa">
+    <script src="{{ asset('js/index.js') }}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
+</head>
+<nav class="navbar is-fixed-top">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="#">
+            <img src="img/logo.png" alt="Logo APPFE">
+        </a>
+        <a href="#" class="navbar-item">En attente d'approbation</a>
+        <a href="#" class="navbar-item">En cours de validation</a>
+        <a href="#" class="navbar-item">Validés</a>
+        <a href="/idea" class="button is-link">Soumettre une idée</a>
+    </div>
+    <div class="navbar-end">
         <div class="navbar-item">
-        <div class="buttons">
-          <a href="/profile" class="button is-link is-rounded">
-            <strong>Mon profil</strong>
-          </a>
-        </div>
-    </nav>
-    <h1 class="title is-3 has-text-centered" style="margin-top: 10px">Bienvenue {{ given_name|escape }} {{ family_name|escape }} !</h1> 
-    <h1 class="subtitle is-6 has-text-centered">Proposez vos idées pour l'association !</h1>
-    <br>
-    <div class="columns">
-        <div class="column is-5">
-            <i class="fa-solid fa-arrow-right fa-2xl" style="color: rgb(255, 166, 0); margin-left: 15px"></i>
-            <h1 class="title is-3" style="margin-left:50px; margin-top: -22px;">Idées en cours de réalisation</h1>
-        <div class="card" style=" padding: 0; background-color: #FFFFFF; width:550px; height: 280px; border: solid,rgb(72,199,142), 5px;">
-            <h1 class="title is-5" style="color:black; margin: 15px;">Mettre en place une plateforme d'innovation</h1>
-                <div class="tags has-addons">
-                    <span class="tag is-success" style="margin-left:10px">Approuvé</span>
-                    <span class="tag">En cours de réalisation</span>
-                </div>
-                    <p style="color:rgb(82, 79, 79); margin:10px;">Créer une plateforme pour que tout le monde puisse<br>proposer leurs idées</p>
-                <p style="margin: 0; color: black; margin: 10px;">Proposé par : Robert de la Compta<br>Crée le : 17/05/2024</p>
-            <a class="button" style="margin-left: 10px;">En savoir plus</a>
-        </div>
-        <div class="card" style=" padding: 0; background-color: #FFFFFF; width:550px; height: 280px; border: solid, rgb(255,183,15), 5px;">
-            <h1 class="title is-5" style="color:black; margin: 15px;">Mettre en place une plateforme d'innovation</h1>
-                    <span class="tag is-warning" style="margin-left:10px">En cours d'approbation</span>
-                    <p style="color:rgb(82, 79, 79); margin:10px;">Créer une plateforme pour que tout le monde puisse<br>proposer leurs idées</p>
-                <p style="margin: 0; color: black; margin: 10px;">Proposé par : Robert de la Compta<br>Crée le : 17/05/2024</p>
-            <a class="button" style="margin-left: 10px;">En savoir plus</a>
-        </div>
-        <div class="card" style=" padding: 0; background-color: #FFFFFF; width:550px; height: 280px; border: solid, rgb(255,102,133), 5px;">
-            <h1 class="title is-5" style="color:black; margin: 15px;">Mettre en place une plateforme d'innovation</h1>
-                <div class="tags has-addons">
-                    <span class="tag is-danger" style="margin-left:10px">Non approuvé</span>
-                    <span class="tag">Non réalisable</span>
-                </div>
-                    <p style="color:rgb(82, 79, 79); margin:10px;">Créer une plateforme pour que tout le monde puisse<br>proposer leurs idées</p>
-                <p style="margin: 0; color: black; margin: 10px;">Proposé par : Robert de la Compta<br>Crée le : 17/05/2024</p>
-            <a class="button" style="margin-left: 10px;">En savoir plus</a>
+            <div class="buttons">
+                <a href="/profile" class="button is-link is-rounded">
+                    <strong>Mon profil</strong>
+                </a>
+            </div>
         </div>
     </div>
-    </body>
+</nav>
+<h1 class="title is-3 has-text-centered" style="margin-top: 10px">Bienvenue {{ given_name|escape }} {{
+    family_name|escape }} !</h1>
+<h1 class="subtitle is-6 has-text-centered">Proposez vos idées pour l'association !</h1>
+<br>
+<div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
+    <span class="icon has-text-success">
+        <i class="fa-solid fa-arrow-right fa-2xl"></i>
+    </span>
+    <h1 class="title is-3 pl-2">Idées en cours de réalisation</h1>
+</div>
+<br>
+<!-- PREMIERE CARTE -->
+<div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
+    <a class="js-modal-trigger" data-target="modal-js-first-idea">
+        <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px;">
+            <div class="card-content">
+                <div class="content">
+                    <h1 class="title is-5">Mettre en place une plateforme innovation</h1>
+                    <div class="tags has-addons">
+                        <span class="tag is-success">Approuvé</span>
+                        <span class="tag">En cours de réalisation</span>
+                    </div>
+                    <p>Créer une plateforme pour que tout le monde puisse proposer</p>
+                    <p class="is-size-7 m-0">Proposé par : <strong>Robert de la Compta</strong>
+                    <p class="is-size-7 m-0">Créer le : <strong>17/05/2024</strong></p>
+                </div>
+            </div>
+        </div>
+    </a>
+    <!-- SECONDE CARTE -->
+    <a class="js-modal-trigger" data-target="modal-js-second-idea">
+        <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px;">
+            <div class="card-content">
+                <div class="content">
+                    <h1 class="title is-5">Mise en place d'un stage</h1>
+                    <div class="tags has-addons">
+                        <span class="tag is-success">Approuvé</span>
+                        <span class="tag">En cours de réalisation</span>
+                    </div>
+                    <p>Propostion de stage à Arthur HYMERY</p>
+                    <p class="is-size-7 m-0">Proposé par : <strong>Arthur PERRIN</strong>
+                    <p class="is-size-7 m-0">Créer le : <strong>01/04/2024</strong></p>
+                </div>
+            </div>
+        </div>
+    </a>
+    <!-- 3eme CARTE -->
+    <a class="js-modal-trigger" data-target="modal-js-third-idea">
+        <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px;">
+            <div class="card-content">
+                <div class="content">
+                    <h1 class="title is-5">Mise en place d'un stage</h1>
+                    <div class="tags has-addons">
+                        <span class="tag is-success">Approuvé</span>
+                        <span class="tag">En cours de réalisation</span>
+                    </div>
+                    <p>Propostion de stage à Arthur HYMERY</p>
+                    <p class="is-size-7 m-0">Proposé par : <strong>Arthur PERRIN</strong>
+                    <p class="is-size-7 m-0">Créer le : <strong>01/04/2024</strong></p>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+<!-- PARTIE IDEES EN ATTENTE D'APPROBATION -->
+<div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
+    <span class="icon has-text-warning">
+        <i class="fa-solid fa-arrow-right fa-2xl"></i>
+    </span>
+    <h1 class="title is-3 pl-2">Idées en attente d'approbation</h1>
+</div>
+<br>
+<!-- PREMIERE CARTE -->
+<div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
+    <a class="js-modal-trigger" data-target="modal-js-first-wait">
+        <div class="card mb-5" style="width: 45vw; border:solid rgb(255,183,15) 5px;">
+            <div class="card-content">
+                <div class="content">
+                    <h1 class="title is-5">Mettre en place une plateforme innovation</h1>
+                    <span class="tag is-warning">En attente d'approbation</span>
+                    <br><br>
+                    <p>Créer une plateforme pour que tout le monde puisse proposer</p>
+                    <p class="is-size-7 m-0">Proposé par : <strong>Robert de Niro</strong>
+                    <p class="is-size-7 m-0">Créer le : <strong>XX/XX/XXXX</strong></p>
+                </div>
+            </div>
+        </div>
+    </a>
+    <!-- SECONDE CARTE -->
+    <a class="js-modal-trigger" data-target="modal-js-second-wait">
+        <div class="card mb-5" style="width: 45vw; border:solid rgb(255,183,15) 5px;">
+            <div class="card-content">
+                <div class="content">
+                    <h1 class="title is-5">TEST</h1>
+                    <span class="tag is-warning">En attente d'approbation</span>
+                    <br><br>
+                    <p>Propostion de stage à Arthur HYMERY</p>
+                    <p class="is-size-7 m-0">Proposé par : <strong>Michel DRUCKER</strong>
+                    <p class="is-size-7 m-0">Créer le : <strong>XX/XX/XXXX</strong></p>
+                </div>
+            </div>
+        </div>
+    </a>
+    <!-- 3eme CARTE -->
+    <a class="js-modal-trigger" data-target="modal-js-third-idea">
+        <div class="card mb-5" style="width: 45vw; border:solid rgb(255,183,15) 5px;">
+            <div class="card-content">
+                <div class="content">
+                    <h1 class="title is-5">Mise en place d'un stage</h1>
+                    <span class="tag is-warning">En attente d'approbation</span>
+                    <br><br>
+                    <p>Propostion de stage à Arthur HYMERY</p>
+                    <p class="is-size-7 m-0">Proposé par : <strong>Arthur PERRIN</strong>
+                    <p class="is-size-7 m-0">Créer le : <strong>01/04/2024</strong></p>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+
+<!-- PARTIE IDEES REFUSÉES -->
+<div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
+    <span class="icon has-text-danger">
+        <i class="fa-solid fa-arrow-right fa-2xl"></i>
+    </span>
+    <h1 class="title is-3 pl-2">Idées refusées</h1>
+</div>
+<br>
+<!-- PREMIERE CARTE -->
+<div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
+    <a class="js-modal-trigger" data-target="modal-js-first-wait">
+        <div class="card mb-5" style="width: 45vw; border:solid rgb(255,102,133) 5px;">
+            <div class="card-content">
+                <div class="content">
+                    <h1 class="title is-5">Mettre en place une plateforme innovation</h1>
+                    <div class="tags has-addons">
+                        <span class="tag is-danger" style="margin-left:10px">Non approuvé</span>
+                        <span class="tag">Non réalisable</span>
+                    </div>                
+                    <p>Créer une plateforme pour que tout le monde puisse proposer</p>
+                    <p class="is-size-7 m-0">Proposé par : <strong>Robert de Niro</strong>
+                    <p class="is-size-7 m-0">Créer le : <strong>XX/XX/XXXX</strong></p>
+                </div>
+            </div>
+        </div>
+    </a>
+    <!-- SECONDE CARTE -->
+    <a class="js-modal-trigger" data-target="modal-js-second-wait">
+        <div class="card mb-5" style="width: 45vw; border:solid rgb(255,102,133) 5px;">
+            <div class="card-content">
+                <div class="content">
+                    <h1 class="title is-5">TEST</h1>
+                    <div class="tags has-addons">
+                        <span class="tag is-danger" style="margin-left:10px">Non approuvé</span>
+                        <span class="tag">Non réalisable</span>
+                    </div>                
+                    <p>Propostion de stage à Arthur HYMERY</p>
+                    <p class="is-size-7 m-0">Proposé par : <strong>Michel DRUCKER</strong>
+                    <p class="is-size-7 m-0">Créer le : <strong>XX/XX/XXXX</strong></p>
+                </div>
+            </div>
+        </div>
+    </a>
+    <!-- 3eme CARTE -->
+    <a class="js-modal-trigger" data-target="modal-js-third-idea">
+        <div class="card mb-5" style="width: 45vw; border:solid rgb(255,102,133) 5px;">
+            <div class="card-content">
+                <div class="content">
+                    <h1 class="title is-5">Mise en place d'un stage</h1>
+                    <div class="tags has-addons">
+                        <span class="tag is-danger" style="margin-left:10px">Non approuvé</span>
+                        <span class="tag">Non réalisable</span>
+                    </div>
+                    <p>Propostion de stage à Arthur HYMERY</p>
+                    <p class="is-size-7 m-0">Proposé par : <strong>Arthur PERRIN</strong>
+                    <p class="is-size-7 m-0">Créer le : <strong>01/04/2024</strong></p>
+                </div>
+            </div>
+        </div>
+    </a>
+    <!-- 3eme CARTE -->
+    <a class="js-modal-trigger" data-target="modal-js-third-idea">
+        <div class="card mb-5" style="width: 45vw; border:solid rgb(255,102,133) 5px;">
+            <div class="card-content">
+                <div class="content">
+                    <h1 class="title is-5">Mise en place d'un stage</h1>
+                    <div class="tags has-addons">
+                        <span class="tag is-danger" style="margin-left:10px">Non approuvé</span>
+                        <span class="tag">Non réalisable</span>
+                    </div>
+                    <p>Propostion de stage à Arthur HYMERY</p>
+                    <p class="is-size-7 m-0">Proposé par : <strong>Arthur PERRIN</strong>
+                    <p class="is-size-7 m-0">Créer le : <strong>01/04/2024</strong></p>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+
+<!-- CRÉATIONS DE MODALS-->
+<!-- PREMIERE IDEE -->
+<div id="modal-js-first-idea" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Mise en place d'une plateforme d'innovation</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <h2 class="title is-3">Explication du projet</h2>
+            <p class="is-size-5">blablablabla</p>
+        </section>
+        <footer class="modal-card-foot">
+            <div class="buttons">
+                <button class="button is-success">Valider idée</button>
+                <button class="button is-warning">Mettre en attente</button>
+                <button class="button is-danger">Abandonner idée</button>
+            </div>
+        </footer>
+    </div>
+</div>
+<!-- SECONDE IDEE -->
+<div id="modal-js-second-idea" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Mise en place d'un stage</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <h2 class="title is-3">UN DEUXIEME ARTHUR DANS L'ASSOCIATION !?</h2>
+            <p class="is-size-6">Et oui ! Sur la période de un mois et 1 semaine <strong>Arthur PERRIN</strong> notre
+                président préféré invite Arthur HYMERY, un étudiant en BTS SIO à faire un stage dans notre association !
+            </p>
+        </section>
+        <footer class="modal-card-foot">
+            <div class="buttons">
+                <button class="button is-success">Valider idée</button>
+                <button class="button is-warning">Mettre en attente</button>
+                <button class="button is-danger">Abandonner idée</button>
+            </div>
+        </footer>
+    </div>
+</div>
+<!-- FIN MODAL-->
+</body>
+
 </html>
