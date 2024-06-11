@@ -155,8 +155,6 @@ class Auth extends AbstractController
             $_SESSION['family_name'] = $account->getFamilyName();
             $_SESSION['given_name'] = $account->getGivenName(); 
             $_SESSION['upn'] = $account->getEmail();
-
-            return new JsonResponse('New account created with id : '.$account->getId());
         } 
 
 

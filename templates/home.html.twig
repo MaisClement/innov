@@ -21,7 +21,7 @@
         <a href="#" class="navbar-item">En attente d'approbation</a>
         <a href="#" class="navbar-item">En cours de validation</a>
         <a href="#" class="navbar-item">Validés</a>
-        <a href="/idea" class="button is-link">Soumettre une idée</a>
+        <a data-target="modal-js-create-idea" class="button is-link js-modal-trigger">Soumettre une idée</a>
     </div>
     <div class="navbar-end">
         <div class="navbar-item">
@@ -171,7 +171,7 @@
                     <div class="tags has-addons">
                         <span class="tag is-danger" style="margin-left:10px">Non approuvé</span>
                         <span class="tag">Non réalisable</span>
-                    </div>                
+                    </div>
                     <p>Créer une plateforme pour que tout le monde puisse proposer</p>
                     <p class="is-size-7 m-0">Proposé par : <strong>Robert de Niro</strong>
                     <p class="is-size-7 m-0">Créer le : <strong>XX/XX/XXXX</strong></p>
@@ -188,7 +188,7 @@
                     <div class="tags has-addons">
                         <span class="tag is-danger" style="margin-left:10px">Non approuvé</span>
                         <span class="tag">Non réalisable</span>
-                    </div>                
+                    </div>
                     <p>Propostion de stage à Arthur HYMERY</p>
                     <p class="is-size-7 m-0">Proposé par : <strong>Michel DRUCKER</strong>
                     <p class="is-size-7 m-0">Créer le : <strong>XX/XX/XXXX</strong></p>
@@ -275,6 +275,130 @@
                 <button class="button is-danger">Abandonner idée</button>
             </div>
         </footer>
+    </div>
+</div>
+<!-- MODAL DE CRÉATION DE L'IDÉE -->
+<div class="modal" id="modal-js-create-idea">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title"><strong>Soumettre une idée</strong></p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <form method="post" action="/recap_idea">
+                <h1 class="title is-4">Intitulé de l'idée</h1>
+                <input type="text" class="input is-medium" name="title_idea" id="title_idea">
+                <br><br>
+                <h1 class="title is-4">Détails</h1>
+                <textarea class="textarea" placeholder="Décrivez plus en détails votre idée" name="details_idea"
+                    id="details_idea"></textarea>
+                <hr>
+                <h1 class="title is-4">Réalisation</h1>
+                <p class="is-size-6">Donnez des détails sur la réalisation de votre idée.</p>
+                <br>
+                <h3 class="title is-5">Quelles mesures prendrez vous ?</h3>
+                <div class="control">
+                    <div class="radio">
+                        <label for="alone" class="radio">
+                            <input type="radio" name="mesures" id="alone" class="mr-2"
+                                value="Je suis en mesure de réaliser ce projet par moi-même"><strong>Je suis en mesure de
+                                réaliser ce projet
+                                par moi-même.</strong>
+                        </label>
+                        <br><br>
+                        <label for="help" class="radio">
+                            <input type="radio" name="mesures" id="help" class="mr-2" value="Je serai aidé à la réalisation"><strong>Je serai aidé à la
+                                réalisation.</strong>
+                        </label>
+                        <br><br>
+                        <label for="no_help" class="radio">
+                            <input type="radio" name="mesures" id="no_help" class="mr-2" value="Je ne serai pas aidé à la réalisation (par
+                            manque de temps ou de compétences)."><strong>Je ne serai pas aidé à
+                                la réalisation
+                                (par
+                                manque de temps ou de compétences).</strong>
+                        </label>
+                        <br><br>
+                    </div>
+                    <textarea class="textarea" placeholder="Quelques détails..." name="details_mesures"
+                        id="details_mesures"></textarea>
+                    <hr>
+                    <h1 class="title is-4">Financement</h1>
+                    <h3 class="title is-5">Combien ?</h3>
+                    <div class="radio">
+                        <label for="less_hundred" class="radio">
+                            <input type="radio" name="funding" id="less_hundred" class="mr-2" value="moins de 100€">
+                            <strong>moins de 100€</strong> Pour rien ou presque rien
+                        </label>
+                        <br><br>
+                        <label for="less_thousand" class="radio">
+                            <input type="radio" name="funding" id="less_thousand" class="mr-2" value="moins de 1000€"><strong>moins de
+                                1000€</strong>
+                        </label>
+                        <br><br>
+                        <label for="less_five_thousand" class="radio">
+                            <input type="radio" name="funding" id="less_five_thousand" class="mr-2" value="moins de 5000€"><strong>moins de
+                                5000€</strong>
+                        </label>
+                        <br><br>
+                        <label for="more_five_thousand" class="radio">
+                            <input type="radio" name="funding" id="more_five_thousand" class="mr-2" value="plus de 5000€"><strong>plus de
+                                5000€</strong> On a besoin de
+                            l'oncle Picsou
+                        </label>
+                        <br><br>
+                    </div>
+                    <textarea id="funding_details" name="funding_details" class="textarea"
+                        placeholder="Quelques détails.."></textarea>
+                </div>
+                <hr>
+                <h1 class="title is-4">A qui envoyer ce projet ?</h1>
+                <p class="is-size-5"><strong>Indiquez à quelle équipe s'adresse cette demande.</strong></p>
+                <br>
+                <label for="finance" class="checkbox">
+                    <input type="checkbox" name="team" id="finance" value="Soutien Financier" checked="checked">
+                    <strong>Soutien Financier</strong> (Responsable : Romain Bernardot)
+                </label>
+                <br><br>
+                <label for="digital" class="checkbox">
+                    <input type="checkbox" name="team" id="digital" value="Numérique / R&D">
+                    <strong>Numérique / R&D</strong> (Responsable : Clément Fresse)
+                </label>
+                <br><br>
+                <label for="maintenance" class="checkbox">
+                    <input type="checkbox" name="team" id="maintenance" value="Maintenance">
+                    <strong>Maintenance</strong> (Responsable : Lancelot Gerber)
+                </label>
+                <br><br>
+                <label for="annexes" class="checkbox">
+                    <input type="checkbox" name="team" id="annexes" value="Projet Annexes Ferroviaires">
+                    <strong>Projet Annexes Ferroviaires</strong> (Responsable : Fabien Laurent)
+                </label>
+                <br><br>
+                <label for="communication" class="checkbox">
+                    <input type="checkbox" name="team" id="communication" value="Communication">
+                    <strong>Communication</strong> (Responsable : Hugo Bernardo)
+                </label>
+                <br><br>
+                <label for="circulation" class="checkbox">
+                    <input type="checkbox" name="team" id="circulation" value="BB 15000 / Circulation">
+                    <strong>BB 15000 / Circulation</strong> (Responsable : Arthur Perrin)
+                </label>
+                <br><br>
+                <label for="organisation" class="checkbox">
+                    <input type="checkbox" name="team" id="organisation" value="Organisation">
+                    <strong>Organisation</strong> (Responsable : Arthur Perrin)
+                </label>
+                <br><br>
+                <label for="other" class="checkbox">
+                    <input type="checkbox" name="team" id="other" value="Autre / J'en ai aucune idée">
+                    <strong>Autre / J'en ai aucune idée</strong>
+                </label>
+                <br><br>
+                <input class="button is-success" type="submit" value="Envoyer" name="envoyer">
+            </form>
+        </section>
     </div>
 </div>
 <!-- FIN MODAL-->
