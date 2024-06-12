@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240611101610 extends AbstractMigration
+final class Version20240612120840 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -22,7 +22,7 @@ final class Version20240611101610 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE account (id INT AUTO_INCREMENT NOT NULL, family_name VARCHAR(255) NOT NULL, given_name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, ms_oid VARCHAR(255) NOT NULL, is_active TINYINT(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE comment (id INT AUTO_INCREMENT NOT NULL, message LONGTEXT NOT NULL, author_id INT DEFAULT NULL, related_idea_id INT DEFAULT NULL, INDEX IDX_9474526CF675F31B (author_id), INDEX IDX_9474526C647625D8 (related_idea_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
-        $this->addSql('CREATE TABLE idea (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, details LONGTEXT NOT NULL, state VARCHAR(255) NOT NULL, creation_datetime DATETIME NOT NULL, author_id INT NOT NULL, validator_id INT DEFAULT NULL, INDEX IDX_A8BCA45F675F31B (author_id), INDEX IDX_A8BCA45B0644AEC (validator_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
+        $this->addSql('CREATE TABLE idea (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, details LONGTEXT NOT NULL, state VARCHAR(255) NOT NULL, creation_datetime DATETIME NOT NULL, choice_mesures LONGTEXT NOT NULL, details_mesures LONGTEXT NOT NULL, choice_funding LONGTEXT NOT NULL, details_funding LONGTEXT NOT NULL, team VARCHAR(255) NOT NULL, author_id INT NOT NULL, validator_id INT DEFAULT NULL, INDEX IDX_A8BCA45F675F31B (author_id), INDEX IDX_A8BCA45B0644AEC (validator_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE login (id INT AUTO_INCREMENT NOT NULL, ip VARCHAR(255) NOT NULL, datetime DATETIME NOT NULL, account_id_id INT NOT NULL, INDEX IDX_AA08CB1049CB4726 (account_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE managers (id INT AUTO_INCREMENT NOT NULL, family_name VARCHAR(255) NOT NULL, given_name VARCHAR(255) NOT NULL, team_id_id INT NOT NULL, INDEX IDX_A949E006B842D717 (team_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE role (id INT AUTO_INCREMENT NOT NULL, role VARCHAR(255) NOT NULL, account_id_id INT NOT NULL, INDEX IDX_57698A6A49CB4726 (account_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');

@@ -95,7 +95,7 @@ class Auth extends AbstractController
         
         if ($account) // the user has an account, we open the session and register the connection
         {         
-            // Est ce que le compte est bien actif ? (getIsActive)
+            // Est ce que le compte est bien actif ? (isIsActive)
             if (!$account->isIsActive()) {
                 return new RedirectResponse('/login?is_active=false');
             }
@@ -155,6 +155,7 @@ class Auth extends AbstractController
             $_SESSION['family_name'] = $account->getFamilyName();
             $_SESSION['given_name'] = $account->getGivenName(); 
             $_SESSION['upn'] = $account->getEmail();
+            return new RedirectResponse('/home');
         } 
 
 
