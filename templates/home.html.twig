@@ -19,13 +19,17 @@
             <img src="img/logo.png" alt="Logo APPFE">
         </a>
         <a href="#" class="navbar-item">En attente d'approbation</a>
-        <a href="#" class="navbar-item">En cours de validation</a>
         <a href="#" class="navbar-item">Validés</a>
         <a data-target="modal-js-create-idea" class="button is-link js-modal-trigger">Soumettre une idée</a>
     </div>
     <div class="navbar-end">
         <div class="navbar-item">
             <div class="buttons">
+            {% if is_admin == "true" %}
+                <a href="/admin" class="button is-link is-rounded">
+                    <strong>Tableau de bord</strong>
+                </a>
+            {% endif %}
                 <a href="/profile" class="button is-link is-rounded">
                     <strong>Mon profil</strong>
                 </a>
@@ -37,20 +41,25 @@
 <h1 class="title is-3 has-text-centered" style="margin-top: 10px">Bienvenue {{ given_name|escape }} {{
     family_name|escape }} !</h1>
 <h1 class="subtitle is-6 has-text-centered">Proposez vos idées pour l'association !</h1>
+{% if is_admin == "true" %}
+    <h1 class="title is-5">Vous êtes ADMIN !</h1>
+{% endif %}
 <br>
-<!-- PREMIERE CARTE -->
-<div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
+<!-- PARTIE IDEES APPROUVEE -->
+{% if ideas|filter(idea => idea.state_idea == 'in_progress') %}
+  <!-- PARTIE IDEES APPROUVEE -->
+  <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
     <span class="icon has-text-success">
-        <i class="fa-solid fa-arrow-right fa-2xl"></i>
+      <i class="fa-solid fa-arrow-right fa-2xl"></i>
     </span>
     <h1 class="title is-3 pl-2">Idées en cours de réalisation</h1>
-</div>
-<br>
-<!-- PREMIERE CARTE -->
+  </div>
+  <br>
+{% endif %}
 <div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
-{% for idea in ideas %}
+    {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress') %}
     <a href="/idea/{{ idea.idea_id }}">
-        <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px;">
+        <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
             <div class="card-content">
                 <div class="content">
                     <h1 class="title is-5">{{ idea.title_idea }}</h1>
@@ -59,7 +68,8 @@
                         <span class="tag">En cours de réalisation</span>
                     </div>
                     <p>{{ idea.details_idea }}</p>
-                    <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }} </strong>
+                    <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                        </strong>
                     <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y") }}</strong></p>
                 </div>
             </div>
@@ -68,6 +78,7 @@
     {% endfor %}
 </div>
 <!-- PARTIE IDEES EN ATTENTE D'APPROBATION -->
+{% if ideas|filter(idea => idea.state_idea == 'waiting_approval')|length > 0 %}
 <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
     <span class="icon has-text-warning">
         <i class="fa-solid fa-arrow-right fa-2xl"></i>
@@ -75,22 +86,26 @@
     <h1 class="title is-3 pl-2">Idées en attente d'approbation</h1>
 </div>
 <br>
-<!-- PREMIERE CARTE -->
+{% endif %}
 <div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
-    <a class="js-modal-trigger" data-target="modal-js-first-wait">
-        <div class="card mb-5" style="width: 45vw; border:solid rgb(255,183,15) 5px;">
+    {% for idea in ideas|filter(idea => idea.state_idea == 'waiting_approval') %}
+    <a href="/idea/{{ idea.idea_id }}">
+        <div class="card mb-5" style="width: 45vw; border:solid #ffb70f 5px">
             <div class="card-content">
                 <div class="content">
-                    <h1 class="title is-5">Mettre en place une plateforme innovation</h1>
-                    <span class="tag is-warning">En attente d'approbation</span>
-                    <br><br>
-                    <p>Créer une plateforme pour que tout le monde puisse proposer</p>
-                    <p class="is-size-7 m-0">Proposé par : <strong>Robert de Niro</strong>
-                    <p class="is-size-7 m-0">Créer le : <strong>XX/XX/XXXX</strong></p>
+                    <h1 class="title is-5">{{ idea.title_idea }}</h1>
+                    <div class="tags has-addons">
+                        <span class="tag is-warning">En attente d'approbation</span>
+                    </div>
+                    <p>{{ idea.details_idea }}</p>
+                    <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                        </strong>
+                    <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y") }}</strong></p>
                 </div>
             </div>
         </div>
     </a>
+    {% endfor %}
 </div>
 
 <!-- CRÉATIONS DE MODALS-->
@@ -109,7 +124,7 @@
                 <br><br>
                 <h1 class="title is-4">Détails</h1>
                 <textarea class="textarea" placeholder="Décrivez plus en détails votre idée" name="details_idea"
-                    id="details_idea" required="required"></textarea>
+                    id="details_idea"></textarea>
                 <hr>
                 <h1 class="title is-4">Réalisation</h1>
                 <p class="is-size-6">Donnez des détails sur la réalisation de votre idée.</p>
@@ -141,7 +156,7 @@
                         <br><br>
                     </div>
                     <textarea class="textarea" placeholder="Quelques détails..." name="details_mesures"
-                        id="details_mesures" required="required"></textarea>
+                        id="details_mesures"></textarea>
                     <hr>
                     <h1 class="title is-4">Financement</h1>
                     <h3 class="title is-5">Combien ?</h3>

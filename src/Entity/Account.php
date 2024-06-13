@@ -42,6 +42,9 @@ class Account
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'auhtor')]
     private Collection $votes;
 
+    #[ORM\OneToMany(targetEntity: Role::class, mappedBy: 'account_id')]
+    private Collection $role;
+
     public function __construct()
     {
         $this->logins = new ArrayCollection();

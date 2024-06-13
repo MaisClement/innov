@@ -23,6 +23,7 @@ class Auth extends AbstractController
 
     private Functions $functions;
     private AccountRepository $accountRepository;
+    private RoleRepository $roleRepository;
 
     private String $azureClientId;
     private String $azureClientSecret;
@@ -60,7 +61,7 @@ class Auth extends AbstractController
 
         return new RedirectResponse($authUrl);
     }
-
+    
     #[Route('/login/microsoft/callback')]
     public function microsoftCallback(Request $request): RedirectResponse
     {
@@ -72,26 +73,25 @@ class Auth extends AbstractController
         
         $baseGraphUri = $provider->getRootMicrosoftGraphUri(null);
         $provider->scope = 'openid profile email offline_access ' . $baseGraphUri . '/User.Read';
-
+        
         $code = $request->query->get('code');
         $state = $request->query->get('state');
-
+        
         if (empty($state) || ($state !== $_SESSION['oauth2state'])) {
             unset($_SESSION['oauth2state']);
             exit('State value does not match the one initially sent');
         }
-
+        
         $token = $provider->getAccessToken('authorization_code', [
             'code' => $code,
         ]);
-
+        
         //--
-
+        
         $user = $provider->getResourceOwner($token)->toArray();
         $msoId = $user['oid'];
-            
-        $account = $this->accountRepository->findOneByMSOID($msoId);
         
+        $account = $this->accountRepository->findOneByMSOID($msoId);
         
         if ($account) // the user has an account, we open the session and register the connection
         {         
@@ -119,10 +119,15 @@ class Auth extends AbstractController
                 // $entityManager->persist($user);                      // Le compte existe déja, pas besoin de remplir les infos
                 $this->entityManager->flush();                                
                 
-                // $this->$_SESSION->set('user', $account); // Ne fonctionne pas
+                // getAll roles in a list
+                $roles = [];
+                foreach($account->getRole() as $_role) {
+                    $roles[] = $_role->getRole();
+                }
                 $_SESSION['account_id'] = $account->getId();
                 $_SESSION['family_name'] = $account->getFamilyName();
                 $_SESSION['given_name'] = $account->getGivenName();
+                $_SESSION['role'] = $roles;
                 $_SESSION['upn'] = $account->getEmail();
                 
                 return new RedirectResponse('/home');
@@ -132,30 +137,36 @@ class Auth extends AbstractController
                 $account = new Account();
                 $account->setMSOID($msoId);
                 $account->setFamilyName($user['family_name']);
-            $account->setGivenName($user['given_name']);
-            $account->setEmail($user['upn']);
+                $account->setGivenName($user['given_name']);
+                $account->setEmail($user['upn']);
 
-            $role = new Role();
-            $role->setRole('default');
-            $account->addRole($role);
+                $role = new Role();
+                $role->setRole('default');
+                $account->addRole($role);
+                
+                $login = new Login();
+                $date = new DateTime();
+                $login->setAccount($account);
+                $login->setDatetime($date);
+                $login->setIp($user['ipaddr']);
+                
+                $this->entityManager->persist($role);
+                $this->entityManager->persist($account);
+                $this->entityManager->persist($login);
+                $this->entityManager->flush();
             
-            $login = new Login();
-            $date = new DateTime();
-            $login->setAccount($account);
-            $login->setDatetime($date);
-            $login->setIp($user['ipaddr']);
-            
-            $this->entityManager->persist($role);
-            $this->entityManager->persist($account);
-            $this->entityManager->persist($login);
-            $this->entityManager->flush();
-        
-            // Création de la session
-            $_SESSION['account_id'] = $account->getId(); 
-            $_SESSION['family_name'] = $account->getFamilyName();
-            $_SESSION['given_name'] = $account->getGivenName(); 
-            $_SESSION['upn'] = $account->getEmail();
-            return new RedirectResponse('/home');
+                // Création de la session
+                // getAll roles in a list
+                $roles = [];
+                foreach($account->getRole() as $_role) {
+                    $roles[] = $_role->getRole();
+                }
+                $_SESSION['account_id'] = $account->getId(); 
+                $_SESSION['family_name'] = $account->getFamilyName();
+                $_SESSION['given_name'] = $account->getGivenName(); 
+                $_SESSION['role'] = $roles;
+                $_SESSION['upn'] = $account->getEmail();
+                return new RedirectResponse('/home');
         } 
 
 

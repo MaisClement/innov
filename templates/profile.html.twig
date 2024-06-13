@@ -9,12 +9,9 @@
     <meta name="description" content="APPFE">
     <meta name="keywords" content="APPFE">
     <meta name="author" content="Lowa">
-    <link href="{{ asset('css/color.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/form.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/index.css') }}" rel="stylesheet">
     <script src="{{ asset('js/index.js') }}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -32,7 +29,7 @@
     <div class="tabs is-centered is-boxed">
         <ul>
             <li class="tab">
-                <a onclick="openTab(event, 'mes-commentaires')">
+                <a onclick="openTab(event, 'my_comments')">
                     <span class="icon is-small">
                         <i class="fas fa-comment" aria-hidden="true"></i>
                     </span>
@@ -40,7 +37,7 @@
                 </a>
             </li>
             <li class="tab">
-                <a onclick="openTab(event, 'mes-idees')">
+                <a onclick="openTab(event, 'my_ideas')">
                     <span class="icon is-small">
                         <i class="fas fa-lightbulb" aria-hidden="true"></i>
                     </span>
@@ -49,14 +46,23 @@
             </li>
         </ul>
     </div>
-    <div id="mes-commentaires" class="content-tab">
+    <div id="my_comments" class="content-tab">
         <h1 class="is-size-2" style="text-align: center;">Commentaires postées</h1>
         {# Faire en sorte d'afficher les commentaires postées par l'utilisateur #}
     </div>
-    <div id="mes-idees" class="content-tab">
+    <div id="my_ideas" class="content-tab">
         <h1 class="is-size-2" style="text-align: center;">Mes idées proposées</h1>
         {# Faire en sorte d'afficher les idées proposées par l'utilisateur #}
+        <div class="columns">
+            <div class="column is-6">
+                <h1 class="title is-5" style="text-align: center;">Mes idées en cours d'approbation</h1>
+            </div> 
+            <div class="column is-6">
+                <h1 class="title is-5" style="text-align: center;">Mes idées approuvées</h1>
+            </div>
+        </div>
     </div>
 </body>
+
 
 </html>

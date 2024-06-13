@@ -40,7 +40,7 @@ class Ideas extends AbstractController
         $idea->setDetailsFunding($request->request->get('funding_details'));
         $idea->setAuthor($author);
         $idea->setTeam($request->request->get('team'));
-        $idea->setState("in_progress");
+        $idea->setState("waiting_approval");
         $idea->setCreationDateTime(new \DateTime());
         
         
@@ -70,6 +70,7 @@ class Ideas extends AbstractController
             "author_id" => $idea->getAuthor()->getId(),
             "idea_id" => $idea->getId(),
             "state" => $idea->getState(),
+            "user_id" => $_SESSION['account_id'],
         ];
 
         return $this->render('/idea/recap_idea.html.twig', $data);

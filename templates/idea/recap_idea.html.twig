@@ -17,8 +17,8 @@
 <body>
   <div class="columns is-centered">
     <div class="column is-8 is-justify-items-center">
-    <br>
-    <h1 class="title is-1" style="text-align: center;"> {{ title_idea | escape }} </h1>
+      <br>
+      <h1 class="title is-1" style="text-align: center;"> {{ title_idea | escape }} </h1>
       <br>
       <p class="is-size-5"><strong>Détail :</strong> {{ details_idea | escape }} </p>
       <hr>
@@ -27,20 +27,35 @@
       <h1 class="title is-4 mb-5">Quelles mesures prendrez vous ?</h1>
       <p class="subtitle is-5"><strong>Voici les mesures que vous serez prêts à prendre : </strong> {{
         choice_mesures }} </p>
-      <p class="is-size-5"><strong>Détail :</strong> {{ details_mesures }} </p>
-      <hr>
-      <h1 class="title is-3">Financement</h1>
-      <br><br>
-      <p class="subtitle is-5"><strong>Combien ?</strong> Le besoin financier de votre projet est de {{
-        choice_funding }}. </p>
-      <p class="is-size-5"><strong>Détail :</strong> {{ funding_details }} </p>
-      <hr>
-      <h1 class="title is-3">A qui envoyer ce projet ?</h1>
-      <br>
-      <p class="subtitle is-5"><strong>L'équipe que vous avez choisi pour votre projet est :</strong> {{ team }}.</p>
-      <br>
-    </div>
-  </div>
-</body>
-
+        <p class="is-size-5"><strong>Détail :</strong> {{ details_mesures }} </p>
+        <hr>
+        <h1 class="title is-3">Financement</h1>
+        <br><br>
+        <p class="subtitle is-5"><strong>Combien ?</strong> Le besoin financier de votre projet est de {{
+          choice_funding }}. </p>
+          <p class="is-size-5"><strong>Détail :</strong> {{ funding_details }} </p>
+          <hr>
+          <h1 class="title is-3">A qui envoyer ce projet ?</h1>
+          <br>
+          <p class="subtitle is-5"><strong>L'équipe que vous avez choisi pour votre projet est :</strong> {{ team }}.</p>
+          {% if user_id != author_id %}
+          <hr>
+          <h1 class="title is-2">Commentaires</h1>
+          <br>
+          <!-- si un commentaire est posté sous une idée le mettre sous l'idée en question -->
+          <form method="post">
+            <p class="subtitle is-5">Votre commentaire : </p>
+            <textarea name="comment" id="comment" class="textarea is-info"></textarea>
+            <br>
+            <input type="submit" class="button is-success" value="Poster votre commentaire">
+          </form>
+          {% endif %}  
+          <hr>
+          <a href="/home" class="button is-link">
+            Retour à l'accueil
+         </a>
+        </div>
+      </div>
+    </body>
+    
 </html>

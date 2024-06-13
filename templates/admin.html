@@ -1,77 +1,52 @@
 <html lang="fr">
-    <head>
-      <title>APPFE | Admin</title>
-      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      <meta name="theme-color" content="#4f474e">
-      <meta name="color-scheme" content="dark light">
-      <meta name="description" content="APPFE">
-      <meta name="keywords" content="APPFE">
-      <meta name="author" content="Lowa">
-      <link href="{{ asset('css/color.css') }}" rel="stylesheet">
-      <link href="{{ asset('css/form.css') }}" rel="stylesheet">
-      <link href="{{ asset('css/index.css') }}" rel="stylesheet">
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+<head>
+    <title>APPFE | Admin</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#4f474e">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="APPFE">
+    <meta name="keywords" content="APPFE">
+    <meta name="author" content="Lowa">
+    <script src="{{ asset('css/index.js') }}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 </head>
+
 <body>
     <h1 class="title is-1" style="text-align: center;">Tableau de bord</h1>
-    <div class="columns">
-        <div class="column is-3">
-            <aside class="menu">
-                <p class="menu-label">Administration</p>
-                <ul class="menu-list">
-                    <ul class="menu-list">
-                        <li>
-                            <a class="is-active">Gestion des idées</a>
-                            <ul>
-                            <li><a onclick="openTab(event, 'validate-idea')">Valider les idées</a></li>
-                            <li><a onclick="openTab(event, 'modify-idea')">Modifier les idées</a></li>
-                            <li><a onclick="openTab(event, 'delete-idea')">Supprimer les idées</a></li>
-                            </ul>
-                        </li>
-                <ul class="menu-list">
-                    <li>
-                        <a class="is-active">Gestion des profils</a>
-                        <ul>
-                            <li><a onclick="openTab(event, 'show-profils')">Voir les profils</a></li>
-                            <li><a onclick="openTab(event, 'modify-profils')">Modifier les rôles</a></li>
-                        </ul>
-                    </li>
-            </aside>
-        </div>
-        <div class="column is-6">
-            <div id="validate-idea" class="content-tab">
-                <h1 class="title is-3">Valider les idées</h1>
+    <nav class="navbar is-fixed-top is-centered">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">
+                ADMIN
+            </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    Gérer les idées
+                </a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item">
+                        Voir les idées
+                    </a>
+                    <a class="navbar-item">
+                        Modifier les idées
+                    </a>
+                </div>
+            </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    Gérer les profils
+                </a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item">
+                        Voir les profils
+                    </a>
+                    <a class="navbar-item">
+                        Modifier les profils
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-    <script>
-        // fonction permettant d'ouvrir une page dès qu'un bouton est cliqué
-        function openTab(evt, tabName) {
-              var i, x, tablinks;
-              x = document.getElementsByClassName("content-tab");
-              for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";
-              }
-              tablinks = document.getElementsByClassName("tab");
-              for (i = 0; i < x.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" is-active", "");
-              }
-              document.getElementById(tabName).style.display = "block";
-              evt.currentTarget.className += " is-active";
-            }
-
-        // fonction permettant à la page de se vider quand elle est rafraîchit
-        window.onload = function() {
-              var x = document.getElementsByClassName("content-tab");
-              for (var i = 0; i < x.length; i++) {
-                x[i].style.display = "none";
-              }
-              var tablinks = document.getElementsByClassName("tab");
-              for (var i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" is-active", "");
-              }
-            }
-    </script>
-</body>    
+    </nav>
+</body>

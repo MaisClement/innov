@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Idea;
+use App\Entity\Role;
 use App\Repository\IdeaRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class Home extends AbstractController
 {
     private IdeaRepository $ideaRepository;
+
     public function __construct(IdeaRepository $ideaRepository)
     {
         $this->ideaRepository = $ideaRepository;
@@ -20,6 +22,7 @@ class Home extends AbstractController
     public function home() 
     {
         $_ideas = $this->ideaRepository->findAll(); 
+
         $ideas = [];
         foreach($_ideas as $idea){
             $ideas[] = [
@@ -38,12 +41,16 @@ class Home extends AbstractController
                 "state_idea" => $idea->getState(),
         ];
     }
+
+    // dd($_SESSION['role']);
+    // dd(in_array('admin',$_SESSION['role']) ? 'true' : 'false');
     $data = [
         'given_name' => $_SESSION['given_name'],
         'family_name'=>$_SESSION['family_name'],
-        "state_idea" => $idea->getState(),
+        'user_id' => $_SESSION['account_id'],
+        'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
         'ideas' => $ideas,
     ];
     return $this->render('home.html.twig', $data);
-}
+    }
 }
