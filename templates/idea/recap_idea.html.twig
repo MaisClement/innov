@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="has-navbar-fixed-top">
 
 <head>
   <title>APPFE</title>
@@ -15,29 +15,69 @@
 
 </head>
 <body>
+<nav class="navbar is-fixed-top">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/home">
+                <img src="img/logo.png" alt="Logo APPFE">
+            </a>
+            <a href="#" class="navbar-item">En attente d'approbation</a>
+            <a href="#" class="navbar-item">Validés</a>
+            <a href="#" data-target="modal-js-create-idea" class="navbar-item js-modal-trigger">
+                <span class="button is-link ">Soumettre une idée</span>
+            </a>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                {% if is_admin == "true" %}
+                    <a href="/admin" class="button is-link is-rounded">
+                        <strong>Tableau de bord</strong>
+                    </a>
+                {% endif %}
+                    <a href="/profile" class="button is-link is-rounded">
+                        <strong>Mon profil</strong>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
   <div class="columns is-centered">
     <div class="column is-8 is-justify-items-center">
       <br>
-      <h1 class="title is-1" style="text-align: center;"> {{ title_idea | escape }} </h1>
+      <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-center">
+          <span class="icon has-text-warning" style="margin-right: 10px;">
+              <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
+          </span>
+          <h1 class="title is-1" style="text-align: center;"> {{ title_idea | escape }} </h1>
+      </div>
       <br>
-      <p class="is-size-5"><strong>Détail :</strong> {{ details_idea | escape }} </p>
+      <p class="is-size-5"> {{ details_idea | escape }} </p>
       <hr>
-      <h1 class="title is-3">Réalisation</h1>
-      <br>
+      <h4 class="title is-4">Quelques details</h4>
+      
+      <b>Equipe d'affectation</b>
+      <span class="tag is-medium is-info is-light">{{ team }}</span>
+
       <h1 class="title is-4 mb-5">Quelles mesures prendrez vous ?</h1>
-      <p class="subtitle is-5"><strong>Voici les mesures que vous serez prêts à prendre : </strong> {{
-        choice_mesures }} </p>
-        <p class="is-size-5"><strong>Détail :</strong> {{ details_mesures }} </p>
+      <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-center">
+          <span class="icon has-text-warning" style="margin-right: 10px;">
+              <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
+          </span>
+          <h1 class="title is-1" style="text-align: center;"> {{ choice_mesures | escape }} </h1>
+      </div>
+      
+        <p class="is-size-5">{{ details_mesures }} </p>
         <hr>
         <h1 class="title is-3">Financement</h1>
-        <br><br>
-        <p class="subtitle is-5"><strong>Combien ?</strong> Le besoin financier de votre projet est de {{
-          choice_funding }}. </p>
-          <p class="is-size-5"><strong>Détail :</strong> {{ funding_details }} </p>
-          <hr>
-          <h1 class="title is-3">A qui envoyer ce projet ?</h1>
-          <br>
-          <p class="subtitle is-5"><strong>L'équipe que vous avez choisi pour votre projet est :</strong> {{ team }}.</p>
+        <br>
+          <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-center">
+            <span class="icon has-text-warning" style="margin-right: 10px;">
+                <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
+            </span>
+            <h1 class="title is-1" style="text-align: center;"> {{ choice_funding | escape }} </h1>
+        </div>
+          <p class="is-size-5">{ funding_details }} </p>
+          
           {% if user_id != author_id %}
           <hr>
           <h1 class="title is-2">Commentaires</h1>

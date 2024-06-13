@@ -1,4 +1,5 @@
-<html lang="fr">
+<!DOCTYPE html>
+<html lang="fr" class="has-navbar-fixed-top">
 
 <head>
     <title>APPFE | Profil - {{ family_name }}</title>
@@ -15,50 +16,78 @@
 </head>
 
 <body>
-    <br>
-    <a href="/home" style="margin-left: 10px;">
-        <i class="fas fa-arrow-left" aria-hidden="true"></i>
-        Retour à l'accueil
-    </a>
-    <br><br>
-    <h1 class="title is-3" style="text-align: left;margin-left: 15px;">Mon profil APPFE</h1>
-    <h1 class="is-size-2" style="text-align: left;margin-left: 15px;">Informations du profil</h1>
-    <h1 style="text-align: left; margin-left: 15px;">Nom : {{ family_name|escape }}</h1>
-    <h1 style="text-align: left;margin-left: 15px;">Prénom : {{ given_name|escape }}</h1>
-    <h1 style="text-align: left;margin-left: 15px;">Mail : {{ mail|escape }}</h1>
-    <div class="tabs is-centered is-boxed">
-        <ul>
-            <li class="tab">
-                <a onclick="openTab(event, 'my_comments')">
-                    <span class="icon is-small">
-                        <i class="fas fa-comment" aria-hidden="true"></i>
-                    </span>
-                    <span>Mes commentaires</span>
-                </a>
-            </li>
-            <li class="tab">
-                <a onclick="openTab(event, 'my_ideas')">
-                    <span class="icon is-small">
-                        <i class="fas fa-lightbulb" aria-hidden="true"></i>
-                    </span>
-                    <span>Mes idées</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-    <div id="my_comments" class="content-tab">
-        <h1 class="is-size-2" style="text-align: center;">Commentaires postées</h1>
-        {# Faire en sorte d'afficher les commentaires postées par l'utilisateur #}
-    </div>
-    <div id="my_ideas" class="content-tab">
-        <h1 class="is-size-2" style="text-align: center;">Mes idées proposées</h1>
-        {# Faire en sorte d'afficher les idées proposées par l'utilisateur #}
-        <div class="columns">
-            <div class="column is-6">
-                <h1 class="title is-5" style="text-align: center;">Mes idées en cours d'approbation</h1>
-            </div> 
-            <div class="column is-6">
-                <h1 class="title is-5" style="text-align: center;">Mes idées approuvées</h1>
+    <nav class="navbar is-fixed-top">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/home">
+                <img src="img/logo.png" alt="Logo APPFE">
+            </a>
+            <a href="#" class="navbar-item">En attente d'approbation</a>
+            <a href="#" class="navbar-item">Validés</a>
+            <a href="#" data-target="modal-js-create-idea" class="navbar-item js-modal-trigger">
+                <span class="button is-link ">Soumettre une idée</span>
+            </a>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                {% if is_admin == "true" %}
+                    <a href="/admin" class="button is-link is-rounded">
+                        <strong>Tableau de bord</strong>
+                    </a>
+                {% endif %}
+                    <a href="/profile" class="button is-link is-rounded">
+                        <strong>Mon profil</strong>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div style="margin: 0 auto;max-width: 1200px;">
+        <br>
+        <a href="/home" style="margin-left: 10px;">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            Retour à l'accueil
+        </a>
+        <br><br>
+        <h1 class="title is-3" style="text-align: left;margin-left: 15px;">Mon profil APPFE</h1>
+        <h1 class="is-size-2" style="text-align: left;margin-left: 15px;">Informations du profil</h1>
+        <h1 style="text-align: left; margin-left: 15px;">Nom : {{ family_name|escape }}</h1>
+        <h1 style="text-align: left;margin-left: 15px;">Prénom : {{ given_name|escape }}</h1>
+        <h1 style="text-align: left;margin-left: 15px;">Mail : {{ mail|escape }}</h1>
+        <div class="tabs is-centered is-boxed">
+            <ul>
+                <li class="tab">
+                    <a onclick="openTab(event, 'my_comments')">
+                        <span class="icon is-small">
+                            <i class="fas fa-comment" aria-hidden="true"></i>
+                        </span>
+                        <span>Mes commentaires</span>
+                    </a>
+                </li>
+                <li class="tab">
+                    <a onclick="openTab(event, 'my_ideas')">
+                        <span class="icon is-small">
+                            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                        </span>
+                        <span>Mes idées</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div id="my_comments" class="content-tab">
+            <h1 class="is-size-2" style="text-align: center;">Commentaires postées</h1>
+            {# Faire en sorte d'afficher les commentaires postées par l'utilisateur #}
+        </div>
+        <div id="my_ideas" class="content-tab">
+            <h1 class="is-size-2" style="text-align: center;">Mes idées proposées</h1>
+            {# Faire en sorte d'afficher les idées proposées par l'utilisateur #}
+            <div class="columns">
+                <div class="column is-6">
+                    <h1 class="title is-5" style="text-align: center;">Mes idées en cours d'approbation</h1>
+                </div> 
+                <div class="column is-6">
+                    <h1 class="title is-5" style="text-align: center;">Mes idées approuvées</h1>
+                </div>
             </div>
         </div>
     </div>
