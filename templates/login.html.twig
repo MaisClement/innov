@@ -29,8 +29,13 @@
             <div class="logo ml-1"></div>
             <h3>Se connecter avec APPFE</h3>
 
+            {% if is_active == false %}
+            <div class="error">
+                 <div class="error">Votre compte est désactivé.</div> 
+            </div>
+            {% endif %}
+            
             <br><br><br><br><br><br><br><br><br><br>
-
             <a href="login/microsoft" class="button">
                 <button class="classic_fluent_btn orange">
                     <img src="{{ asset('img/key.svg') }}" class="svg_white">

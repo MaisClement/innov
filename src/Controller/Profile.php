@@ -2,27 +2,24 @@
 namespace App\Controller;
 
 use App\Entity\Idea;
-use App\Entity\Role;
 use App\Repository\IdeaRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class Home extends AbstractController
+class Profile extends AbstractController
 {
     private IdeaRepository $ideaRepository;
-
     public function __construct(IdeaRepository $ideaRepository)
     {
         $this->ideaRepository = $ideaRepository;
     }
 
-    #[Route('/home')]
-    public function home() 
-    {
+    #[Route('/profile')]
+    public function profile()
+    {   
         $_ideas = $this->ideaRepository->findAll(); 
-
         $ideas = [];
         foreach($_ideas as $idea){
             $ideas[] = [
@@ -39,18 +36,15 @@ class Home extends AbstractController
                 "family_name" => $idea->getAuthor()->getFamilyName(),
                 "creationDateTime" => $idea->getCreationDateTime(),
                 "state_idea" => $idea->getState(),
-        ];
-    }
-
-    // dd($_SESSION['role']);
-    // dd(in_array('admin',$_SESSION['role']) ? 'true' : 'false');
-    $data = [
-        'given_name' => $_SESSION['given_name'],
-        'family_name'=>$_SESSION['family_name'],
-        'user_id' => $_SESSION['account_id'],
-        'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
-        'ideas' => $ideas,
-    ];
-    return $this->render('home.html.twig', $data);
+                'user_id' => $_SESSION['account_id'],
+            ];
+        }
+            $data = [ 
+                'family_name'=>$_SESSION['family_name'], 
+                'given_name' => $_SESSION['given_name'],
+                'mail' => $_SESSION['upn'],
+                'ideas' => $ideas,
+            ];
+            return $this->render('profile.html.twig', $data);
     }
 }

@@ -1,0 +1,68 @@
+<html lang="fr">
+
+<head>
+    <title>APPFE | Profil - {{ family_name }}</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#4f474e">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="APPFE">
+    <meta name="keywords" content="APPFE">
+    <meta name="author" content="Lowa">
+    <script src="{{ asset('js/index.js') }}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <br>
+    <a href="/home" style="margin-left: 10px;">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        Retour à l'accueil
+    </a>
+    <br><br>
+    <h1 class="title is-3" style="text-align: left;margin-left: 15px;">Mon profil APPFE</h1>
+    <h1 class="is-size-2" style="text-align: left;margin-left: 15px;">Informations du profil</h1>
+    <h1 style="text-align: left; margin-left: 15px;">Nom : {{ family_name|escape }}</h1>
+    <h1 style="text-align: left;margin-left: 15px;">Prénom : {{ given_name|escape }}</h1>
+    <h1 style="text-align: left;margin-left: 15px;">Mail : {{ mail|escape }}</h1>
+    <div class="tabs is-centered is-boxed">
+        <ul>
+            <li class="tab">
+                <a onclick="openTab(event, 'my_comments')">
+                    <span class="icon is-small">
+                        <i class="fas fa-comment" aria-hidden="true"></i>
+                    </span>
+                    <span>Mes commentaires</span>
+                </a>
+            </li>
+            <li class="tab">
+                <a onclick="openTab(event, 'my_ideas')">
+                    <span class="icon is-small">
+                        <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                    </span>
+                    <span>Mes idées</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="my_comments" class="content-tab">
+        <h1 class="is-size-2" style="text-align: center;">Commentaires postées</h1>
+        {# Faire en sorte d'afficher les commentaires postées par l'utilisateur #}
+    </div>
+    <div id="my_ideas" class="content-tab">
+        <h1 class="is-size-2" style="text-align: center;">Mes idées proposées</h1>
+        {# Faire en sorte d'afficher les idées proposées par l'utilisateur #}
+        <div class="columns">
+            <div class="column is-6">
+                <h1 class="title is-5" style="text-align: center;">Mes idées en cours d'approbation</h1>
+            </div> 
+            <div class="column is-6">
+                <h1 class="title is-5" style="text-align: center;">Mes idées approuvées</h1>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+</html>

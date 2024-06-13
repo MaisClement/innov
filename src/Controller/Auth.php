@@ -23,6 +23,7 @@ class Auth extends AbstractController
 
     private Functions $functions;
     private AccountRepository $accountRepository;
+    private RoleRepository $roleRepository;
 
     private String $azureClientId;
     private String $azureClientSecret;
@@ -60,7 +61,7 @@ class Auth extends AbstractController
 
         return new RedirectResponse($authUrl);
     }
-
+    
     #[Route('/login/microsoft/callback')]
     public function microsoftCallback(Request $request): RedirectResponse
     {
@@ -72,81 +73,102 @@ class Auth extends AbstractController
         
         $baseGraphUri = $provider->getRootMicrosoftGraphUri(null);
         $provider->scope = 'openid profile email offline_access ' . $baseGraphUri . '/User.Read';
-
+        
         $code = $request->query->get('code');
         $state = $request->query->get('state');
-
+        
         if (empty($state) || ($state !== $_SESSION['oauth2state'])) {
             unset($_SESSION['oauth2state']);
             exit('State value does not match the one initially sent');
         }
-
+        
         $token = $provider->getAccessToken('authorization_code', [
             'code' => $code,
         ]);
-
+        
         //--
-
+        
         $user = $provider->getResourceOwner($token)->toArray();
         $msoId = $user['oid'];
-            
+        
         $account = $this->accountRepository->findOneByMSOID($msoId);
         
         if ($account) // the user has an account, we open the session and register the connection
         {         
-            // $user = new Login();
-            $login = new Login();
-            $date = new DateTime();
-            $login->setAccount($account);
-            $login->setDatetime($date);
-            $login->setIp($user['ipaddr']);
+            // Est ce que le compte est bien actif ? (isIsActive)
+            if (!$account->isIsActive()) {
+                return new RedirectResponse('/login?is_active=false');
+            }
 
-            $this->entityManager->persist($login);  
-            // $user->setFamilyName($_SESSION->get('family_name')); // Le compte existe déja, pas besoin de remplir les infos
-            // $user->setGivenName($_SESSION->get('given_name'));   // Le compte existe déja, pas besoin de remplir les infos
-            // $user->setEmail($_SESSION->get('email'));            // Le compte existe déja, pas besoin de remplir les infos
-            // $user->setMsOid($account);                           // Le compte existe déja, pas besoin de remplir les infos
+                $login = new Login();
+                $date = new DateTime();
+                $login->setAccount($account);
+                $login->setDatetime($date);
+                $login->setIp($user['ipaddr']);
+
+                $this->entityManager->persist($login);  
+                // $user->setFamilyName($_SESSION->get('family_name')); // Le compte existe déja, pas besoin de remplir les infos
+                // $user->setGivenName($_SESSION->get('given_name'));   // Le compte existe déja, pas besoin de remplir les infos
+                // $user->setEmail($_SESSION->get('email'));            // Le compte existe déja, pas besoin de remplir les infos
+                // $user->setMsOid($account);                           // Le compte existe déja, pas besoin de remplir les infos
+                
+                // $role = new Role();                                  // Le compte existe déja, pas besoin de remplir les infos
+                
+                // $role = setRole('default');                          // Le compte existe déja, pas besoin de remplir les infos
+                // $user->setRole($role);                               // Le compte existe déja, pas besoin de remplir les infos
+                // $entityManager->persist($user);                      // Le compte existe déja, pas besoin de remplir les infos
+                $this->entityManager->flush();                                
+                
+                // getAll roles in a list
+                $roles = [];
+                foreach($account->getRole() as $_role) {
+                    $roles[] = $_role->getRole();
+                }
+                $_SESSION['account_id'] = $account->getId();
+                $_SESSION['family_name'] = $account->getFamilyName();
+                $_SESSION['given_name'] = $account->getGivenName();
+                $_SESSION['role'] = $roles;
+                $_SESSION['upn'] = $account->getEmail();
+                
+                return new RedirectResponse('/home');
         
-            // $role = new Role();                                  // Le compte existe déja, pas besoin de remplir les infos
+                
+            } else { // the user doesn't have an account, so we create one for him and give him the ‘default’ role
+                $account = new Account();
+                $account->setMSOID($msoId);
+                $account->setFamilyName($user['family_name']);
+                $account->setGivenName($user['given_name']);
+                $account->setEmail($user['upn']);
 
-            // $role = setRole('default');                          // Le compte existe déja, pas besoin de remplir les infos
-            // $user->setRole($role);                               // Le compte existe déja, pas besoin de remplir les infos
-            // $entityManager->persist($user);                      // Le compte existe déja, pas besoin de remplir les infos
-            $this->entityManager->flush();                                
-        
-            // $this->$_SESSION->set('user', $account); // Ne fonctionne pas
-            $_SESSION = $account;
-
-            return new JsonResponse('Logged in !'.$account->getId());
-
-        } else { // the user doesn't have an account, so we create one for him and give him the ‘default’ role
-            $account = new Account();
-            $account->setMSOID($msoId);
-            $account->setFamilyName($user['family_name']);
-            $account->setGivenName($user['given_name']);
-            $account->setEmail($user['upn']);
-
-            $role = new Role();
-            $role->setRole('default');
-            $account->addRole($role);
+                $role = new Role();
+                $role->setRole('default');
+                $account->addRole($role);
+                
+                $login = new Login();
+                $date = new DateTime();
+                $login->setAccount($account);
+                $login->setDatetime($date);
+                $login->setIp($user['ipaddr']);
+                
+                $this->entityManager->persist($role);
+                $this->entityManager->persist($account);
+                $this->entityManager->persist($login);
+                $this->entityManager->flush();
             
-            $login = new Login();
-            $date = new DateTime();
-            $login->setAccount($account);
-            $login->setDatetime($date);
-            $login->setIp($user['ipaddr']);
-            
-            $this->entityManager->persist($role);
-            $this->entityManager->persist($account);
-            $this->entityManager->persist($login);
-            $this->entityManager->flush();
-        
-            // Création de la session
-            $_SESSION = $account;
-        
-            return new JsonResponse('New account created with id'.$account->getId());
+                // Création de la session
+                // getAll roles in a list
+                $roles = [];
+                foreach($account->getRole() as $_role) {
+                    $roles[] = $_role->getRole();
+                }
+                $_SESSION['account_id'] = $account->getId(); 
+                $_SESSION['family_name'] = $account->getFamilyName();
+                $_SESSION['given_name'] = $account->getGivenName(); 
+                $_SESSION['role'] = $roles;
+                $_SESSION['upn'] = $account->getEmail();
+                return new RedirectResponse('/home');
         } 
-        
-        // return $this->redirect('/account');
+
+
     }
 }

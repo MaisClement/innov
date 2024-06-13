@@ -1,0 +1,20 @@
+vert - approuvé : rgb(72,199,142)
+rouge - non approuvé : rgb(255,102,133)
+jaune - en cours d'approbation : rgb(255,183,15)
+
+Code html des tags 
+++ Ajouter bulma a la page html pour ajouter les tags
+
+- Approuvé : 
+
+    <div class="tags has-addons">
+        <span class="tag is-success" style="margin-left:10px">Approuvé</span>
+        <span class="tag">En cours de réalisation</span>
+    </div>
+    
+- Non approuvé :
+
+    ²
+- En cours d'approbation : 
+
+    <span class="tag is-warning" style="margin-left:10px">En cours d'approbation</span>

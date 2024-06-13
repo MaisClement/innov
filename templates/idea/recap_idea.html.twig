@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <title>APPFE</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#4f474e">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="APPFE">
+  <meta name="keywords" content="APPFE">
+  <meta name="author" content="Lowa">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+  <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+  <div class="columns is-centered">
+    <div class="column is-8 is-justify-items-center">
+      <br>
+      <h1 class="title is-1" style="text-align: center;"> {{ title_idea | escape }} </h1>
+      <br>
+      <p class="is-size-5"><strong>Détail :</strong> {{ details_idea | escape }} </p>
+      <hr>
+      <h1 class="title is-3">Réalisation</h1>
+      <br>
+      <h1 class="title is-4 mb-5">Quelles mesures prendrez vous ?</h1>
+      <p class="subtitle is-5"><strong>Voici les mesures que vous serez prêts à prendre : </strong> {{
+        choice_mesures }} </p>
+        <p class="is-size-5"><strong>Détail :</strong> {{ details_mesures }} </p>
+        <hr>
+        <h1 class="title is-3">Financement</h1>
+        <br><br>
+        <p class="subtitle is-5"><strong>Combien ?</strong> Le besoin financier de votre projet est de {{
+          choice_funding }}. </p>
+          <p class="is-size-5"><strong>Détail :</strong> {{ funding_details }} </p>
+          <hr>
+          <h1 class="title is-3">A qui envoyer ce projet ?</h1>
+          <br>
+          <p class="subtitle is-5"><strong>L'équipe que vous avez choisi pour votre projet est :</strong> {{ team }}.</p>
+          {% if user_id != author_id %}
+          <hr>
+          <h1 class="title is-2">Commentaires</h1>
+          <br>
+          <!-- si un commentaire est posté sous une idée le mettre sous l'idée en question -->
+          <form method="post">
+            <p class="subtitle is-5">Votre commentaire : </p>
+            <textarea name="comment" id="comment" class="textarea is-info"></textarea>
+            <br>
+            <input type="submit" class="button is-success" value="Poster votre commentaire">
+          </form>
+          {% endif %}  
+          <hr>
+          <a href="/home" class="button is-link">
+            Retour à l'accueil
+         </a>
+        </div>
+      </div>
+    </body>
+    
+</html>

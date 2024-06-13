@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class Login extends AbstractController
 {
@@ -14,14 +15,16 @@ class Login extends AbstractController
     }
 
     #[Route('/login')]
-    public function login()
+    public function login(Request $request)
     {
         $token = $_SESSION['token'] ?? null;
-
+        $data = [
+            'is_active' => !$request->get('is_active'),
+        ];
         if ($token != null) {
             return $this->redirect('/account');
         }
-        return $this->render('login.html');
+        return $this->render('login.html.twig', $data);
     }
 
     #[Route('/logout')]
