@@ -5,6 +5,7 @@ use App\Entity\Idea;
 use App\Entity\Role;
 use App\Repository\IdeaRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,9 +19,13 @@ class Home extends AbstractController
         $this->ideaRepository = $ideaRepository;
     }
 
+    #[Route('/')]
     #[Route('/home')]
-    public function home() 
+    public function home(Request $request) 
     {
+        if ($_SESSION == null) {
+            return $this->redirect('/login');
+        }
         $_ideas = $this->ideaRepository->findAll(); 
 
         $ideas = [];

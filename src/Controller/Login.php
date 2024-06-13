@@ -17,13 +17,12 @@ class Login extends AbstractController
     #[Route('/login')]
     public function login(Request $request)
     {
-        $token = $_SESSION['token'] ?? null;
+        if ($_SESSION != null) {
+            return $this->redirect('/home');
+        }
         $data = [
             'is_active' => !$request->get('is_active'),
         ];
-        if ($token != null) {
-            return $this->redirect('/account');
-        }
         return $this->render('login.html.twig', $data);
     }
 
