@@ -8,3 +8,18 @@ account:
   path: /account
   controller: App\Controller\Account
   methods: [GET]
+
+idea_validate:
+  path: /idea/{id}/validate
+  controller: App\Controller\Ideas::validateIdea
+  methods: [POST]
+
+idea_refuse:
+  path: /idea/{id}/refuse
+  controller: App\Controller\Ideas::refusedIdea
+  methods: [POST]
+
+idea_wait:
+  path: /idea/{id}/wait
+  controller: App\Controller\Ideas::waitingIdea
+  methods: [POST]

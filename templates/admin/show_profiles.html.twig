@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr" class="has-navbar-fixed-top">
+
+<head>
+    <title>APPFE | Admin</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#4f474e">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="APPFE">
+    <meta name="keywords" content="APPFE">
+    <meta name="author" content="Lowa">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar is-link is-fixed-top">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/admin">
+                ADMIN
+            </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link is-arrowless">
+                    <i class="fa-solid fa-lightbulb mr-2"></i>
+                    Idées
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="/admin/manage_ideas" class="navbar-item">
+                        Gérer les idées
+                    </a>
+                    <a href="/admin/show_ideas" class="navbar-item">
+                        Voir les idées
+                    </a>
+                </div>
+            </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link is-arrowless">
+                    <i class="fa-solid fa-user mr-2"></i>
+                    Profils
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="/admin/show_profiles" class="navbar-item">
+                        Voir les profils
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <a href="/home" class="button is-light is-link">
+                    <i class="fa-solid fa-home mr-1"></i>
+                    <strong>Retour à l'accueil</strong>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <h1 class="title is-1 m-5" style="text-align: center;">Voici l'ensemble des profils créés</h1>
+    <hr>
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <table class="table is-bordered">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Email</th>
+                            <th>Microsoft ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for account in accounts %}
+                        <tr>
+                            <td>{{ account.account_id }}</td>
+                            <td>{{ account.family_name }}</td>
+                            <td>{{ account.given_name }}</td>
+                            <td>{{ account.mail }}</td>
+                            <td>{{ account.msOid }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

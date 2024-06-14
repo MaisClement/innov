@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr" class="has-navbar-fixed-top">
+
+<head>
+    <title>APPFE | Admin</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#4f474e">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="APPFE">
+    <meta name="keywords" content="APPFE">
+    <meta name="author" content="Lowa">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar is-link is-fixed-top">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/admin">
+                ADMIN
+            </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link is-arrowless">
+                    <i class="fa-solid fa-lightbulb mr-2"></i>
+                    Idées
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="/admin/manage_ideas" class="navbar-item">
+                        Gérer les idées
+                    </a>
+                    <a href="/admin/show_ideas" class="navbar-item">
+                        Voir les idées
+                    </a>
+                </div>
+            </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link is-arrowless">
+                    <i class="fa-solid fa-user mr-2"></i>
+                    Profils
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="/admin/show_profiles" class="navbar-item">
+                        Voir les profils
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <a href="/home" class="button is-light is-link">
+                    <i class="fa-solid fa-home mr-1"></i>
+                    <strong>Retour à l'accueil</strong>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <h1 class="title is-1 m-5" style="text-align: center;">Gestion des idées</h1>
+    <hr>
+    <div class="columns is-centered">
+        <div class="column is-6">
+            {% if ideas|filter(idea => idea.state_idea == 'waiting_approval')|length > 0 %}
+            <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
+                <span class="icon has-text-warning">
+                    <i class="fa-solid fa-arrow-right fa-2xl"></i>
+                </span>
+                <h1 class="title is-3 pl-2">Idées en attente d'approbation</h1>
+            </div>
+            <br>
+            {% for idea in ideas|filter(idea => idea.state_idea == 'waiting_approval') %}
+            <a href="/idea/{{ idea.idea_id }}">
+                <div class="card mb-5" style="width: 45vw; border:solid #ffb70f 5px">
+                    <div class="card-content">
+                        <div class="content">
+                            <h1 class="title is-5">{{ idea.title_idea }}</h1>
+                            <div class="tags has-addons">
+                                <span class="tag is-warning">En attente d'approbation</span>
+                            </div>
+                            <p>{{ idea.details_idea }}</p>
+                            <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                                </strong>
+                            <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y")
+                                    }}</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div class="buttons is-left">
+                <form action="{{ path('idea_validate', {'id': idea.idea_id}) }}" method="post">
+                    <input type="submit" value="Valider ?" id="valid_idea" class="button is-success">
+                </form>
+                <form action="{{ path('idea_refuse', {'id': idea.idea_id}) }}" method="post">
+                    <input type="submit" value="Refuser ?" id="refuse_idea" class="button is-danger">
+                </form>
+            </div>
+            <br><br>
+            {% endfor %}
+            {% endif %}
+            {% if ideas|filter(idea => idea.state_idea == 'in_progress')|length > 0 %}
+            <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
+                <span class="icon has-text-success">
+                    <i class="fa-solid fa-arrow-right fa-2xl"></i>
+                </span>
+                <h1 class="title is-3 pl-2">Idées approuvées</h1>
+            </div>
+            <br>
+            {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress') %}
+            <a href="/idea/{{ idea.idea_id }}">
+                <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
+                    <div class="card-content">
+                        <div class="content">
+                            <h1 class="title is-5">{{ idea.title_idea }}</h1>
+                            <div class="tags has-addons">
+                                <span class="tag is-success" style="margin-left:10px">Approuvé</span>
+                                <span class="tag">En cours de réalisation</span>
+                            </div>
+                            <p>{{ idea.details_idea }}</p>
+                            <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                                </strong>
+                            <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y")
+                                    }}</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div class="buttons is-left">
+                <form action="{{ path('idea_wait', {'id': idea.idea_id}) }}" method="post">
+                    <input type="submit" value="Mettre en attente ?" id="wait_idea" class="button is-warning">
+                </form>
+                <form action="{{ path('idea_refuse', {'id': idea.idea_id}) }}" method="post">
+                    <input type="submit" value="Refuser ?" id="refuse_idea" class="button is-danger">
+                </form>
+            </div>
+            <br><br>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

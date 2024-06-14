@@ -2,15 +2,15 @@
 namespace App\Controller;
 
 use App\Entity\Idea;
+use DateTimeInterface;
 use App\Repository\IdeaRepository;
 use App\Repository\AccountRepository;
-use DateTimeInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class Ideas extends AbstractController
 {
@@ -69,6 +69,7 @@ class Ideas extends AbstractController
             "team" => $idea->getTeam(),
             "author_id" => $idea->getAuthor()->getId(),
             "idea_id" => $idea->getId(),
+            'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
             "state" => $idea->getState(),
             "user_id" => $_SESSION['account_id'],
         ];
@@ -76,8 +77,46 @@ class Ideas extends AbstractController
         return $this->render('/idea/recap_idea.html.twig', $data);
     }
 
-    public function manage_statut()
+    /**
+     * @Route("/idea/{id}/valid", name="idea_validate")
+    */
+    public function validateIdea(Request $request, $id) : RedirectResponse
     {
+        $idea = $this->ideaRepository->find($id);
 
+        $idea->setState('in_progress');
+        $this->entityManager->persist($idea);
+        $this->entityManager->flush();
+        
+        return new RedirectResponse('/home');
     }
+
+    /**
+     * @Route("/idea/{id}/refuse", name="idea_refuse")
+    */
+    public function refusedIdea(Request $request, $id) : RedirectResponse
+    {
+        $idea = $this->ideaRepository->find($id);
+
+        $idea->setState('refused');
+        $this->entityManager->persist($idea);
+        $this->entityManager->flush();
+
+        return new RedirectResponse('/home');
+    }
+
+    /**
+     * @Route("/idea/{id}/wait", name="idea_wait")
+    */
+    public function waitingIdea(Request $request, $id) : RedirectResponse
+    {
+        $idea = $this->ideaRepository->find($id);
+
+        $idea->setState('waiting_approval');
+        $this->entityManager->persist($idea);
+        $this->entityManager->flush();
+
+        return new RedirectResponse('/home');
+    }
+
 }
