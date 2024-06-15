@@ -55,6 +55,9 @@ class Idea
     #[ORM\Column(length: 255)]
     private ?string $team = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $files_idea = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -223,6 +226,18 @@ class Idea
     public function setTeam(string $team): static
     {
         $this->team = $team;
+
+        return $this;
+    }
+
+    public function getFilesIdea(): ?string
+    {
+        return $this->files_idea;
+    }
+
+    public function setFilesIdea(?string $files_idea): static
+    {
+        $this->files_idea = $files_idea;
 
         return $this;
     }

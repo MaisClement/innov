@@ -97,45 +97,6 @@
             <br><br>
             {% endfor %}
             {% endif %}
-            {% if ideas|filter(idea => idea.state_idea == 'in_progress')|length > 0 %}
-            <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
-                <span class="icon has-text-success">
-                    <i class="fa-solid fa-arrow-right fa-2xl"></i>
-                </span>
-                <h1 class="title is-3 pl-2">Idées approuvées</h1>
-            </div>
-            <br>
-            {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress') %}
-            <a href="/idea/{{ idea.idea_id }}">
-                <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
-                    <div class="card-content">
-                        <div class="content">
-                            <h1 class="title is-5">{{ idea.title_idea }}</h1>
-                            <div class="tags has-addons">
-                                <span class="tag is-success" style="margin-left:10px">Approuvé</span>
-                                <span class="tag">En cours de réalisation</span>
-                            </div>
-                            <p>{{ idea.details_idea }}</p>
-                            <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
-                                </strong>
-                            <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y")
-                                    }}</strong>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            <div class="buttons is-left">
-                <form action="{{ path('idea_wait', {'id': idea.idea_id}) }}" method="post">
-                    <input type="submit" value="Mettre en attente ?" id="wait_idea" class="button is-warning">
-                </form>
-                <form action="{{ path('idea_refuse', {'id': idea.idea_id}) }}" method="post">
-                    <input type="submit" value="Refuser ?" id="refuse_idea" class="button is-danger">
-                </form>
-            </div>
-            <br><br>
-            {% endfor %}
-            {% endif %}
         </div>
     </div>
 </body>

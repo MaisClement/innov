@@ -3,11 +3,6 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
-    
-account:
-  path: /account
-  controller: App\Controller\Account
-  methods: [GET]
 
 idea_validate:
   path: /idea/{id}/validate
@@ -19,7 +14,3 @@ idea_refuse:
   controller: App\Controller\Ideas::refusedIdea
   methods: [POST]
 
-idea_wait:
-  path: /idea/{id}/wait
-  controller: App\Controller\Ideas::waitingIdea
-  methods: [POST]

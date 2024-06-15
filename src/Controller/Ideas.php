@@ -74,9 +74,11 @@ class Ideas extends AbstractController
             "user_id" => $_SESSION['account_id'],
         ];
 
+        
         return $this->render('/idea/recap_idea.html.twig', $data);
     }
 
+    
     /**
      * @Route("/idea/{id}/valid", name="idea_validate")
     */
@@ -99,20 +101,6 @@ class Ideas extends AbstractController
         $idea = $this->ideaRepository->find($id);
 
         $idea->setState('refused');
-        $this->entityManager->persist($idea);
-        $this->entityManager->flush();
-
-        return new RedirectResponse('/home');
-    }
-
-    /**
-     * @Route("/idea/{id}/wait", name="idea_wait")
-    */
-    public function waitingIdea(Request $request, $id) : RedirectResponse
-    {
-        $idea = $this->ideaRepository->find($id);
-
-        $idea->setState('waiting_approval');
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
 

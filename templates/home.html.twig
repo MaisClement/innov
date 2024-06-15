@@ -14,33 +14,34 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
-<nav class="navbar is-fixed-top">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="/home">
-            <img src="img/logo.png" alt="Logo APPFE">
-        </a>
-        <a href="#" class="navbar-item">En attente d'approbation</a>
-        <a href="#" class="navbar-item">Validés</a>
-        <a href="#" data-target="modal-js-create-idea" class="navbar-item js-modal-trigger">
-            <span class="button is-link ">Soumettre une idée</span>
-        </a>
-    </div>
-    <div class="navbar-end">
-        <div class="navbar-item">
-            <div class="buttons">
-            {% if is_admin == "true" %}
-                <a href="/admin" class="button is-link is-rounded">
-                    <strong>Tableau de bord</strong>
-                </a>
-            {% endif %}
-                <a href="/profile" class="button is-link is-rounded">
-                    <strong>Mon profil</strong>
-                </a>
+    <nav class="navbar is-fixed-top">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/home">
+                <img src="img/logo.png" alt="Logo APPFE">
+            </a>
+            <a href="#" class="navbar-item">En attente d'approbation</a>
+            <a href="#" class="navbar-item">Validés</a>
+            <a href="#" data-target="modal-js-create-idea" class="navbar-item js-modal-trigger">
+                <span class="button is-link ">Soumettre une idée</span>
+            </a>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    {% if is_admin == "true" %}
+                    <a href="/admin" class="button is-link is-rounded">
+                        <strong>Tableau de bord</strong>
+                    </a>
+                    {% endif %}
+                    <a href="/profile" class="button is-link is-rounded">
+                        <strong>Mon profil</strong>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <h1 class="title is-3 has-text-centered" style="margin-top: 10px">Bienvenue {{ given_name|escape }} {{
         family_name|escape }} !</h1>
@@ -113,38 +114,6 @@
         </a>
         {% endfor %}
     </div>
-    {% if ideas|filter(idea => idea.state_idea == 'refused')|length > 0 %}
-    <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
-        <span class="icon has-text-danger">
-            <i class="fa-solid fa-arrow-right fa-2xl"></i>
-        </span>
-        <h1 class="title is-3 pl-2">Idées refusées</h1>
-    </div>
-    <br>
-    {% endif %}
-    <div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
-        {% for idea in ideas|filter(idea => idea.state_idea == 'refused') %}
-        <a href="/idea/{{ idea.idea_id }}">
-            <div class="card mb-5" style="width: 45vw; border:solid  rgb(255,102,133) 5px">
-                <div class="card-content">
-                    <div class="content">
-                        <h1 class="title is-5">{{ idea.title_idea }}</h1>
-                        <div class="tags has-addons">
-                            <span class="tag is-danger" style="margin-left:10px">Non approuvé</span>
-                            <span class="tag">Non réalisable</span>
-                        </div>
-                        <p>{{ idea.details_idea }}</p>
-                        <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
-                            </strong>
-                        <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y") }}</strong>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
-    </div>
-
     <!-- CRÉATIONS DE MODALS-->
     <!-- MODAL DE CRÉATION DE L'IDÉE -->
     <div class="modal" id="modal-js-create-idea">
@@ -155,7 +124,7 @@
                 <button class="delete" aria-label="close"></button>
             </header>
             <section class="modal-card-body">
-                <form method="post" action="/idea">
+                <form method="post" action="/idea" enctype="multipart/form-data">
                     <h1 class="title is-4">Intitulé de l'idée</h1>
                     <input type="text" class="input is-medium" name="title_idea" id="title_idea" required="required">
                     <br><br>
@@ -271,15 +240,41 @@
                         <input type="radio" name="team" id="other" value="other">
                         <strong>Autre / J'en ai aucune idée</strong>
                     </label>
-                    <br><hr>
-                    <h1 class="title is-3">Ajouter un ou plusieurs fichiers</h1>
-                    <input type="file" class="file" name="files_idea" id="files_idea">
+                    <br>
+                    <hr>
+                    <h1 class="title is-3">Ajout d'un fichier</h1>
+                    <div class="file has-name">
+                        <label class="file-label">
+                            <input class="file-input" type="file" id="file" name="file_idea" multiple/>
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label"> Choisissez un ou plusieurs fichiers… </span>
+                            </span>
+                            <span class="file-name" id="filenames">Aucun fichier selectionné</span>
+                        </label>
+                    </div>
+                    <hr>
                     <input class="button is-success" type="submit" value="Envoyer" name="envoyer">
                 </form>
             </section>
         </div>
     </div>
     <!-- FIN MODAL-->
+    <script>
+        const fileInput = document.getElementById('file');
+        const filenamesElement = document.getElementById('filenames');
+    
+        fileInput.addEventListener('change', function() {
+            const files = fileInput.files;
+            let filenames = ' ';
+            for (let i = 0; i < files.length; i++) {
+                filenames += `${files[i].name} `;
+            }
+            filenamesElement.textContent = `${filenames}`;
+        });
+    </script>
 </body>
 
 </html>
