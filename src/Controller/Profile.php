@@ -37,9 +37,11 @@ class Profile extends AbstractController
                 "creationDateTime" => $idea->getCreationDateTime(),
                 "state_idea" => $idea->getState(),
                 'user_id' => $_SESSION['account_id'],
+                
             ];
         }
-            $data = [ 
+        $data = [ 
+                'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
                 'family_name'=>$_SESSION['family_name'], 
                 'given_name' => $_SESSION['given_name'],
                 'mail' => $_SESSION['upn'],

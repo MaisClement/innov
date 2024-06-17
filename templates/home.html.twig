@@ -14,236 +14,267 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
-<nav class="navbar is-fixed-top">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="/home">
-            <img src="img/logo.png" alt="Logo APPFE">
-        </a>
-        <a href="#" class="navbar-item">En attente d'approbation</a>
-        <a href="#" class="navbar-item">Validés</a>
-        <a href="#" data-target="modal-js-create-idea" class="navbar-item js-modal-trigger">
-            <span class="button is-link ">Soumettre une idée</span>
-        </a>
-    </div>
-    <div class="navbar-end">
-        <div class="navbar-item">
-            <div class="buttons">
-            {% if is_admin == "true" %}
-                <a href="/admin" class="button is-link is-rounded">
-                    <strong>Tableau de bord</strong>
-                </a>
-            {% endif %}
-                <a href="/profile" class="button is-link is-rounded">
-                    <strong>Mon profil</strong>
-                </a>
+    <nav class="navbar is-fixed-top">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/home">
+                <img src="img/logo.png" alt="Logo APPFE">
+            </a>
+            <a href="#" class="navbar-item">En attente d'approbation</a>
+            <a href="#" class="navbar-item">Validés</a>
+            <a href="#" data-target="modal-js-create-idea" class="navbar-item js-modal-trigger">
+                <span class="button is-link ">Soumettre une idée</span>
+            </a>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    {% if is_admin == "true" %}
+                    <a href="/admin" class="button is-link is-rounded">
+                        <strong>Tableau de bord</strong>
+                    </a>
+                    {% endif %}
+                    <a href="/profile" class="button is-link is-rounded">
+                        <strong>Mon profil</strong>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<h1 class="title is-3 has-text-centered" style="margin-top: 10px">Bienvenue {{ given_name|escape }} {{
-    family_name|escape }} !</h1>
-<h1 class="subtitle is-6 has-text-centered">Proposez vos idées pour l'association !</h1>
-{% if is_admin == "true" %}
+    <h1 class="title is-3 has-text-centered" style="margin-top: 10px">Bienvenue {{ given_name|escape }} {{
+        family_name|escape }} !</h1>
+    <h1 class="subtitle is-6 has-text-centered">Proposez vos idées pour l'association !</h1>
+    {% if is_admin == "true" %}
     <h1 class="title is-5">Vous êtes ADMIN !</h1>
-{% endif %}
-<br>
-<!-- PARTIE IDEES APPROUVEE -->
-{% if ideas|filter(idea => idea.state_idea == 'in_progress') %}
-  <!-- PARTIE IDEES APPROUVEE -->
-  <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
-    <span class="icon has-text-success">
-      <i class="fa-solid fa-arrow-right fa-2xl"></i>
-    </span>
-    <h1 class="title is-3 pl-2">Idées en cours de réalisation</h1>
-  </div>
-  <br>
-{% endif %}
-<div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
-    {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress') %}
-    <a href="/idea/{{ idea.idea_id }}">
-        <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
-            <div class="card-content">
-                <div class="content">
-                    <h1 class="title is-5">{{ idea.title_idea }}</h1>
-                    <div class="tags has-addons">
-                        <span class="tag is-success">Approuvé</span>
-                        <span class="tag">En cours de réalisation</span>
-                    </div>
-                    <p>{{ idea.details_idea }}</p>
-                    <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
-                        </strong>
-                    <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y") }}</strong></p>
-                </div>
-            </div>
-        </div>
-    </a>
-    {% endfor %}
-</div>
-<!-- PARTIE IDEES EN ATTENTE D'APPROBATION -->
-{% if ideas|filter(idea => idea.state_idea == 'waiting_approval')|length > 0 %}
-<div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
-    <span class="icon has-text-warning">
-        <i class="fa-solid fa-arrow-right fa-2xl"></i>
-    </span>
-    <h1 class="title is-3 pl-2">Idées en attente d'approbation</h1>
-</div>
-<br>
-{% endif %}
-<div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
-    {% for idea in ideas|filter(idea => idea.state_idea == 'waiting_approval') %}
-    <a href="/idea/{{ idea.idea_id }}">
-        <div class="card mb-5" style="width: 45vw; border:solid #ffb70f 5px">
-            <div class="card-content">
-                <div class="content">
-                    <h1 class="title is-5">{{ idea.title_idea }}</h1>
-                    <div class="tags has-addons">
-                        <span class="tag is-warning">En attente d'approbation</span>
-                    </div>
-                    <p>{{ idea.details_idea }}</p>
-                    <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
-                        </strong>
-                    <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y") }}</strong></p>
-                </div>
-            </div>
-        </div>
-    </a>
-    {% endfor %}
-</div>
-
-<!-- CRÉATIONS DE MODALS-->
-<!-- MODAL DE CRÉATION DE L'IDÉE -->
-<div class="modal" id="modal-js-create-idea">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title"><strong>Soumettre une idée</strong></p>
-            <button class="delete" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
-            <form method="post" action="/idea">
-                <h1 class="title is-4">Intitulé de l'idée</h1>
-                <input type="text" class="input is-medium" name="title_idea" id="title_idea" required="required">
-                <br><br>
-                <h1 class="title is-4">Détails</h1>
-                <textarea class="textarea" placeholder="Décrivez plus en détails votre idée" name="details_idea"
-                    id="details_idea"></textarea>
-                <hr>
-                <h1 class="title is-4">Réalisation</h1>
-                <p class="is-size-6">Donnez des détails sur la réalisation de votre idée.</p>
-                <br>
-                <h3 class="title is-5">Quelles mesures prendrez vous ?</h3>
-                <div class="control">
-                    <div class="radio">
-                        <label for="alone" class="radio">
-                            <input type="radio" name="mesures" id="alone" class="mr-2"
-                                value="Je suis en mesure de réaliser ce projet par moi-même"
-                                required="required"><strong>Je suis en mesure de
-                                réaliser ce projet
-                                par moi-même.</strong>
-                        </label>
-                        <br><br>
-                        <label for="help" class="radio">
-                            <input type="radio" name="mesures" id="help" class="mr-2"
-                                value="Je serai aidé à la réalisation" required="required"><strong>Je serai aidé à la
-                                réalisation.</strong>
-                        </label>
-                        <br><br>
-                        <label for="no_help" class="radio">
-                            <input type="radio" name="mesures" id="no_help" class="mr-2" value="Je ne serai pas aidé à la réalisation (par
-                            manque de temps ou de compétences)." required="required"><strong>Je ne serai pas aidé à
-                                la réalisation
-                                (par
-                                manque de temps ou de compétences).</strong>
-                        </label>
-                        <br><br>
-                    </div>
-                    <textarea class="textarea" placeholder="Quelques détails..." name="details_mesures"
-                        id="details_mesures"></textarea>
-                    <hr>
-                    <h1 class="title is-4">Financement</h1>
-                    <h3 class="title is-5">Combien ?</h3>
-                    <div class="radio">
-                        <label for="less_hundred" class="radio">
-                            <input type="radio" name="funding" id="less_hundred" class="mr-2" value="moins de 100€"
-                                required="required">
-                            <strong>moins de 100€</strong> Pour rien ou presque rien
-                        </label>
-                        <br><br>
-                        <label for="less_thousand" class="radio">
-                            <input type="radio" name="funding" id="less_thousand" class="mr-2" value="moins de 1000€"
-                                required="required"><strong>moins de
-                                1000€</strong>
-                        </label>
-                        <br><br>
-                        <label for="less_five_thousand" class="radio">
-                            <input type="radio" name="funding" id="less_five_thousand" class="mr-2"
-                                value="moins de 5000€" required="required"><strong>moins de
-                                5000€</strong>
-                        </label>
-                        <br><br>
-                        <label for="more_five_thousand" class="radio">
-                            <input type="radio" name="funding" id="more_five_thousand" class="mr-2"
-                                value="plus de 5000€" required="required"><strong>plus de
-                                5000€</strong> On a besoin de
-                            l'oncle Picsou
-                        </label>
-                        <br><br>
-                    </div>
-                    <textarea id="funding_details" name="funding_details" class="textarea"
-                        placeholder="Quelques détails.."></textarea>
-                </div>
-                <hr>
-                <h1 class="title is-4">A qui envoyer ce projet ?</h1>
-                <p class="is-size-5"><strong>Indiquez à quelle équipe s'adresse cette demande.</strong></p>
-                <br>
-                <label for="finance" class="radio">
-                    <input type="radio" name="team" id="finance" value="finance" required="required">
-                    <strong>Soutien Financier</strong> (Responsable : Romain Bernardot)
-                </label>
-                <br><br>
-                <label for="digital" class="radio">
-                    <input type="radio" name="team" id="digital" value="digital">
-                    <strong>Numérique / R&D</strong> (Responsable : Clément Fresse)
-                </label>
-                <br><br>
-                <label for="maintenance" class="radio">
-                    <input type="radio" name="team" id="maintenance" value="maintenance">
-                    <strong>Maintenance</strong> (Responsable : Lancelot Gerber)
-                </label>
-                <br><br>
-                <label for="annexes" class="radio">
-                    <input type="radio" name="team" id="annexes" value="annexes">
-                    <strong>Projet Annexes Ferroviaires</strong> (Responsable : Fabien Laurent)
-                </label>
-                <br><br>
-                <label for="communication" class="radio">
-                    <input type="radio" name="team" id="communication" value="communication">
-                    <strong>Communication</strong> (Responsable : Hugo Bernardo)
-                </label>
-                <br><br>
-                <label for="circulation" class="radio">
-                    <input type="radio" name="team" id="circulation" value="circulation">
-                    <strong>Circulation</strong> (Responsable : Arthur Perrin)
-                </label>
-                <br><br>
-                <label for="organisation" class="radio">
-                    <input type="radio" name="team" id="organisation" value="organisation">
-                    <strong>Organisation</strong> (Responsable : Arthur Perrin)
-                </label>
-                <br><br>
-                <label for="other" class="radio">
-                    <input type="radio" name="team" id="other" value="other">
-                    <strong>Autre / J'en ai aucune idée</strong>
-                </label>
-                <br><br>
-                <input class="button is-success" type="submit" value="Envoyer" name="envoyer">
-            </form>
-        </section>
+    {% endif %}
+    <br>
+    <!-- PARTIE IDEES APPROUVEE -->
+    {% if ideas|filter(idea => idea.state_idea == 'in_progress') %}
+    <!-- PARTIE IDEES APPROUVEE -->
+    <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
+        <span class="icon has-text-success">
+            <i class="fa-solid fa-arrow-right fa-2xl"></i>
+        </span>
+        <h1 class="title is-3 pl-2">Idées en cours de réalisation</h1>
     </div>
-</div>
-<!-- FIN MODAL-->
+    <br>
+    {% endif %}
+    <div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
+        {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress') %}
+        <a href="/idea/{{ idea.idea_id }}">
+            <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
+                <div class="card-content">
+                    <div class="content">
+                        <h1 class="title is-5">{{ idea.title_idea }}</h1>
+                        <div class="tags has-addons">
+                            <span class="tag is-success">Approuvé</span>
+                            <span class="tag">En cours de réalisation</span>
+                        </div>
+                        <p>{{ idea.details_idea }}</p>
+                        <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                            </strong>
+                        <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y") }}</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    <!-- PARTIE IDEES EN ATTENTE D'APPROBATION -->
+    {% if ideas|filter(idea => idea.state_idea == 'waiting_approval')|length > 0 %}
+    <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
+        <span class="icon has-text-warning">
+            <i class="fa-solid fa-arrow-right fa-2xl"></i>
+        </span>
+        <h1 class="title is-3 pl-2">Idées en attente d'approbation</h1>
+    </div>
+    <br>
+    {% endif %}
+    <div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
+        {% for idea in ideas|filter(idea => idea.state_idea == 'waiting_approval') %}
+        <a href="/idea/{{ idea.idea_id }}">
+            <div class="card mb-5" style="width: 45vw; border:solid #ffb70f 5px">
+                <div class="card-content">
+                    <div class="content">
+                        <h1 class="title is-5">{{ idea.title_idea }}</h1>
+                        <div class="tags has-addons">
+                            <span class="tag is-warning">En attente d'approbation</span>
+                        </div>
+                        <p>{{ idea.details_idea }}</p>
+                        <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                            </strong>
+                        <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y") }}</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    <!-- CRÉATIONS DE MODALS-->
+    <!-- MODAL DE CRÉATION DE L'IDÉE -->
+    <div class="modal" id="modal-js-create-idea">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title"><strong>Soumettre une idée</strong></p>
+                <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <form method="post" action="/idea" enctype="multipart/form-data">
+                    <h1 class="title is-4">Intitulé de l'idée</h1>
+                    <input type="text" class="input is-medium" name="title_idea" id="title_idea" required="required">
+                    <br><br>
+                    <h1 class="title is-4">Détails</h1>
+                    <textarea class="textarea" placeholder="Décrivez plus en détails votre idée" name="details_idea"
+                        id="details_idea"></textarea>
+                    <hr>
+                    <h1 class="title is-4">Réalisation</h1>
+                    <p class="is-size-6">Donnez des détails sur la réalisation de votre idée.</p>
+                    <br>
+                    <h3 class="title is-5">Quelles mesures prendrez vous ?</h3>
+                    <div class="control">
+                        <div class="radio">
+                            <label for="alone" class="radio">
+                                <input type="radio" name="mesures" id="alone" class="mr-2"
+                                    value="Je suis en mesure de réaliser ce projet par moi-même"
+                                    required="required"><strong>Je suis en mesure de
+                                    réaliser ce projet
+                                    par moi-même.</strong>
+                            </label>
+                            <br><br>
+                            <label for="help" class="radio">
+                                <input type="radio" name="mesures" id="help" class="mr-2"
+                                    value="Je serai aidé à la réalisation" required="required"><strong>Je serai aidé à
+                                    la
+                                    réalisation.</strong>
+                            </label>
+                            <br><br>
+                            <label for="no_help" class="radio">
+                                <input type="radio" name="mesures" id="no_help" class="mr-2" value="Je ne serai pas aidé à la réalisation (par
+                            manque de temps ou de compétences)." required="required"><strong>Je ne serai pas aidé à
+                                    la réalisation
+                                    (par
+                                    manque de temps ou de compétences).</strong>
+                            </label>
+                            <br><br>
+                        </div>
+                        <textarea class="textarea" placeholder="Quelques détails..." name="details_mesures"
+                            id="details_mesures"></textarea>
+                        <hr>
+                        <h1 class="title is-4">Financement</h1>
+                        <h3 class="title is-5">Combien ?</h3>
+                        <div class="radio">
+                            <label for="less_hundred" class="radio">
+                                <input type="radio" name="funding" id="less_hundred" class="mr-2" value="moins de 100€"
+                                    required="required">
+                                <strong>moins de 100€</strong> Pour rien ou presque rien
+                            </label>
+                            <br><br>
+                            <label for="less_thousand" class="radio">
+                                <input type="radio" name="funding" id="less_thousand" class="mr-2"
+                                    value="moins de 1000€" required="required"><strong>moins de
+                                    1000€</strong>
+                            </label>
+                            <br><br>
+                            <label for="less_five_thousand" class="radio">
+                                <input type="radio" name="funding" id="less_five_thousand" class="mr-2"
+                                    value="moins de 5000€" required="required"><strong>moins de
+                                    5000€</strong>
+                            </label>
+                            <br><br>
+                            <label for="more_five_thousand" class="radio">
+                                <input type="radio" name="funding" id="more_five_thousand" class="mr-2"
+                                    value="plus de 5000€" required="required"><strong>plus de
+                                    5000€</strong> On a besoin de
+                                l'oncle Picsou
+                            </label>
+                            <br><br>
+                        </div>
+                        <textarea id="funding_details" name="funding_details" class="textarea"
+                            placeholder="Quelques détails.."></textarea>
+                    </div>
+                    <hr>
+                    <h1 class="title is-4">A qui envoyer ce projet ?</h1>
+                    <p class="is-size-5"><strong>Indiquez à quelle équipe s'adresse cette demande.</strong></p>
+                    <br>
+                    <label for="finance" class="radio">
+                        <input type="radio" name="team" id="finance" value="finance" required="required">
+                        <strong>Soutien Financier</strong> (Responsable : Romain Bernardot)
+                    </label>
+                    <br><br>
+                    <label for="digital" class="radio">
+                        <input type="radio" name="team" id="digital" value="digital">
+                        <strong>Numérique / R&D</strong> (Responsable : Clément Fresse)
+                    </label>
+                    <br><br>
+                    <label for="maintenance" class="radio">
+                        <input type="radio" name="team" id="maintenance" value="maintenance">
+                        <strong>Maintenance</strong> (Responsable : Lancelot Gerber)
+                    </label>
+                    <br><br>
+                    <label for="annexes" class="radio">
+                        <input type="radio" name="team" id="annexes" value="annexes">
+                        <strong>Projet Annexes Ferroviaires</strong> (Responsable : Fabien Laurent)
+                    </label>
+                    <br><br>
+                    <label for="communication" class="radio">
+                        <input type="radio" name="team" id="communication" value="communication">
+                        <strong>Communication</strong> (Responsable : Hugo Bernardo)
+                    </label>
+                    <br><br>
+                    <label for="circulation" class="radio">
+                        <input type="radio" name="team" id="circulation" value="circulation">
+                        <strong>Circulation</strong> (Responsable : Arthur Perrin)
+                    </label>
+                    <br><br>
+                    <label for="organisation" class="radio">
+                        <input type="radio" name="team" id="organisation" value="organisation">
+                        <strong>Organisation</strong> (Responsable : Arthur Perrin)
+                    </label>
+                    <br><br>
+                    <label for="other" class="radio">
+                        <input type="radio" name="team" id="other" value="other">
+                        <strong>Autre / J'en ai aucune idée</strong>
+                    </label>
+                    <br>
+                    <hr>
+                    <h1 class="title is-3">Ajout d'un fichier</h1>
+                    <div class="file has-name">
+                        <label class="file-label">
+                            <input class="file-input" type="file" id="file" name="file_idea" multiple/>
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label"> Choisissez un ou plusieurs fichiers… </span>
+                            </span>
+                            <span class="file-name" id="filenames">Aucun fichier selectionné</span>
+                        </label>
+                    </div>
+                    <hr>
+                    <input class="button is-success" type="submit" value="Envoyer" name="envoyer">
+                </form>
+            </section>
+        </div>
+    </div>
+    <!-- FIN MODAL-->
+    <script>
+        const fileInput = document.getElementById('file');
+        const filenamesElement = document.getElementById('filenames');
+    
+        fileInput.addEventListener('change', function() {
+            const files = fileInput.files;
+            let filenames = ' ';
+            for (let i = 0; i < files.length; i++) {
+                filenames += `${files[i].name} `;
+            }
+            filenamesElement.textContent = `${filenames}`;
+        });
+    </script>
 </body>
 
 </html>

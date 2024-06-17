@@ -13,8 +13,8 @@ Code html des tags
     </div>
     
 - Non approuvé :
-
-    ²
+    
+    
 - En cours d'approbation : 
 
     <span class="tag is-warning" style="margin-left:10px">En cours d'approbation</span>

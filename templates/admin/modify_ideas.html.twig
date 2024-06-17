@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr" class="has-navbar-fixed-top">
+
+<head>
+    <title>APPFE | Admin</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#4f474e">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="APPFE">
+    <meta name="keywords" content="APPFE">
+    <meta name="author" content="Lowa">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar is-link is-fixed-top">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/admin">
+                ADMIN
+            </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link is-arrowless">
+                    <i class="fa-solid fa-lightbulb mr-2"></i>
+                    Idées
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="/admin/manage_ideas" class="navbar-item">
+                        Gérer les idées
+                    </a>
+                    <a href="/admin/show_ideas" class="navbar-item">
+                        Voir les idées
+                    </a>
+                </div>
+            </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link is-arrowless">
+                    <i class="fa-solid fa-user mr-2"></i>
+                    Profils
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="/admin/show_profiles" class="navbar-item">
+                        Voir les profils
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <a href="/home" class="button is-light is-link">
+                    <i class="fa-solid fa-home mr-1"></i>
+                    <strong>Retour à l'accueil</strong>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <h1 class="title is-1 m-5" style="text-align: center;">Modifier l'idée | ID : {{ idea_id }} </h1>
+    <hr>
+    <form method="post">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <h1 class="title is-4">Intitulé de l'idée : </h1>
+                <input type="text" name="modify_title_idea" id="modify_title_idea" class="input is-medium"
+                    value="{{ title_idea | escape }}">
+                <br><br>
+                <h1 class="title is-4">Détails de l'idée : </h1>
+                <textarea name="modify_details_idea" id="modify_details_idea" class="textarea"> {{ details_idea }} </textarea>
+                <br>
+                <hr>
+                <h1 class="title is-3">Réalisation</h1>
+                <p class="is-size-5">Modifiez les détails sur la réalisation de l'idée en question.</p>
+                <br>
+                <h1 class="title is-4">Quelles mesures prendrez-vous ?</h1>
+                <br>
+                <p class="subtitle is-5"><strong>Les mesures qu'ils sont prêts à prendre : </strong> {{
+                    choice_mesures }}. </p>
+                <br>
+                <h1 class="title is-4">Détails des mesures</h1>
+                <textarea name="modify_details_mesures" id="modify_details_mesures"
+                    class="textarea"> {{ details_mesures }} </textarea>
+                <hr>
+                <h1 class="title is-3">Financement</h1>
+                <h1 class="title is-4">Combien ?</h1>
+                <p class="subtitle is-5 mt-3">Le besoin financier de ce projet est de {{
+                    choice_funding }}. </p>
+                <br>
+                <h1 class="title is-4">Détails des financement</h1>
+                <textarea name="modify_funding_details" id="modify_funding_details" class="textarea"> {{ funding_details }} </textarea>
+                <hr>
+                <h1 class="title is-3">A quel équipe ont-il choisit pour envoyer leur projet ?</h1>
+                <br>
+                <p class="subtitle is-5"><strong>L'équipe choisi pour ce projet est :</strong> {{ team }}.</p>
+                <hr>
+                <input type="submit" class="button is-success" value="Modifier l'idée">
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

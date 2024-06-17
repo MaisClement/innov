@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr" class="has-navbar-fixed-top">
+
+<head>
+    <title>APPFE | Admin</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#4f474e">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="APPFE">
+    <meta name="keywords" content="APPFE">
+    <meta name="author" content="Lowa">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar is-link is-fixed-top">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/admin">
+                ADMIN
+            </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link is-arrowless">
+                    <i class="fa-solid fa-lightbulb mr-2"></i>
+                    Idées
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="/admin/manage_ideas" class="navbar-item">
+                        Gérer les idées
+                    </a>
+                    <a href="/admin/show_ideas" class="navbar-item">
+                        Voir les idées
+                    </a>
+                </div>
+            </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link is-arrowless">
+                    <i class="fa-solid fa-user mr-2"></i>
+                    Profils
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="/admin/show_profiles" class="navbar-item">
+                        Voir les profils
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <a href="/home" class="button is-light is-link">
+                    <i class="fa-solid fa-home mr-1"></i>
+                    <strong>Retour à l'accueil</strong>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <h1 class="title is-1 m-5" style="text-align: center;">Voici l'ensemble des idées</h1>
+    <hr>
+    <table class="table is-bordered">
+        <thead>
+            <tr class="is-link">
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Détails</th>
+                <th>Statut</th>
+                <th>Mesures</th>
+                <th>Détails des mesures prises</th>
+                <th>Besoins financiers</th>
+                <th>Détails des besoins financiers</th>
+                <th>Équipe choisi</th>
+                <th>Nom/Prénom de l'auteur</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for idea in ideas %}
+            <tr>
+                <td><a href="/admin/modify_ideas/{{ idea.idea_id}}">{{ idea.idea_id }}</a></td>
+                <td>{{ idea.title_idea }}</td>
+                <td>{{ idea.details_idea }}</td>
+                <td>{{ idea.state_idea }}</td>
+                <td>{{ idea.choice_mesures }}</td>
+                <td>{{ idea.details_mesures }}</td>
+                <td>{{ idea.choice_funding }}</td>
+                <td>{{ idea.funding_details }}</td>
+                <td>{{ idea.team }}</td>
+                <td>{{ idea.first_name }} {{ idea.family_name }}</td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>

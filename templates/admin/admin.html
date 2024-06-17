@@ -1,0 +1,76 @@
+<html lang="fr" class="has-navbar-fixed-top">
+
+<head>
+    <title>APPFE | Admin</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#4f474e">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="APPFE">
+    <meta name="keywords" content="APPFE">
+    <meta name="author" content="Lowa">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar is-fixed-top is-link">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/admin">
+                ADMIN
+            </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link is-arrowless">
+                    <i class="fa-solid fa-lightbulb mr-2"></i>
+                    Idées
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="/admin/manage_ideas" class="navbar-item">
+                        Gérer les idées
+                    </a>
+                    <a href="/admin/show_ideas" class="navbar-item">
+                        Voir les idées
+                    </a>
+                </div>
+            </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link is-arrowless">
+                    <i class="fa-solid fa-user mr-2"></i>
+                    Profils
+                </a>
+                <div class="navbar-dropdown">
+                    <a href="/admin/show_profiles" class="navbar-item">
+                        Voir les profils
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <a href="/home" class="button is-light is-link is-rounded">
+                    <i class="fa-solid fa-home mr-1"></i>
+                    <strong>Retour à l'accueil</strong>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <h1 class="title is-1" style="text-align: center; margin: 50px;">Bienvenue ADMIN !</h1>
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <div class="box">
+                <div class="content">
+                    <h1 style="text-align: center;">Que faire ici ?</h1>
+                    <p class="is-size-4" style="text-align: center;"><strong>Ce que vous pouvez faire dans ce tableau de bord : </strong></p>
+                    <ul>
+                        <li>Voir les profils</li>
+                        <li>Voir les idées</li>
+                        <li>Gérer les idées</li>
+                        <li>Modifier les idées</li>
+                    </ul>
+                    <h2 class="has-text-warning" style="text-align: center;">Précision pour la partie "Voir les idées"</h2>
+                    <p class="is-size-5" style="text-align: center;">L'Identifiant des idées sont des liens cliquables menant directement à une page de modification de l'idée en fonction de l'id cliqué.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body> 

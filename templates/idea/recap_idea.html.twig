@@ -18,7 +18,7 @@
 <nav class="navbar is-fixed-top">
         <div class="navbar-brand">
             <a class="navbar-item" href="/home">
-                <img src="img/logo.png" alt="Logo APPFE">
+                <img src="/img/logo.png" alt="Logo APPFE">
             </a>
             <a href="#" class="navbar-item">En attente d'approbation</a>
             <a href="#" class="navbar-item">Validés</a>
@@ -48,7 +48,7 @@
           <span class="icon has-text-warning" style="margin-right: 10px;">
               <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
           </span>
-          <h1 class="title is-1" style="text-align: center;"> {{ title_idea | escape }} </h1>
+          <h1 class="title is-2 mb-2"> {{ title_idea | escape }} </h1>
       </div>
       <br>
       <p class="is-size-5"> {{ details_idea | escape }} </p>
@@ -57,16 +57,15 @@
       
       <b>Equipe d'affectation</b>
       <span class="tag is-medium is-info is-light">{{ team }}</span>
-
+      <br><br>
       <h1 class="title is-4 mb-5">Quelles mesures prendrez vous ?</h1>
       <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-center">
           <span class="icon has-text-warning" style="margin-right: 10px;">
               <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
           </span>
-          <h1 class="title is-1" style="text-align: center;"> {{ choice_mesures | escape }} </h1>
+          <h1 class="title is-1 mb-2" style="text-align: center;"> {{ choice_mesures | escape }} </h1>
       </div>
-      
-        <p class="is-size-5">{{ details_mesures }} </p>
+        <p class="is-size-4">{{ details_mesures }} </p>
         <hr>
         <h1 class="title is-3">Financement</h1>
         <br>
@@ -74,9 +73,9 @@
             <span class="icon has-text-warning" style="margin-right: 10px;">
                 <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
             </span>
-            <h1 class="title is-1" style="text-align: center;"> {{ choice_funding | escape }} </h1>
+            <h1 class="title is-1" style="text-align: center; margin-bottom: 15px;"> {{ choice_funding | escape }} </h1>
         </div>
-          <p class="is-size-5">{ funding_details }} </p>
+          <p class="is-size-5">{{ funding_details }} </p>
           
           {% if user_id != author_id %}
           <hr>
