@@ -45,6 +45,7 @@ class Profile extends AbstractController
                 'family_name'=>$_SESSION['family_name'], 
                 'given_name' => $_SESSION['given_name'],
                 'mail' => $_SESSION['upn'],
+                'account_id' => $_SESSION['account_id'],
                 'ideas' => $ideas,
             ];
             return $this->render('profile.html.twig', $data);

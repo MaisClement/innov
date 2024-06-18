@@ -2,20 +2,22 @@
 <html lang="fr" class="has-navbar-fixed-top">
 
 <head>
-  <title>APPFE</title>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#4f474e">
-  <meta name="color-scheme" content="dark light">
-  <meta name="description" content="APPFE">
-  <meta name="keywords" content="APPFE">
-  <meta name="author" content="Lowa">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-  <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
+    <title>APPFE</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#4f474e">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="APPFE">
+    <meta name="keywords" content="APPFE">
+    <meta name="author" content="Lowa">
+    <script src="{{ asset('js/index.js') }}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
 
 </head>
+
 <body>
-<nav class="navbar is-fixed-top">
+    <nav class="navbar is-fixed-top">
         <div class="navbar-brand">
             <a class="navbar-item" href="/home">
                 <img src="/img/logo.png" alt="Logo APPFE">
@@ -29,11 +31,11 @@
         <div class="navbar-end">
             <div class="navbar-item">
                 <div class="buttons">
-                {% if is_admin == "true" %}
+                    {% if is_admin == "true" %}
                     <a href="/admin" class="button is-link is-rounded">
                         <strong>Tableau de bord</strong>
                     </a>
-                {% endif %}
+                    {% endif %}
                     <a href="/profile" class="button is-link is-rounded">
                         <strong>Mon profil</strong>
                     </a>
@@ -41,60 +43,94 @@
             </div>
         </div>
     </nav>
-  <div class="columns is-centered">
-    <div class="column is-8 is-justify-items-center">
-      <br>
-      <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-center">
-          <span class="icon has-text-warning" style="margin-right: 10px;">
-              <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
-          </span>
-          <h1 class="title is-2 mb-2"> {{ title_idea | escape }} </h1>
-      </div>
-      <br>
-      <p class="is-size-5"> {{ details_idea | escape }} </p>
-      <hr>
-      <h4 class="title is-4">Quelques details</h4>
-      
-      <b>Equipe d'affectation</b>
-      <span class="tag is-medium is-info is-light">{{ team }}</span>
-      <br><br>
-      <h1 class="title is-4 mb-5">Quelles mesures prendrez vous ?</h1>
-      <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-center">
-          <span class="icon has-text-warning" style="margin-right: 10px;">
-              <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
-          </span>
-          <h1 class="title is-1 mb-2" style="text-align: center;"> {{ choice_mesures | escape }} </h1>
-      </div>
-        <p class="is-size-4">{{ details_mesures }} </p>
-        <hr>
-        <h1 class="title is-3">Financement</h1>
-        <br>
-          <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-center">
-            <span class="icon has-text-warning" style="margin-right: 10px;">
-                <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
-            </span>
-            <h1 class="title is-1" style="text-align: center; margin-bottom: 15px;"> {{ choice_funding | escape }} </h1>
-        </div>
-          <p class="is-size-5">{{ funding_details }} </p>
-          
-          {% if user_id != author_id %}
-          <hr>
-          <h1 class="title is-2">Commentaires</h1>
-          <br>
-          <!-- si un commentaire est posté sous une idée le mettre sous l'idée en question -->
-          <form method="post">
-            <p class="subtitle is-5">Votre commentaire : </p>
-            <textarea name="comment" id="comment" class="textarea is-info"></textarea>
+    <div class="columns is-centered">
+        <div class="column is-8 is-justify-items-center">
             <br>
-            <input type="submit" class="button is-success" value="Poster votre commentaire">
-          </form>
-          {% endif %}  
-          <hr>
-          <a href="/home" class="button is-link">
-            Retour à l'accueil
-         </a>
+            <a href="/home" style="padding-bottom: 20px;">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                Retour à l'accueil
+            </a>
+            <br />
+            <br />
+            <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-center">
+                <span class="icon has-text-warning" style="margin-right: 10px;">
+                    <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
+                </span>
+                <h1 class="title is-2 mb-2"> {{ title_idea | escape }} </h1>
+            </div>
+            <br>
+            <p class="is-size-5"> {{ details_idea | escape }} </p>
+            <hr>
+            <h4 class="title is-4">Quelques details</h4>
+
+            <b>Equipe d'affectation</b>
+            <span class="tag is-medium is-info is-light">{{ team }}</span>
+
+            <br><br>
+
+            <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-center mb-4">
+                <span class="icon has-text-warning" style="margin-right: 10px;">
+                    <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
+                </span>
+                <h4 class="title is-4" style="text-align: center;"> Quelles mesures prendrez vous ? </h4>
+            </div>
+            <div style="margin-left: 34px;">
+                <h5 class="title is-5 mb-2">{{ choice_mesures | escape }} </h5>
+                <p class="is-size-5">{{ details_mesures }} </p>
+            </div>
+
+            <hr>
+
+            <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-center mb-4">
+                <span class="icon has-text-warning" style="margin-right: 10px;">
+                    <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
+                </span>
+                <h4 class="title is-4" style="text-align: center;"> Financement </h4>
+            </div>
+            <div style="margin-left: 34px;">
+                <h5 class="title is-5 mb-2">{{ choice_funding | escape }} </h5>
+                <p class="is-size-5">{{ funding_details }} </p>
+            </div>
+
+            <hr>
+            <h1 class="title is-2">Commentaires</h1>
+            <br>
+            <h1 class="title is-4">Liste des commentaires</h1>
+            <!-- si un commentaire est posté sous une idée le mettre sous l'idée en question -->
+            <h1 class="title is-6">Ici vos commentaires</h1>
+            <h1 class="title is-4">Poster un commentaire</h1>
+            <form action="" method="post">
+                <textarea name="" id="" class="textarea is-light"></textarea><br>
+                <input type="submit" id="send_comment" value="Envoyer un commentaire" class="button is-success">
+            </form>
+            <hr>
+            <div class="buttons">
+            {% if is_admin != false %}
+            <form action="{{ path('idea_archived', { 'id':idea_id }) }}" method="post">
+                <input type="submit" value="Archiver ?" class="button is-warning">
+            </form>
+                <input type="submit" value="Supprimer ?" class="button is-danger js-modal-trigger" data-target="modal-js-delete">
+            {% endif %} 
+            <a href="/home" class="button is-link">
+                Retour à l'accueil
+            </a>
         </div>
-      </div>
-    </body>
-    
+    </div>
+    <!-- MODAL CONFIRMATION SUPPRESSION -->
+    <div class="modal has-background-danger" id="modal-js-delete">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <h1 class="title is-2">Êtes vous sur de vouloir supprimer cette idée ?</h1>
+            <div class="buttons">
+                <form action="{{ path('idea_delete', { 'id':idea_id }) }}" method="post">
+                    <input type="submit" class="button has-text-light has-background-danger-40" value="Oui">    
+                </form>
+                <form action="/idea/{{ idea_id }}" method="post">
+                    <input type="submit" class="button has-text-light has-background-success-40" value="Non"></input>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
 </html>

@@ -32,6 +32,9 @@
                     <a href="/admin/show_ideas" class="navbar-item">
                         Voir les idées
                     </a>
+                    <a href="/admin/show_archived_ideas" class="navbar-item">
+                        Voir les idées
+                    </a>
                 </div>
             </div>
             <div class="navbar-item has-dropdown is-hoverable">
@@ -60,12 +63,13 @@
     <form method="post">
         <div class="columns is-centered">
             <div class="column is-half">
+            
                 <h1 class="title is-4">Intitulé de l'idée : </h1>
                 <input type="text" name="modify_title_idea" id="modify_title_idea" class="input is-medium"
                     value="{{ title_idea | escape }}">
                 <br><br>
                 <h1 class="title is-4">Détails de l'idée : </h1>
-                <textarea name="modify_details_idea" id="modify_details_idea" class="textarea"> {{ details_idea }} </textarea>
+                <textarea name="modify_details_idea" id="modify_details_idea" class="textarea">{{ details_idea }}</textarea>
                 <br>
                 <hr>
                 <h1 class="title is-3">Réalisation</h1>

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="fr" class="has-navbar-fixed-top">
 
 <head>
@@ -14,7 +15,7 @@
 </head>
 
 <body>
-    <nav class="navbar is-fixed-top is-link">
+    <nav class="navbar is-link is-fixed-top">
         <div class="navbar-brand">
             <a class="navbar-item" href="/admin">
                 ADMIN
@@ -30,6 +31,9 @@
                     </a>
                     <a href="/admin/show_ideas" class="navbar-item">
                         Voir les idées
+                    </a>
+                    <a href="/admin/show_archived_ideas" class="navbar-item">
+                        Voir les idées archivées
                     </a>
                 </div>
             </div>
@@ -47,30 +51,47 @@
         </div>
         <div class="navbar-end">
             <div class="navbar-item">
-                <a href="/home" class="button is-light is-link is-rounded">
+                <a href="/home" class="button is-light is-link">
                     <i class="fa-solid fa-home mr-1"></i>
                     <strong>Retour à l'accueil</strong>
                 </a>
             </div>
         </div>
     </nav>
-    <h1 class="title is-1" style="text-align: center; margin: 50px;">Bienvenue ADMIN !</h1>
-    <div class="columns is-centered">
-        <div class="column is-half">
-            <div class="box">
-                <div class="content">
-                    <h1 style="text-align: center;">Que faire ici ?</h1>
-                    <p class="is-size-4" style="text-align: center;"><strong>Ce que vous pouvez faire dans ce tableau de bord : </strong></p>
-                    <ul>
-                        <li>Voir les profils</li>
-                        <li>Voir les idées</li>
-                        <li>Gérer les idées</li>
-                        <li>Modifier les idées</li>
-                    </ul>
-                    <h2 class="has-text-warning" style="text-align: center;">Précision pour la partie "Voir les idées"</h2>
-                    <p class="is-size-5" style="text-align: center;">L'Identifiant des idées sont des liens cliquables menant directement à une page de modification de l'idée en fonction de l'id cliqué.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</body> 
+    <h1 class="title is-1 m-5" style="text-align: center;">Voici l'ensemble des idées</h1>
+    <hr>
+    <table class="table is-bordered">
+        <thead>
+            <tr class="is-link">
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Détails</th>
+                <th>Statut</th>
+                <th>Mesures</th>
+                <th>Détails des mesures prises</th>
+                <th>Besoins financiers</th>
+                <th>Détails des besoins financiers</th>
+                <th>Équipe choisi</th>
+                <th>Nom/Prénom de l'auteur</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for idea in ideas|filter(idea => idea.state_idea == 'is_archived') %}
+            <tr>
+                <td><a href="/admin/modify_ideas/{{ idea.idea_id}}">{{ idea.idea_id }}</a></td>
+                <td>{{ idea.title_idea }}</td>
+                <td>{{ idea.details_idea }}</td>
+                <td>{{ idea.state_idea }}</td>
+                <td>{{ idea.choice_mesures }}</td>
+                <td>{{ idea.details_mesures }}</td>
+                <td>{{ idea.choice_funding }}</td>
+                <td>{{ idea.funding_details }}</td>
+                <td>{{ idea.team }}</td>
+                <td>{{ idea.first_name }} {{ idea.family_name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>

@@ -2,7 +2,9 @@
 namespace App\Controller;
 
 use App\Entity\Idea;
+use App\Entity\Comment;
 use DateTimeInterface;
+use App\Form\CommentsType;
 use App\Repository\IdeaRepository;
 use App\Repository\AccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -59,6 +61,26 @@ class Ideas extends AbstractController
     public function display_idea($id)
     {
         $idea = $this->ideaRepository->find($id);
+        $ideas = [];
+        foreach($idea as $_idea){
+            $ideas[] = [
+                "title_idea" => $_idea->getTitle(),
+                "details_idea" => $_idea->getDetails(),
+                "choice_mesures" => $_idea->getChoiceMesures(),
+                "details_mesures" => $_idea->getDetailsMesures(),
+                "choice_funding" => $_idea->getChoiceFunding(),
+                "funding_details" => $_idea->getDetailsFunding(),
+                "team" => $_idea->getTeam(),
+                "author_id" => $_idea->getAuthor()->getId(),
+                "idea_id" => $_idea->getId(),
+                "role" => $_SESSION['role'],
+                "first_name" => $_idea->getAuthor()->getGivenName(),
+                "family_name" => $_idea->getAuthor()->getFamilyName(),
+                "creationDateTime" => $_idea->getCreationDateTime(),
+                "state_idea" => $_idea->getState(),
+            ]; 
+        }
+        
         $data = [
             "title_idea" => $idea->getTitle(),
             "details_idea" => $idea->getDetails(),
@@ -72,9 +94,11 @@ class Ideas extends AbstractController
             'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
             "state" => $idea->getState(),
             "user_id" => $_SESSION['account_id'],
+            "comments" => $idea->getComments(),
+            "ideas" => $ideas,
         ];
 
-        
+
         return $this->render('/idea/recap_idea.html.twig', $data);
     }
 
@@ -107,4 +131,30 @@ class Ideas extends AbstractController
         return new RedirectResponse('/home');
     }
 
+
+    /**
+     * @Route("/idea/{id}/archived", name="idea_archived")
+    */
+    public function archivedIdea(Request $request, $id) : RedirectResponse
+    {
+        $idea = $this->ideaRepository->find($id);
+
+        $idea->setState('is_archived');
+        $this->entityManager->persist($idea);
+        $this->entityManager->flush();
+
+        return new RedirectResponse('/home');
+    }
+
+    /**
+     * @Route("/idea/{id}/delete", name="idea_delete")
+    */
+    public function deleteIdea(Request $request, $id) : RedirectResponse
+    {
+        $idea = $this->ideaRepository->find($id);
+        $this->entityManager->remove($idea);
+        $this->entityManager->flush();
+
+        return new RedirectResponse('/home');
+    }
 }

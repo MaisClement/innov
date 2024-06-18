@@ -28,12 +28,33 @@ class Admin extends AbstractController
     #[Route('/admin')]
     public function admin()
     {
+        $idea = $this->ideaRepository->findAll(); 
+
+        $ideas = [];
+        foreach($idea as $_idea){
+            $ideas[] = [
+                "title_idea" => $_idea->getTitle(),
+                "details_idea" => $_idea->getDetails(),
+                "choice_mesures" => $_idea->getChoiceMesures(),
+                "details_mesures" => $_idea->getDetailsMesures(),
+                "choice_funding" => $_idea->getChoiceFunding(),
+                "funding_details" => $_idea->getDetailsFunding(),
+                "team" => $_idea->getTeam(),
+                "author_id" => $_idea->getAuthor()->getId(),
+                "idea_id" => $_idea->getId(),
+                "first_name" => $_idea->getAuthor()->getGivenName(),
+                "family_name" => $_idea->getAuthor()->getFamilyName(),
+                "creationDateTime" => $_idea->getCreationDateTime(),
+                "state_idea" => $_idea->getState(),
+        ];
+    }
         $data = [ 
             'family_name'=>$_SESSION['family_name'], 
             'given_name' => $_SESSION['given_name'],
             'mail' => $_SESSION['upn'],
+            'ideas' => $ideas,
           ];
-        return $this->render('admin/admin.html', $data);
+        return $this->render('admin/admin.html.twig', $data);
     }
 
     // ROUTE DES PAGES POUR GÉRER LES IDÉES
@@ -98,27 +119,71 @@ class Admin extends AbstractController
         return $this->render('admin/show_ideas.html.twig', $data);
     }
 
+    #[Route('/admin/show_archived_ideas')]
+    public function showideaarchived()
+    {   
+        $_ideas = $this->ideaRepository->findAll(); 
+
+        $ideas = [];
+        foreach($_ideas as $idea){
+            $ideas[] = [
+                "title_idea" => $idea->getTitle(),
+                "details_idea" => $idea->getDetails(),
+                "choice_mesures" => $idea->getChoiceMesures(),
+                "details_mesures" => $idea->getDetailsMesures(),
+                "choice_funding" => $idea->getChoiceFunding(),
+                "funding_details" => $idea->getDetailsFunding(),
+                "team" => $idea->getTeam(),
+                "author_id" => $idea->getAuthor()->getId(),
+                "idea_id" => $idea->getId(),
+                "first_name" => $idea->getAuthor()->getGivenName(),
+                "family_name" => $idea->getAuthor()->getFamilyName(),
+                "creationDateTime" => $idea->getCreationDateTime(),
+                "state_idea" => $idea->getState(),
+            ];
+
+            $data = [ 
+                "ideas" => $ideas, 
+            ];
+        }
+        return $this->render('admin/show_ideas_archived.html.twig', $data);
+    }
+    
     #[Route('/admin/modify_ideas/{id}')]
     public function modifyidea(Request $request, $id)
     {
         $_idea = $this->ideaRepository->find($id);
         
         $data = [
-            "title_idea" => $_idea->getTitle(),
-            "details_idea" => $_idea->getDetails(),
+            "title_idea" => trim($_idea->getTitle()),
+            "details_idea" => trim($_idea->getDetails()),
             "choice_mesures" => $_idea->getChoiceMesures(),
-            "details_mesures" => $_idea->getDetailsMesures(),
+            "details_mesures" => trim($_idea->getDetailsMesures()),
             "choice_funding" => $_idea->getChoiceFunding(),
-            "funding_details" => $_idea->getDetailsFunding(),
+            "funding_details" => trim($_idea->getDetailsFunding()),
             "idea_id" => $_idea->getId(),
             "team" => $_idea->getTeam(),
             "author_id" => $_idea->getAuthor()->getId(),
+            'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
             "state" => $_idea->getState(),
         ];
         
+        $idea = $this->ideaRepository->find($id);
+                
+        if ($request->isMethod('POST')) {
+            $idea->setTitle($request->request->get('modify_title_idea'));
+            $idea->setDetails($request->request->get('modify_details_idea'));
+            $idea->setDetailsMesures($request->request->get('modify_details_mesures'));
+            $idea->setDetailsFunding($request->request->get('modify_funding_details'));
+
+            $this->entityManager->persist($idea);
+            $this->entityManager->flush();    
+        }
+        
         return $this->render('admin/modify_ideas.html.twig', $data);
     }
-    
+        
+
 
     
     // ROUTES DES PAGES POUR GÉRER LES PROFILS
@@ -145,5 +210,4 @@ class Admin extends AbstractController
 
         return $this->render('admin/show_profiles.html.twig', $data);
     }
-
 }
