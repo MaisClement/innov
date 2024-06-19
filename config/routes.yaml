@@ -14,3 +14,12 @@ idea_refuse:
   controller: App\Controller\Ideas::refusedIdea
   methods: [POST]
 
+idea_archived:
+  path: /idea/{id}/archived
+  controller: App\Controller\Ideas::archivedIdea
+  methods: [POST]
+
+idea_delete:
+  path: /idea/{id}/delete
+  controller: App\Controller\Ideas::deleteIdea
+  methods: [POST]

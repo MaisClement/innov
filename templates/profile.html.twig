@@ -30,11 +30,11 @@
         <div class="navbar-end">
             <div class="navbar-item">
                 <div class="buttons">
-                {% if is_admin == "true" %}
+                    {% if is_admin == "true" %}
                     <a href="/admin" class="button is-link is-rounded">
                         <strong>Tableau de bord</strong>
                     </a>
-                {% endif %}
+                    {% endif %}
                     <a href="/profile" class="button is-link is-rounded">
                         <strong>Mon profil</strong>
                     </a>
@@ -44,11 +44,6 @@
     </nav>
     <div style="margin: 0 auto;max-width: 1200px;">
         <br>
-        <a href="/home" style="margin-left: 10px;">
-            <i class="fas fa-arrow-left" aria-hidden="true"></i>
-            Retour à l'accueil
-        </a>
-        <br><br>
         <h1 class="title is-3" style="text-align: left;margin-left: 15px;">Mon profil APPFE</h1>
         <h1 class="is-size-2" style="text-align: left;margin-left: 15px;">Informations du profil</h1>
         <h1 style="text-align: left; margin-left: 15px;">Nom : {{ family_name|escape }}</h1>
@@ -77,16 +72,65 @@
         <div id="my_comments" class="content-tab">
             <h1 class="is-size-2" style="text-align: center;">Commentaires postées</h1>
             {# Faire en sorte d'afficher les commentaires postées par l'utilisateur #}
+            <hr>
         </div>
         <div id="my_ideas" class="content-tab">
             <h1 class="is-size-2" style="text-align: center;">Mes idées proposées</h1>
             {# Faire en sorte d'afficher les idées proposées par l'utilisateur #}
+            <hr>
             <div class="columns">
                 <div class="column is-6">
                     <h1 class="title is-5" style="text-align: center;">Mes idées en cours d'approbation</h1>
-                </div> 
+                    {% for idea in ideas|filter(idea => idea.state_idea == 'waiting_approval') %}
+                    {% if account_id == idea.author_id %}
+                    <a href="/idea/{{ idea.idea_id }}">
+                        <div class="card mb-5" style="width: 45vw; border:solid #ffb70f 5px">
+                            <div class="card-content">
+                                <div class="content">
+                                    <h1 class="title is-5">{{ idea.title_idea }}</h1>
+                                    <div class="tags has-addons">
+                                        <span class="tag is-warning">En attente d'approbation</span>
+                                    </div>
+                                    <p>{{ idea.details_idea }}</p>
+                                    <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{
+                                            idea.family_name }}
+                                        </strong>
+                                    <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y")
+                                            }}</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+                </div>
                 <div class="column is-6">
                     <h1 class="title is-5" style="text-align: center;">Mes idées approuvées</h1>
+                    {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress') %}
+                    {% if account_id == idea.author_id %}
+                    <a href="/idea/{{ idea.idea_id }}">
+                        <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
+                            <div class="card-content">
+                                <div class="content">
+                                    <h1 class="title is-5">{{ idea.title_idea }}</h1>
+                                    <div class="tags has-addons">
+                                        <span class="tag is-success">Approuvé</span>
+                                        <span class="tag">En cours de réalisation</span>
+                                    </div>
+                                    <p>{{ idea.details_idea }}</p>
+                                    <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{
+                                            idea.family_name }}
+                                        </strong>
+                                    <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y")
+                                            }}</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         </div>

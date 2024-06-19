@@ -32,6 +32,9 @@
                     <a href="/admin/show_ideas" class="navbar-item">
                         Voir les idées
                     </a>
+                    <a href="/admin/show_archived_ideas" class="navbar-item">
+                        Voir les idées archivées
+                    </a>
                 </div>
             </div>
             <div class="navbar-item has-dropdown is-hoverable">
@@ -57,6 +60,9 @@
     </nav>
     <h1 class="title is-1 m-5" style="text-align: center;">Gestion des idées</h1>
     <hr>
+    {% if ideas|filter(idea => idea.state_idea == 'waiting_approval')|length > 0 == null %}
+        <h1 class="title is-3 has-text-danger-50" style="text-align: center;">C'est vide ici ! Toutes les idées ont été vérifiées !</h1>
+    {% endif %}
     <div class="columns is-centered">
         <div class="column is-6">
             {% if ideas|filter(idea => idea.state_idea == 'waiting_approval')|length > 0 %}
