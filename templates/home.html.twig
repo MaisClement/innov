@@ -44,12 +44,18 @@
     </nav>
     <h1 class="title is-3 has-text-centered" style="margin-top: 10px">Bienvenue {{ given_name|escape }} {{
         family_name|escape }} !</h1>
-    <h1 class="subtitle is-6 has-text-centered">Proposez vos idées pour l'association !</h1>
-    {% if is_admin == "true" %}
-    <h1 class="title is-5">Vous êtes ADMIN !</h1>
-    {% endif %}
-    <br>
-    <!-- PARTIE IDEES APPROUVEE -->
+        <h1 class="subtitle is-6 has-text-centered">Proposez vos idées pour l'association !</h1>
+        {% if is_admin == "true" %}
+        <div class="columns is-centered">
+            <div class="column is-3">
+                <div class="notification is-link">
+                    <h1 class="title is-6" style="text-align: center;">VOUS ÊTES ADMINISTRATEUR !</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <br>
+        <!-- PARTIE IDEES APPROUVEE -->
     {% if ideas|filter(idea => idea.state_idea == 'in_progress') %}
     <!-- PARTIE IDEES APPROUVEE -->
     <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">

@@ -58,6 +58,9 @@ class Idea
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $files_idea = null;
 
+    #[ORM\Column]
+    private ?bool $is_archived = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -238,6 +241,18 @@ class Idea
     public function setFilesIdea(?string $files_idea): static
     {
         $this->files_idea = $files_idea;
+
+        return $this;
+    }
+
+    public function isArchived(): ?bool
+    {
+        return $this->is_archived;
+    }
+
+    public function setArchived(bool $is_archived): static
+    {
+        $this->is_archived = $is_archived;
 
         return $this;
     }

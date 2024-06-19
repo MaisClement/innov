@@ -60,7 +60,15 @@
     </nav>
     <h1 class="title is-1 m-5" style="text-align: center;">Voici l'ensemble des idées</h1>
     <hr>
-    <table class="table is-bordered">
+    {% if ideas|filter(idea => idea.is_archived == 'false')|length > 0 == null %}
+    <h1 class="title is-3 has-text-danger-50" style="text-align: center;">C'est vide ici ! Aucune idée à été créer !
+        {% if ideas|filter(idea => idea.is_archived == 'true')|length > 0 %} 
+            (ou une idée à été archivée)
+            <br><a href="/admin/show_archived_ideas">Voir les idées archivées</a>
+        {% endif %}
+    </h1>
+    {% else %}
+   <table class="table is-bordered">
         <thead>
             <tr class="is-link">
                 <th>Id</th>
@@ -75,8 +83,8 @@
                 <th>Nom/Prénom de l'auteur</th>
             </tr>
         </thead>
+        {% for idea in ideas|filter(idea => idea.is_archived != "true") %}
         <tbody>
-         {% for idea in ideas|filter(idea => idea.state_idea != 'is_archived') %}
             <tr>
                 <td><a href="/admin/modify_ideas/{{ idea.idea_id}}">{{ idea.idea_id }}</a></td>
                 <td>{{ idea.title_idea }}</td>
@@ -91,6 +99,7 @@
                 
             </tr>
             {% endfor %}
+            {% endif %}
         </tbody>
     </table>
 </body>

@@ -58,8 +58,9 @@
             </div>
         </div>
     </nav>
-    <h1 class="title is-1 m-5" style="text-align: center;">Voici l'ensemble des idées</h1>
+    <h1 class="title is-1 m-5" style="text-align: center;">Voici l'ensemble des idées archivées</h1>
     <hr>
+    {% if ideas|filter(idea=> idea.is_archived == "true") %}
     <table class="table is-bordered">
         <thead>
             <tr class="is-link">
@@ -76,9 +77,9 @@
             </tr>
         </thead>
         <tbody>
-            {% for idea in ideas|filter(idea => idea.state_idea == 'is_archived') %}
+            {% for idea in ideas|filter(idea => idea.is_archived == 'true') %}
             <tr>
-                <td><a href="/admin/modify_ideas/{{ idea.idea_id}}">{{ idea.idea_id }}</a></td>
+                <td><a href="/idea/{{ idea.idea_id}}">{{ idea.idea_id }}</a></td>
                 <td>{{ idea.title_idea }}</td>
                 <td>{{ idea.details_idea }}</td>
                 <td>{{ idea.state_idea }}</td>
@@ -90,6 +91,9 @@
                 <td>{{ idea.first_name }} {{ idea.family_name }}</td>
             </tr>
             {% endfor %}
+            {% else %}
+            <h1 class="title is-2 has-text-danger-50" style="text-align: center;">C'est vide ici ! Aucune idées ont été archivées !</h1>
+            {% endif %}
         </tbody>
     </table>
 </body>

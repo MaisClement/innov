@@ -7,6 +7,7 @@ use DateTimeInterface;
 use App\Form\CommentsType;
 use App\Repository\IdeaRepository;
 use App\Repository\AccountRepository;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,12 +20,14 @@ class Ideas extends AbstractController
 
     private AccountRepository $accountRepository;
     private IdeaRepository $ideaRepository;
+    private CommentRepository $commentRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, AccountRepository $accountRepository, IdeaRepository $ideaRepository)
+    public function __construct(EntityManagerInterface $entityManager, AccountRepository $accountRepository, IdeaRepository $ideaRepository, CommentRepository $commentRepository)
     {
         $this->entityManager = $entityManager;
         $this->ideaRepository = $ideaRepository;
         $this->accountRepository = $accountRepository;
+        $this->commentRepository = $commentRepository;
     }
 
     #[Route('/idea')]
@@ -43,6 +46,7 @@ class Ideas extends AbstractController
         $idea->setAuthor($author);
         $idea->setTeam($request->request->get('team'));
         $idea->setState("waiting_approval");
+        $idea->setArchived(false);
         $idea->setCreationDateTime(new \DateTime());
         
         
@@ -58,7 +62,7 @@ class Ideas extends AbstractController
     // Enfin faire en sorte de l'afficher sur une page récapitulative avec les infos de l'utilisateur et de l'idée.
 
     #[Route('/idea/{id}')]
-    public function display_idea($id)
+    public function display_idea(Request $request, $id)
     {
         $idea = $this->ideaRepository->find($id);
         $ideas = [];
@@ -73,6 +77,7 @@ class Ideas extends AbstractController
                 "team" => $_idea->getTeam(),
                 "author_id" => $_idea->getAuthor()->getId(),
                 "idea_id" => $_idea->getId(),
+                'is_archived'  =>$idea->isArchived(),
                 "role" => $_SESSION['role'],
                 "first_name" => $_idea->getAuthor()->getGivenName(),
                 "family_name" => $_idea->getAuthor()->getFamilyName(),
@@ -81,6 +86,32 @@ class Ideas extends AbstractController
             ]; 
         }
         
+        
+        $author = $this->accountRepository->find($_SESSION['account_id']);
+        $idea = $this->ideaRepository->find($id);
+        
+        if(isset($_POST['send_comment'])){
+            $comment = new Comment;
+            $comment->setMessage($request->request->get("content_commentary"));
+            $comment->setAuthor($author);
+            $comment->setRelatedIdea($idea);
+            $comment->setCreationDateTime(new \DateTime());
+            $this->entityManager->persist($comment);
+            $this->entityManager->flush();
+        }
+        
+
+        $comments = $this->commentRepository->findAll();
+        $_comments = [];
+        foreach($comments as $commentary)
+        {
+            $_comments[] = [
+                "comment_id" => $commentary->getId(),
+                "content_comment" => $commentary->getMessage(),
+                "create_comment" => $commentary->getCreationDateTime(),
+            ];
+        }
+
         $data = [
             "title_idea" => $idea->getTitle(),
             "details_idea" => $idea->getDetails(),
@@ -94,14 +125,13 @@ class Ideas extends AbstractController
             'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
             "state" => $idea->getState(),
             "user_id" => $_SESSION['account_id'],
-            "comments" => $idea->getComments(),
             "ideas" => $ideas,
+            "comments" => $_comments,
         ];
-
 
         return $this->render('/idea/recap_idea.html.twig', $data);
     }
-
+    
     
     /**
      * @Route("/idea/{id}/valid", name="idea_validate")
@@ -131,6 +161,20 @@ class Ideas extends AbstractController
         return new RedirectResponse('/home');
     }
 
+    /**
+     * @Route("/idea/{id}/wait", name="idea_wait_approve")
+    */
+    public function waiting(Request $request, $id) : RedirectResponse
+    {
+        $idea = $this->ideaRepository->find($id);
+
+        $idea->setState('waiting_approval');
+        $idea->setArchived(false);
+        $this->entityManager->persist($idea);
+        $this->entityManager->flush();
+
+        return new RedirectResponse('/home');
+    }
 
     /**
      * @Route("/idea/{id}/archived", name="idea_archived")
@@ -139,7 +183,7 @@ class Ideas extends AbstractController
     {
         $idea = $this->ideaRepository->find($id);
 
-        $idea->setState('is_archived');
+        $idea->setArchived(true);
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
 
@@ -153,6 +197,18 @@ class Ideas extends AbstractController
     {
         $idea = $this->ideaRepository->find($id);
         $this->entityManager->remove($idea);
+        $this->entityManager->flush();
+
+        return new RedirectResponse('/home');
+    }
+
+    /**
+     * @Route("/idea/{id}/deletecomment", name="comment_delete")
+    */
+    public function deleteComment(Request $request, $id) : RedirectResponse
+    {
+        $comment = $this->commentRepository->find($id);
+        $this->entityManager->remove($comment);
         $this->entityManager->flush();
 
         return new RedirectResponse('/home');

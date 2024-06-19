@@ -28,6 +28,11 @@ class Admin extends AbstractController
     #[Route('/admin')]
     public function admin()
     {
+
+        if (in_array('default', $_SESSION['role'])) {
+            return $this->redirect('/error403');
+        }
+
         $idea = $this->ideaRepository->findAll(); 
 
         $ideas = [];
@@ -46,8 +51,8 @@ class Admin extends AbstractController
                 "family_name" => $_idea->getAuthor()->getFamilyName(),
                 "creationDateTime" => $_idea->getCreationDateTime(),
                 "state_idea" => $_idea->getState(),
-        ];
-    }
+            ];
+        }
         $data = [ 
             'family_name'=>$_SESSION['family_name'], 
             'given_name' => $_SESSION['given_name'],
@@ -104,6 +109,7 @@ class Admin extends AbstractController
                 "choice_funding" => $idea->getChoiceFunding(),
                 "funding_details" => $idea->getDetailsFunding(),
                 "team" => $idea->getTeam(),
+                'is_archived' => $idea->isArchived() ? 'true' : 'false',
                 "author_id" => $idea->getAuthor()->getId(),
                 "idea_id" => $idea->getId(),
                 "first_name" => $idea->getAuthor()->getGivenName(),
@@ -111,11 +117,11 @@ class Admin extends AbstractController
                 "creationDateTime" => $idea->getCreationDateTime(),
                 "state_idea" => $idea->getState(),
         ];
-
-        $data = [ 
-            "ideas" => $ideas, 
-        ];
     }
+    
+            $data = [ 
+                "ideas" => $ideas, 
+            ];
         return $this->render('admin/show_ideas.html.twig', $data);
     }
 
@@ -134,6 +140,7 @@ class Admin extends AbstractController
                 "choice_funding" => $idea->getChoiceFunding(),
                 "funding_details" => $idea->getDetailsFunding(),
                 "team" => $idea->getTeam(),
+                'is_archived' => $idea->isArchived() ? 'true' : 'false',
                 "author_id" => $idea->getAuthor()->getId(),
                 "idea_id" => $idea->getId(),
                 "first_name" => $idea->getAuthor()->getGivenName(),
@@ -142,10 +149,11 @@ class Admin extends AbstractController
                 "state_idea" => $idea->getState(),
             ];
 
-            $data = [ 
-                "ideas" => $ideas, 
-            ];
         }
+        
+        $data = [ 
+            "ideas" => $ideas, 
+        ];
         return $this->render('admin/show_ideas_archived.html.twig', $data);
     }
     
@@ -177,7 +185,8 @@ class Admin extends AbstractController
             $idea->setDetailsFunding($request->request->get('modify_funding_details'));
 
             $this->entityManager->persist($idea);
-            $this->entityManager->flush();    
+            $this->entityManager->flush();   
+            return $this->redirect('/admin/show_ideas'); 
         }
         
         return $this->render('admin/modify_ideas.html.twig', $data);

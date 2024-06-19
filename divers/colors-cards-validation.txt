@@ -14,6 +14,10 @@ Code html des tags
     
 - Non approuvé :
     
+    <div class="tags has-addons">
+        <span class="tag is-danger" style="margin-left:10px">Non approuvé</span>
+        <span class="tag">Non réalisable</span>
+    </div>
     
 - En cours d'approbation : 
 

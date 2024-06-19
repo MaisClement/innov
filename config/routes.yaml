@@ -23,3 +23,13 @@ idea_delete:
   path: /idea/{id}/delete
   controller: App\Controller\Ideas::deleteIdea
   methods: [POST]
+
+idea_wait_approve:
+  path: /idea/{id}/wait
+  controller: App\Controller\Ideas::waiting
+  methods: [POST]
+
+comment_delete:
+  path: /idea/{id}/comment/{comment_id}/delete
+  controller: App\Controller\Ideas::deleteComment
+  methods: [POST]
