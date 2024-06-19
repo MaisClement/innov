@@ -95,17 +95,28 @@
             <hr>
             <h1 class="title is-2">Commentaires</h1>
             <br>
-            <h1 class="title is-4">Liste des commentaires</h1>
-            <!-- si un commentaire est posté sous une idée le mettre sous l'idée en question -->
-            <h1 class="title is-6">Ici vos commentaires</h1>
             <h1 class="title is-4">Poster un commentaire</h1>
-            <form action="" method="post">
-                <textarea name="" id="" class="textarea is-light"></textarea><br>
-                <input type="submit" id="send_comment" value="Envoyer un commentaire" class="button is-success">
+            <form action="/idea/{{ idea_id }}" method="post">
+                <textarea name="content_commentary" id="content_commentary" class="textarea is-light"></textarea><br>
+                <input type="submit" name="send_comment" id="send_comment" value="Envoyer un commentaire" class="button is-success">
             </form>
             <hr>
+            <h1 class="title is-2">Liste des commentaires</h1>
+            <div class="container">
+                {% for comment in comments %}
+                    <h1 class="title is-4">Arthur Hymery</h1>
+                    <div class="box">
+                        <p class="subtitle is-4">{{ comment.content_comment }}</p>
+                        <!-- {# {% if is_admin == true %}
+                            <a href="/idea/{{ idea_id }}/comment/{{ comment_id }}/delete"></a>
+                        {% endif %} #}--> 
+                    </div>
+                    <br>
+                {% endfor %}
+            </div>
+            <hr>
             <div class="buttons">
-            {% if is_admin != false %}
+            {% if is_admin == "true" %}
             <form action="{{ path('idea_archived', { 'id':idea_id }) }}" method="post">
                 <input type="submit" value="Archiver ?" class="button is-warning">
             </form>

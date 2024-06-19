@@ -76,4 +76,16 @@ class Home extends AbstractController
     return $this->render('home.html.twig', $data);
     }
 
+    #[Route('/error403')]
+    public function error403()
+    {
+        return $this->render('errors/error403.html');
+    }
+
+    #[Route('/error404')]
+    public function error404()
+    {
+        return $this->render('errors/error404.html');
+    }
+
 }

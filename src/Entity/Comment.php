@@ -23,6 +23,9 @@ class Comment
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?Idea $related_idea = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $creationDateTime = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,18 @@ class Comment
     public function setRelatedIdea(?Idea $related_idea): static
     {
         $this->related_idea = $related_idea;
+
+        return $this;
+    }
+
+    public function getCreationDateTime(): ?\DateTimeInterface
+    {
+        return $this->creationDateTime;
+    }
+
+    public function setCreationDateTime(\DateTimeInterface $creationDateTime): static
+    {
+        $this->creationDateTime = $creationDateTime;
 
         return $this;
     }
