@@ -38,6 +38,8 @@ class Home extends AbstractController
                 "choice_funding" => $idea->getChoiceFunding(),
                 "funding_details" => $idea->getDetailsFunding(),
                 "team" => $idea->getTeam(),
+                "validator_givenname" => $idea->getValidator(),
+                "validator_familyname" => $idea->getValidator(),
                 "author_id" => $idea->getAuthor()->getId(),
                 "idea_id" => $idea->getId(),
                 "first_name" => $idea->getAuthor()->getGivenName(),
@@ -46,6 +48,8 @@ class Home extends AbstractController
                 "state_idea" => $idea->getState(),
         ];
     }
+
+        
     
     if(isset($_FILES['files_idea']) && $_FILES['files_idea']['error'] === 0){
         $fileName = $_FILES["files_idea"]["name"];

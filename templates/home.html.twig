@@ -23,8 +23,11 @@
             </a>
             <a href="#" class="navbar-item">En attente d'approbation</a>
             <a href="#" class="navbar-item">Validés</a>
-            <a href="#" data-target="modal-js-create-idea" class="navbar-item js-modal-trigger">
-                <span class="button is-link ">Soumettre une idée</span>
+            <a href="#" data-target="modal-js-create-idea" class="navbar-item has-background-link js-modal-trigger">
+                <span class="button is-link">
+                    <i class="fa-solid fa-lightbulb mr-2"></i>
+                    Soumettre une idée
+                </span>
             </a>
         </div>
         <div class="navbar-end">
@@ -32,11 +35,17 @@
                 <div class="buttons">
                     {% if is_admin == "true" %}
                     <a href="/admin" class="button is-link is-rounded">
+                        <i class="fa-solid fa-user-tie mr-2"></i>
                         <strong>Tableau de bord</strong>
                     </a>
                     {% endif %}
                     <a href="/profile" class="button is-link is-rounded">
+                        <i class="fa-solid fa-user mr-2"></i>
                         <strong>Mon profil</strong>
+                    </a>
+                    <a href="/logout" class="button is-danger is-rounded">
+                        <i class="fa-solid fa-lock mr-2"></i>
+                        <strong>Se déconnecter</strong>
                     </a>
                 </div>
             </div>

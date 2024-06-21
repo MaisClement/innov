@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Idea;
 use App\Repository\IdeaRepository;
+use App\Repository\AccountRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,9 +12,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class Profile extends AbstractController
 {
     private IdeaRepository $ideaRepository;
-    public function __construct(IdeaRepository $ideaRepository)
+    private AccountRepository $accountRepository;
+    public function __construct(IdeaRepository $ideaRepository, AccountRepository $accountRepository)
     {
         $this->ideaRepository = $ideaRepository;
+        $this->accountRepository = $accountRepository;
     }
 
     #[Route('/profile')]
@@ -37,9 +40,25 @@ class Profile extends AbstractController
                 "creationDateTime" => $idea->getCreationDateTime(),
                 "state_idea" => $idea->getState(),
                 'user_id' => $_SESSION['account_id'],
-                
             ];
         }
+        
+        $account = $this->accountRepository->find($_SESSION['account_id']);
+        $comments = $account->getComments();
+        $idea = $account->getIdeas();
+        $_comments = [];
+        foreach($comments as $commentary)
+        {
+            $_comments[] = [
+                "comment_id" => $commentary->getId(),
+                "comment_idea_id" => $commentary->getRelatedIdea(),
+                "author_givenname" => $commentary->getAuthor()->getGivenName(),
+                "author_familyname" => $commentary->getAuthor()->getFamilyName(),
+                "content_comment" => $commentary->getMessage(),
+                "create_comment" => $commentary->getCreationDateTime(),
+            ];
+        }
+
         $data = [ 
                 'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
                 'family_name'=>$_SESSION['family_name'], 
@@ -47,6 +66,7 @@ class Profile extends AbstractController
                 'mail' => $_SESSION['upn'],
                 'account_id' => $_SESSION['account_id'],
                 'ideas' => $ideas,
+                'comments' => $_comments,
             ];
             return $this->render('profile.html.twig', $data);
     }
