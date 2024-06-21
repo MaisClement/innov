@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240619135827 extends AbstractMigration
+final class Version20240621153952 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,7 +21,7 @@ final class Version20240619135827 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE account (id INT AUTO_INCREMENT NOT NULL, family_name VARCHAR(255) NOT NULL, given_name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, ms_oid VARCHAR(255) NOT NULL, is_active TINYINT(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
-        $this->addSql('CREATE TABLE comment (id INT AUTO_INCREMENT NOT NULL, message LONGTEXT NOT NULL, creation_date_time DATETIME NOT NULL, author_id INT DEFAULT NULL, related_idea_id INT DEFAULT NULL, INDEX IDX_9474526CF675F31B (author_id), INDEX IDX_9474526C647625D8 (related_idea_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
+        $this->addSql('CREATE TABLE comment (id INT AUTO_INCREMENT NOT NULL, message LONGTEXT NOT NULL, creation_date_time DATETIME NOT NULL, answer LONGTEXT DEFAULT NULL, answer_date_time DATETIME DEFAULT NULL, author_id INT DEFAULT NULL, related_idea_id INT DEFAULT NULL, author_answer_id_id INT DEFAULT NULL, INDEX IDX_9474526CF675F31B (author_id), INDEX IDX_9474526C647625D8 (related_idea_id), INDEX IDX_9474526CBAFC7F69 (author_answer_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE idea (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, details LONGTEXT NOT NULL, state VARCHAR(255) NOT NULL, creation_datetime DATETIME NOT NULL, choice_mesures LONGTEXT NOT NULL, details_mesures LONGTEXT NOT NULL, choice_funding LONGTEXT NOT NULL, details_funding LONGTEXT NOT NULL, team VARCHAR(255) NOT NULL, files_idea VARCHAR(255) DEFAULT NULL, is_archived TINYINT(1) NOT NULL, author_id INT NOT NULL, validator_id INT DEFAULT NULL, INDEX IDX_A8BCA45F675F31B (author_id), INDEX IDX_A8BCA45B0644AEC (validator_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE login (id INT AUTO_INCREMENT NOT NULL, ip VARCHAR(255) NOT NULL, datetime DATETIME NOT NULL, account_id_id INT NOT NULL, INDEX IDX_AA08CB1049CB4726 (account_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE managers (id INT AUTO_INCREMENT NOT NULL, family_name VARCHAR(255) NOT NULL, given_name VARCHAR(255) NOT NULL, team_id_id INT NOT NULL, INDEX IDX_A949E006B842D717 (team_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
@@ -31,6 +31,7 @@ final class Version20240619135827 extends AbstractMigration
         $this->addSql('CREATE TABLE messenger_messages (id BIGINT AUTO_INCREMENT NOT NULL, body LONGTEXT NOT NULL, headers LONGTEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at DATETIME NOT NULL, available_at DATETIME NOT NULL, delivered_at DATETIME DEFAULT NULL, INDEX IDX_75EA56E0FB7336F0 (queue_name), INDEX IDX_75EA56E0E3BD61CE (available_at), INDEX IDX_75EA56E016BA31DB (delivered_at), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('ALTER TABLE comment ADD CONSTRAINT FK_9474526CF675F31B FOREIGN KEY (author_id) REFERENCES account (id)');
         $this->addSql('ALTER TABLE comment ADD CONSTRAINT FK_9474526C647625D8 FOREIGN KEY (related_idea_id) REFERENCES idea (id)');
+        $this->addSql('ALTER TABLE comment ADD CONSTRAINT FK_9474526CBAFC7F69 FOREIGN KEY (author_answer_id_id) REFERENCES account (id)');
         $this->addSql('ALTER TABLE idea ADD CONSTRAINT FK_A8BCA45F675F31B FOREIGN KEY (author_id) REFERENCES account (id)');
         $this->addSql('ALTER TABLE idea ADD CONSTRAINT FK_A8BCA45B0644AEC FOREIGN KEY (validator_id) REFERENCES account (id)');
         $this->addSql('ALTER TABLE login ADD CONSTRAINT FK_AA08CB1049CB4726 FOREIGN KEY (account_id_id) REFERENCES account (id)');
@@ -44,6 +45,7 @@ final class Version20240619135827 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE comment DROP FOREIGN KEY FK_9474526CF675F31B');
         $this->addSql('ALTER TABLE comment DROP FOREIGN KEY FK_9474526C647625D8');
+        $this->addSql('ALTER TABLE comment DROP FOREIGN KEY FK_9474526CBAFC7F69');
         $this->addSql('ALTER TABLE idea DROP FOREIGN KEY FK_A8BCA45F675F31B');
         $this->addSql('ALTER TABLE idea DROP FOREIGN KEY FK_A8BCA45B0644AEC');
         $this->addSql('ALTER TABLE login DROP FOREIGN KEY FK_AA08CB1049CB4726');

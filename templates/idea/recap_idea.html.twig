@@ -24,8 +24,11 @@
             </a>
             <a href="#" class="navbar-item">En attente d'approbation</a>
             <a href="#" class="navbar-item">Validés</a>
-            <a href="#" data-target="modal-js-create-idea" class="navbar-item js-modal-trigger">
-                <span class="button is-link ">Soumettre une idée</span>
+            <a href="#" data-target="modal-js-create-idea" class="navbar-item has-background-link js-modal-trigger">
+                <span class="button is-link">
+                    <i class="fa-solid fa-lightbulb mr-2"></i>
+                    Soumettre une idée
+                </span>
             </a>
         </div>
         <div class="navbar-end">
@@ -33,11 +36,17 @@
                 <div class="buttons">
                     {% if is_admin == "true" %}
                     <a href="/admin" class="button is-link is-rounded">
+                        <i class="fa-solid fa-user-tie mr-2"></i>
                         <strong>Tableau de bord</strong>
                     </a>
                     {% endif %}
                     <a href="/profile" class="button is-link is-rounded">
+                        <i class="fa-solid fa-user mr-2"></i>
                         <strong>Mon profil</strong>
+                    </a>
+                    <a href="/logout" class="button is-danger is-rounded">
+                        <i class="fa-solid fa-lock mr-2"></i>
+                        <strong>Se déconnecter</strong>
                     </a>
                 </div>
             </div>
@@ -46,12 +55,8 @@
     <div class="columns is-centered">
         <div class="column is-8 is-justify-items-center">
             <br>
-            <a href="/home" style="padding-bottom: 20px;">
-                <i class="fas fa-arrow-left" aria-hidden="true"></i>
-                Retour à l'accueil
-            </a>
-            <br />
-            <br />
+            <br>
+            <br>
             <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-center">
                 <span class="icon has-text-warning" style="margin-right: 10px;">
                     <i class="fa-solid fa-arrow-right fa-2xl" aria-hidden="true"></i>
@@ -96,52 +101,84 @@
             <h1 class="title is-2">Commentaires</h1>
             <br>
             <h1 class="title is-4">Poster un commentaire</h1>
-            <form action="/idea/{{ idea_id }}" method="post">
+            <form action="/idea/{{ idea_id }}#comments" method="post">
                 <textarea name="content_commentary" id="content_commentary" class="textarea is-light"></textarea><br>
-                <input type="submit" name="send_comment" id="send_comment" value="Envoyer un commentaire" class="button is-success">
+                <input type="submit" name="send_comment" id="send_comment" value="Envoyer un commentaire"
+                    class="button is-success">
             </form>
             <hr>
-            <h1 class="title is-2">Liste des commentaires</h1>
+            <h1 class="title is-2" id="comments">Liste des commentaires</h1>
             <div class="container">
                 {% for comment in comments %}
-                    <h1 class="title is-4">Arthur Hymery</h1>
-                    <div class="box">
-                        <p class="subtitle is-4">{{ comment.content_comment }}</p>
-                        <!-- {# {% if is_admin == true %}
-                            <a href="/idea/{{ idea_id }}/comment/{{ comment_id }}/delete"></a>
-                        {% endif %} #}--> 
+                <div class="box">
+                    <h1 class="title is-4 mb-2">{{ comment.author_givenname }} {{ comment.author_familyname }} </h1>
+                    <p class="subtitle is-4">{{ comment.content_comment }}</p>
+                    {% if is_admin == "true" %}
+                    <div class="buttons">
+                        <form action="/idea/{{ idea_id }}/comment/{{ comment.comment_id }}/delete" method="post">
+                            <input type="submit" class="button" value="Supprimer">
+                        </form>
+                        <input type="submit" value="Répondre" class="button js-modal-trigger"
+                            data-target="modal-js-answer">
                     </div>
-                    <br>
+                    {% endif %}
+                </div>
+                <div class="box ml-6" style="border: solid #4258ff 5px;">
+                    <h1 class="title is-4 mb-2">Réponse de</h1>
+                </div>
+                <br>
                 {% endfor %}
             </div>
             <hr>
             <div class="buttons">
-            {% if is_admin == "true" %}
-            <form action="{{ path('idea_archived', { 'id':idea_id }) }}" method="post">
-                <input type="submit" value="Archiver ?" class="button is-warning">
-            </form>
-                <input type="submit" value="Supprimer ?" class="button is-danger js-modal-trigger" data-target="modal-js-delete">
-            {% endif %} 
-            <a href="/home" class="button is-link">
-                Retour à l'accueil
-            </a>
-        </div>
-    </div>
-    <!-- MODAL CONFIRMATION SUPPRESSION -->
-    <div class="modal has-background-danger" id="modal-js-delete">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-            <h1 class="title is-2">Êtes vous sur de vouloir supprimer cette idée ?</h1>
-            <div class="buttons">
-                <form action="{{ path('idea_delete', { 'id':idea_id }) }}" method="post">
-                    <input type="submit" class="button has-text-light has-background-danger-40" value="Oui">    
+                {% if is_admin == "true" %}
+                <form action="{{ path('idea_archived', { 'id':idea_id }) }}" method="post">
+                    <input type="submit" value="Archiver ?" class="button is-warning">
                 </form>
+                <input type="submit" value="Supprimer ?" class="button is-danger js-modal-trigger"
+                    data-target="modal-js-delete">
+                {% endif %}
+                <a href="/home" class="button is-link">
+                    Retour à l'accueil
+                </a>
+            </div>
+        </div>
+        <!-- MODAL CONFIRMATION SUPPRESSION -->
+        <div class="modal has-background-danger" id="modal-js-delete">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <h1 class="title is-2">Êtes vous sur de vouloir supprimer cette idée ?</h1>
+                <div class="buttons">
+                    <form action="{{ path('idea_delete', { 'id':idea_id }) }}" method="post">
+                        <input type="submit" class="button has-text-light has-background-danger-40" value="Oui">
+                    </form>
+                    <form action="/idea/{{ idea_id }}" method="post">
+                        <input type="submit" class="button has-text-light has-background-success-40"
+                            value="Non"></input>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="modal-js-answer">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Répondre au commentaire</p>
+                    <button class="delete" aria-label="close"></button>
+                </header>
                 <form action="/idea/{{ idea_id }}" method="post">
-                    <input type="submit" class="button has-text-light has-background-success-40" value="Non"></input>
+                    <section class="modal-card-body">
+                        <h1 class="title is-3">Rédiger votre réponse</h1>
+                        <textarea name="answer_comment" id="answer_comment" class="textarea"></textarea>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <div class="buttons">
+                            <button type="submit" id="send_answer" name="send_answer" class="button is-success">Envoyer la réponse</button>
+                        </div>
+                    </footer>
                 </form>
             </div>
         </div>
-    </div>
 </body>
 
 </html>

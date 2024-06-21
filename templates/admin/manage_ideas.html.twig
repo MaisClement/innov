@@ -60,6 +60,9 @@
     </nav>
     <h1 class="title is-1 m-5" style="text-align: center;">Gestion des idées</h1>
     <hr>
+    {% if ideas == null %}
+    <h1 class="title is-2 has-text-danger-50" style="text-align: center;">C'est vide ici ! Aucune idée à été créer !</h1>
+    {% endif %}
     <div class="columns is-centered">
         <div class="column is-4">
             {% if ideas|filter(idea => idea.state_idea == 'in_progress')|length > 0 %}
@@ -67,7 +70,7 @@
                 <span class="icon has-text-success">
                     <i class="fa-solid fa-arrow-right fa-2xl"></i>
                 </span>
-                <h1 class="title is-3 pl-2">Idées approuvées</h1>
+                <h1 class="title is-3 pl-2">Approuvées</h1>
             </div>
             <br>
             {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress') %}
@@ -108,7 +111,7 @@
                 <span class="icon has-text-warning">
                     <i class="fa-solid fa-arrow-right fa-2xl"></i>
                 </span>
-                <h1 class="title is-3 pl-2">Idées en attente d'approbation</h1>
+                <h1 class="title is-3 pl-2">En attente d'approbation</h1>
             </div>
             <br>
             {% for idea in ideas|filter(idea => idea.state_idea == 'waiting_approval') %}
@@ -148,7 +151,7 @@
                 <span class="icon has-text-danger">
                     <i class="fa-solid fa-arrow-right fa-2xl"></i>
                 </span>
-                <h1 class="title is-3 pl-2">Idées refusées</h1>
+                <h1 class="title is-3 pl-2">Refusées</h1>
             </div>
             <br>
             {% for idea in ideas|filter(idea => idea.state_idea == 'refused') %}

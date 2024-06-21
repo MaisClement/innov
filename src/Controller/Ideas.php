@@ -88,25 +88,27 @@ class Ideas extends AbstractController
         
         
         $author = $this->accountRepository->find($_SESSION['account_id']);
-        $idea = $this->ideaRepository->find($id);
         
         if(isset($_POST['send_comment'])){
             $comment = new Comment;
             $comment->setMessage($request->request->get("content_commentary"));
+            $idea->addComment($comment);
             $comment->setAuthor($author);
-            $comment->setRelatedIdea($idea);
             $comment->setCreationDateTime(new \DateTime());
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
         }
         
 
-        $comments = $this->commentRepository->findAll();
+        $comments = $idea->getComments();
         $_comments = [];
         foreach($comments as $commentary)
         {
             $_comments[] = [
                 "comment_id" => $commentary->getId(),
+                "comment_idea_id" => $commentary->getRelatedIdea(),
+                "author_givenname" => $commentary->getAuthor()->getGivenName(),
+                "author_familyname" => $commentary->getAuthor()->getFamilyName(),
                 "content_comment" => $commentary->getMessage(),
                 "create_comment" => $commentary->getCreationDateTime(),
             ];
@@ -119,9 +121,11 @@ class Ideas extends AbstractController
             "details_mesures" => $idea->getDetailsMesures(),
             "choice_funding" => $idea->getChoiceFunding(),
             "funding_details" => $idea->getDetailsFunding(),
-            "team" => $idea->getTeam(),
-            "author_id" => $idea->getAuthor()->getId(),
             "idea_id" => $idea->getId(),
+            "team" => $idea->getTeam(),
+            "validator_givenname" => $idea->getValidator(),
+            "validator_familyname" => $idea->getValidator(),
+            "author_id" => $idea->getAuthor()->getId(),
             'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
             "state" => $idea->getState(),
             "user_id" => $_SESSION['account_id'],
@@ -131,6 +135,9 @@ class Ideas extends AbstractController
 
         return $this->render('/idea/recap_idea.html.twig', $data);
     }
+    
+
+    
     
     
     /**
@@ -144,7 +151,7 @@ class Ideas extends AbstractController
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
         
-        return new RedirectResponse('/home');
+        return new RedirectResponse('/admin/manage_ideas');
     }
 
     /**
@@ -158,7 +165,7 @@ class Ideas extends AbstractController
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
 
-        return new RedirectResponse('/home');
+        return new RedirectResponse('/admin/manage_ideas');
     }
 
     /**
@@ -173,7 +180,7 @@ class Ideas extends AbstractController
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
 
-        return new RedirectResponse('/home');
+        return new RedirectResponse('/admin/manage_ideas');
     }
 
     /**
@@ -196,6 +203,12 @@ class Ideas extends AbstractController
     public function deleteIdea(Request $request, $id) : RedirectResponse
     {
         $idea = $this->ideaRepository->find($id);
+        $comments = $idea->getComments();
+
+        foreach ($comments as $comment) {
+            $this->entityManager->remove($comment);
+        }
+        
         $this->entityManager->remove($idea);
         $this->entityManager->flush();
 
@@ -203,14 +216,15 @@ class Ideas extends AbstractController
     }
 
     /**
-     * @Route("/idea/{id}/deletecomment", name="comment_delete")
+     * @Route(" /idea/{id}/comment/{comment_id}/delete", name="comment_delete")
     */
-    public function deleteComment(Request $request, $id) : RedirectResponse
+    public function deleteComment(Request $request, $id, $comment_id) : RedirectResponse
     {
-        $comment = $this->commentRepository->find($id);
+        $comment = $this->commentRepository->find($comment_id);
+        $idea = $this->ideaRepository->find($id);
+        $comment->setRelatedIdea($idea);
         $this->entityManager->remove($comment);
         $this->entityManager->flush();
-
         return new RedirectResponse('/home');
     }
 }
