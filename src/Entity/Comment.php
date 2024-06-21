@@ -26,6 +26,15 @@ class Comment
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $creationDateTime = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $answer = null;
+
+    #[ORM\ManyToOne]
+    private ?Account $author_answer_id = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $answer_date_time = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -78,4 +87,41 @@ class Comment
 
         return $this;
     }
+
+    public function getAnswer(): ?string
+    {
+        return $this->answer;
+    }
+
+    public function setAnswer(?string $answer): static
+    {
+        $this->answer = $answer;
+
+        return $this;
+    }
+
+    public function getAuthorAnswerId(): ?Account
+    {
+        return $this->author_answer_id;
+    }
+
+    public function setAuthorAnswerId(?Account $author_answer_id): static
+    {
+        $this->author_answer_id = $author_answer_id;
+
+        return $this;
+    }
+
+    public function getAnswerDateTime(): ?\DateTimeInterface
+    {
+        return $this->answer_date_time;
+    }
+
+    public function setAnswerDateTime(?\DateTimeInterface $answer_date_time): static
+    {
+        $this->answer_date_time = $answer_date_time;
+
+        return $this;
+    }
+    
 }

@@ -3,7 +3,9 @@ namespace App\Controller;
 
 use App\Entity\Idea;
 use App\Entity\Account;
+use App\Entity\Role;
 use App\Repository\IdeaRepository;
+use DateTimeInterface;
 use App\Repository\AccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -204,19 +206,81 @@ class Admin extends AbstractController
 
         $accounts = [];
         foreach($_accounts as $account){
-            $accounts[] = [
-                "account_id" => $account->getId(),
-                "family_name" => $account->getFamilyName(),
-                "given_name" => $account->getGivenName(),
-                "mail" => $account->getEmail(),
-                "msOid" => $account->getMsOid(),
+        $roles = [];
+        foreach($account->getRole() as $_role) {
+            $roles[] = $_role->getRole();
+        }
+        
+        $accounts[] = [ 
+            "account_id" => $account->getId(),
+            "family_name" => $account->getFamilyName(),
+            "given_name" => $account->getGivenName(),
+            "mail" => $account->getEmail(),
+            "msOid" => $account->getMsOid(),
+            "user_roles" => implode(",", $roles),
         ];
+    }
 
         $data = [ 
             "accounts" => $accounts, 
         ];
+        
+        return $this->render('admin/show_profiles.html.twig', $data);
     }
 
-        return $this->render('admin/show_profiles.html.twig', $data);
+    #[Route('/admin/show_profiles/roles_added/{id}')]
+    public function addRoles(Request $request, $id)
+    {
+        $user = $this->accountRepository->find($id);
+            
+        // On récupère tout les roles de l'utilisateur
+        $roles = [];
+        foreach($user->getRole() as $_role) {
+            $roles[] = $_role;
+        }
+        if($request->isMethod('POST')) {
+        // On supprime tout les roles de l'utilisateur
+        foreach($roles as $role) {
+            $this->entityManager->remove($role);
+        };
+        $this->entityManager->flush();
+        // On récupère la liste des nouveaux roles
+        $new_roles = explode(",", $request->request->get('rolestags'));
+            
+        // On crée les roles de l'utilisateurs
+        foreach ($new_roles as $new_role) {
+            $role = new Role;
+            $role->setRole($new_role);
+            $this->entityManager->persist($role);
+            $user->addRole($role);
+        }
+            
+            // On enregistre tout cela
+            $this->entityManager->flush();
+        }
+
+        return $this->redirect('/admin/show_profiles');
+    }
+
+    #[Route("/idea/{id}/comment/{comment_id}/answer")]
+    public function answer(Request $request, $id, $comment_id)
+    {
+        $idea = $this->ideaRepository->find($id);
+        $comment = $this->commentRepository->find($comment_id);
+        $author = $this->accountRepository->find($_SESSION['account_id']);
+
+        if(isset($_POST['send_answer']))
+        {
+            $answer = new Comment;
+            $answer->setAnswer($comment);
+            $idea->setComment($request->request->get('answer_comment'));
+            $answer->setAuthorAnswerId($author);
+            $answer->setAnswerDateTime(new \DateTime);
+            dd($answer);
+            $this->entityManager->persist($answer);
+            $this->entityManager->flush();
+        }        
+
+       return $this->redirect('/idea/{id}#comments');
     }
 }

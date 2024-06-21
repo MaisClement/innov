@@ -12,8 +12,11 @@
     <meta name="author" content="Lowa">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://www.jsdelivr.com/package/npm/@creativebulma/bulma-tagsinput/dist/css/bulma-tagsinput.min.css" />
-    <script src="https://www.jsdelivr.com/package/npm/@creativebulma/bulma-tagsinput/dist/js/bulma-tagsinput.min.js"></script>
+    <script src="{{asset('js/index.js')}}"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/bulma-tagsinput@2.0.0/dist/js/bulma-tagsinput.min.js"></script>
+    <link rel="stylesheet"
+        href="https://www.jsdelivr.com/package/npm/@creativebulma/bulma-tagsinput/dist/css/bulma-tagsinput.min.css" />
 </head>
 
 <body>
@@ -64,7 +67,7 @@
     <hr>
     <div class="container">
         <div class="columns is-centered">
-            <div class="column is-half">
+            <div class="column is-12">
                 <table class="table is-bordered">
                     <thead>
                         <tr>
@@ -73,6 +76,7 @@
                             <th>Prénom</th>
                             <th>Email</th>
                             <th>Microsoft ID</th>
+                            <th>Rôles</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,6 +87,15 @@
                             <td>{{ account.given_name }}</td>
                             <td>{{ account.mail }}</td>
                             <td>{{ account.msOid }}</td>
+                            <form method="post" action="/admin/show_profiles/roles_added/{{ account.account_id }}">
+                                <td>
+                                    <input class="input" type="tags" placeholder="Ajoutez un rôle" name="rolestags"
+                                        id="rolestags" value="{{ account.user_roles }}">
+                                </td>
+                                <td>
+                                    <input class="button" type="submit" value="Mettre à jour">
+                                </td>
+                            </form>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -90,7 +103,7 @@
             </div>
         </div>
     </div>
-</body>
+    <script>bulmaTagsinput.attach();</script>
 </body>
 
 </html>

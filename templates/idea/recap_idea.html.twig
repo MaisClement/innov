@@ -103,58 +103,82 @@
             <h1 class="title is-4">Poster un commentaire</h1>
             <form action="/idea/{{ idea_id }}#comments" method="post">
                 <textarea name="content_commentary" id="content_commentary" class="textarea is-light"></textarea><br>
-                <input type="submit" name="send_comment" id="send_comment" value="Envoyer un commentaire" class="button is-success">
+                <input type="submit" name="send_comment" id="send_comment" value="Envoyer un commentaire"
+                    class="button is-success">
             </form>
             <hr>
             <h1 class="title is-2" id="comments">Liste des commentaires</h1>
             <div class="container">
                 {% for comment in comments %}
                 <div class="box">
-                        <h1 class="title is-4 mb-2">{{ comment.author_givenname }} {{ comment.author_familyname }} </h1>
-                        <p class="subtitle is-4">{{ comment.content_comment }}</p>
-                        {% if is_admin == "true" %}
-                        <div class="buttons">
-
-                            <form action="/idea/{{ idea_id }}/comment/{{ comment.comment_id }}/delete" method="post">
-                                <input type="submit" class="button" value="Supprimer">
-                            </form>
-                            <form method="post">
-                                <input type="submit" value="Répondre" class="button">
-                            </form>
-                        </div>
-                        {% endif %}
+                    <h1 class="title is-4 mb-2">{{ comment.author_givenname }} {{ comment.author_familyname }} </h1>
+                    <p class="subtitle is-4">{{ comment.content_comment }}</p>
+                    {% if is_admin == "true" %}
+                    <div class="buttons">
+                        <form action="/idea/{{ idea_id }}/comment/{{ comment.comment_id }}/delete" method="post">
+                            <input type="submit" class="button" value="Supprimer">
+                        </form>
+                        <input type="submit" value="Répondre" class="button js-modal-trigger"
+                            data-target="modal-js-answer">
                     </div>
-                    <br>
+                    {% endif %}
+                </div>
+                <div class="box ml-6" style="border: solid #4258ff 5px;">
+                    <h1 class="title is-4 mb-2">Réponse de</h1>
+                </div>
+                <br>
                 {% endfor %}
             </div>
             <hr>
             <div class="buttons">
-            {% if is_admin == "true" %}
-            <form action="{{ path('idea_archived', { 'id':idea_id }) }}" method="post">
-                <input type="submit" value="Archiver ?" class="button is-warning">
-            </form>
-                <input type="submit" value="Supprimer ?" class="button is-danger js-modal-trigger" data-target="modal-js-delete">
-            {% endif %} 
-            <a href="/home" class="button is-link">
-                Retour à l'accueil
-            </a>
-        </div>
-    </div>
-    <!-- MODAL CONFIRMATION SUPPRESSION -->
-    <div class="modal has-background-danger" id="modal-js-delete">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-            <h1 class="title is-2">Êtes vous sur de vouloir supprimer cette idée ?</h1>
-            <div class="buttons">
-                <form action="{{ path('idea_delete', { 'id':idea_id }) }}" method="post">
-                    <input type="submit" class="button has-text-light has-background-danger-40" value="Oui">    
+                {% if is_admin == "true" %}
+                <form action="{{ path('idea_archived', { 'id':idea_id }) }}" method="post">
+                    <input type="submit" value="Archiver ?" class="button is-warning">
                 </form>
+                <input type="submit" value="Supprimer ?" class="button is-danger js-modal-trigger"
+                    data-target="modal-js-delete">
+                {% endif %}
+                <a href="/home" class="button is-link">
+                    Retour à l'accueil
+                </a>
+            </div>
+        </div>
+        <!-- MODAL CONFIRMATION SUPPRESSION -->
+        <div class="modal has-background-danger" id="modal-js-delete">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <h1 class="title is-2">Êtes vous sur de vouloir supprimer cette idée ?</h1>
+                <div class="buttons">
+                    <form action="{{ path('idea_delete', { 'id':idea_id }) }}" method="post">
+                        <input type="submit" class="button has-text-light has-background-danger-40" value="Oui">
+                    </form>
+                    <form action="/idea/{{ idea_id }}" method="post">
+                        <input type="submit" class="button has-text-light has-background-success-40"
+                            value="Non"></input>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="modal-js-answer">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Répondre au commentaire</p>
+                    <button class="delete" aria-label="close"></button>
+                </header>
                 <form action="/idea/{{ idea_id }}" method="post">
-                    <input type="submit" class="button has-text-light has-background-success-40" value="Non"></input>
+                    <section class="modal-card-body">
+                        <h1 class="title is-3">Rédiger votre réponse</h1>
+                        <textarea name="answer_comment" id="answer_comment" class="textarea"></textarea>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <div class="buttons">
+                            <button type="submit" id="send_answer" name="send_answer" class="button is-success">Envoyer la réponse</button>
+                        </div>
+                    </footer>
                 </form>
             </div>
         </div>
-    </div>
 </body>
 
 </html>

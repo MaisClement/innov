@@ -136,6 +136,9 @@ class Ideas extends AbstractController
         return $this->render('/idea/recap_idea.html.twig', $data);
     }
     
+
+    
+    
     
     /**
      * @Route("/idea/{id}/valid", name="idea_validate")
