@@ -40,6 +40,7 @@ class Profile extends AbstractController
                 "creationDateTime" => $idea->getCreationDateTime(),
                 "state_idea" => $idea->getState(),
                 'user_id' => $_SESSION['account_id'],
+
             ];
         }
         
@@ -51,9 +52,9 @@ class Profile extends AbstractController
         {
             $_comments[] = [
                 "comment_id" => $commentary->getId(),
-                "comment_idea_id" => $commentary->getRelatedIdea(),
                 "author_givenname" => $commentary->getAuthor()->getGivenName(),
                 "author_familyname" => $commentary->getAuthor()->getFamilyName(),
+                "comment_idea_id" => $commentary->getRelatedIdea(),
                 "content_comment" => $commentary->getMessage(),
                 "create_comment" => $commentary->getCreationDateTime(),
             ];

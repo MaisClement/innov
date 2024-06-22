@@ -48,7 +48,7 @@ class Ideas extends AbstractController
         $idea->setState("waiting_approval");
         $idea->setArchived(false);
         $idea->setCreationDateTime(new \DateTime());
-        
+        $author->setAuthor(true);
         
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
@@ -79,10 +79,14 @@ class Ideas extends AbstractController
                 "idea_id" => $_idea->getId(),
                 'is_archived'  =>$idea->isArchived(),
                 "role" => $_SESSION['role'],
+                "validator_givenname" => $idea->getValidator()->getGivenName(),
+                "validator_familyname" => $idea->getValidator()->getFamilyName(),
                 "first_name" => $_idea->getAuthor()->getGivenName(),
                 "family_name" => $_idea->getAuthor()->getFamilyName(),
                 "creationDateTime" => $_idea->getCreationDateTime(),
                 "state_idea" => $_idea->getState(),
+                "validator_givenname" => $idea->getValidator()->getGivenName(),
+                "validator_familyname" => $idea->getValidator()->getFamilyName(),
             ]; 
         }
         
@@ -99,7 +103,7 @@ class Ideas extends AbstractController
             $this->entityManager->flush();
         }
         
-
+        
         $comments = $idea->getComments();
         $_comments = [];
         foreach($comments as $commentary)
@@ -113,7 +117,7 @@ class Ideas extends AbstractController
                 "create_comment" => $commentary->getCreationDateTime(),
             ];
         }
-
+        
         $data = [
             "title_idea" => $idea->getTitle(),
             "details_idea" => $idea->getDetails(),
@@ -123,21 +127,17 @@ class Ideas extends AbstractController
             "funding_details" => $idea->getDetailsFunding(),
             "idea_id" => $idea->getId(),
             "team" => $idea->getTeam(),
-            "validator_givenname" => $idea->getValidator(),
-            "validator_familyname" => $idea->getValidator(),
             "author_id" => $idea->getAuthor()->getId(),
             'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
             "state" => $idea->getState(),
             "user_id" => $_SESSION['account_id'],
+            "is_author" => $author->isAuthor() ? 'true' : 'false',
             "ideas" => $ideas,
             "comments" => $_comments,
         ];
 
         return $this->render('/idea/recap_idea.html.twig', $data);
     }
-    
-
-    
     
     
     /**
@@ -146,7 +146,8 @@ class Ideas extends AbstractController
     public function validateIdea(Request $request, $id) : RedirectResponse
     {
         $idea = $this->ideaRepository->find($id);
-
+        $validatorId = $this->accountRepository->find($id);
+        $idea->setValidator($validatorId);
         $idea->setState('in_progress');
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
@@ -176,6 +177,7 @@ class Ideas extends AbstractController
         $idea = $this->ideaRepository->find($id);
 
         $idea->setState('waiting_approval');
+        $idea->setValidator(null);
         $idea->setArchived(false);
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
@@ -201,19 +203,23 @@ class Ideas extends AbstractController
      * @Route("/idea/{id}/delete", name="idea_delete")
     */
     public function deleteIdea(Request $request, $id) : RedirectResponse
-    {
-        $idea = $this->ideaRepository->find($id);
-        $comments = $idea->getComments();
+{
+    $idea = $this->ideaRepository->find($id);
+    $comments = $idea->getComments();
 
-        foreach ($comments as $comment) {
-            $this->entityManager->remove($comment);
+    foreach ($comments as $comment) {
+        $answers = $comment->getAnswers(); 
+        foreach ($answers as $answer) {
+            $this->entityManager->remove($answer);
         }
-        
-        $this->entityManager->remove($idea);
-        $this->entityManager->flush();
-
-        return new RedirectResponse('/home');
+        $this->entityManager->remove($comment);
     }
+
+    $this->entityManager->remove($idea);
+    $this->entityManager->flush();
+
+    return new RedirectResponse('/home');
+}
 
     /**
      * @Route(" /idea/{id}/comment/{comment_id}/delete", name="comment_delete")
@@ -224,6 +230,31 @@ class Ideas extends AbstractController
         $idea = $this->ideaRepository->find($id);
         $comment->setRelatedIdea($idea);
         $this->entityManager->remove($comment);
+        $this->entityManager->flush();
+        return new RedirectResponse('/home');
+    }
+
+    /**
+     * @Route(" /idea/{id}/idea_realized")
+    */
+    public function realizedIdea(Request $request, $id) : RedirectResponse
+    {
+        $idea = $this->ideaRepository->find($id);
+        $idea->setState("is_realized");
+        $this->entityManager->persist($idea);
+        $this->entityManager->flush();
+        return new RedirectResponse('/home');
+    }
+
+
+    /**
+     * @Route(" /idea/{id}/idea_not_realized")
+    */
+    public function notrealizedIdea(Request $request, $id) : RedirectResponse
+    {
+        $idea = $this->ideaRepository->find($id);
+        $idea->setState("is_not_realized");
+        $this->entityManager->persist($idea);
         $this->entityManager->flush();
         return new RedirectResponse('/home');
     }

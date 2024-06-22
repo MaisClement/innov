@@ -22,8 +22,6 @@
             <a class="navbar-item" href="/home">
                 <img src="/img/logo.png" alt="Logo APPFE">
             </a>
-            <a href="#" class="navbar-item">En attente d'approbation</a>
-            <a href="#" class="navbar-item">Validés</a>
             <a href="#" data-target="modal-js-create-idea" class="navbar-item has-background-link js-modal-trigger">
                 <span class="button is-link">
                     <i class="fa-solid fa-lightbulb mr-2"></i>
@@ -68,7 +66,7 @@
             <hr>
             <h4 class="title is-4">Quelques details</h4>
 
-            <b>Equipe d'affectation</b>
+            <b>Équipe d'affectation</b>
             <span class="tag is-medium is-info is-light">{{ team }}</span>
 
             <br><br>
@@ -119,24 +117,30 @@
                             <input type="submit" class="button" value="Supprimer">
                         </form>
                         <input type="submit" value="Répondre" class="button js-modal-trigger"
-                            data-target="modal-js-answer">
+                        data-target="modal-js-answer">
                     </div>
                     {% endif %}
                 </div>
-                <div class="box ml-6" style="border: solid #4258ff 5px;">
-                    <h1 class="title is-4 mb-2">Réponse de</h1>
-                </div>
-                <br>
+                
                 {% endfor %}
+                <br>
             </div>
             <hr>
             <div class="buttons">
+                {% if is_author == "true" and author_id == user_id and state == "in_progress" %}
+                <form action="/idea/{{ idea_id }}/idea_realized" method="post">
+                    <input type="submit" value="Idée réalisée avec succès" class="button is-success">
+                </form>
+                <form action="/idea/{{ idea_id }}/idea_not_realized" method="post">
+                    <input type="submit" value="Idée non réalisée sans succès" class="button is-danger">
+                </form>
+                {% endif %}
                 {% if is_admin == "true" %}
                 <form action="{{ path('idea_archived', { 'id':idea_id }) }}" method="post">
                     <input type="submit" value="Archiver ?" class="button is-warning">
                 </form>
                 <input type="submit" value="Supprimer ?" class="button is-danger js-modal-trigger"
-                    data-target="modal-js-delete">
+                data-target="modal-js-delete">
                 {% endif %}
                 <a href="/home" class="button is-link">
                     Retour à l'accueil
@@ -166,7 +170,9 @@
                     <p class="modal-card-title">Répondre au commentaire</p>
                     <button class="delete" aria-label="close"></button>
                 </header>
-                <form action="/idea/{{ idea_id }}" method="post">
+                {% for comment in comments %}
+                    <form action="/idea/{{ idea_id }}/comment/{{ comment.comment_id }}/answer" method="post">
+                {% endfor %}
                     <section class="modal-card-body">
                         <h1 class="title is-3">Rédiger votre réponse</h1>
                         <textarea name="answer_comment" id="answer_comment" class="textarea"></textarea>

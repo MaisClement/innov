@@ -33,3 +33,13 @@ comment_delete:
   path: /idea/{id}/comment/{comment_id}/delete
   controller: App\Controller\Ideas::deleteComment
   methods: [POST]
+
+idea_realized:
+  path: /idea/{id}/idea_realized
+  controller: App\Controller\Ideas::realizedIdea
+  methods: [POST]
+
+idea_not_realized:
+  path: /idea/{id}/idea_not_realized
+  controller: App\Controller\Ideas::notrealizedIdea
+  methods: [POST]

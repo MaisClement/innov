@@ -4,7 +4,11 @@ namespace App\Controller;
 use App\Entity\Idea;
 use App\Entity\Account;
 use App\Entity\Role;
+use App\Entity\Answer;
+use App\Entity\Comment;
 use App\Repository\IdeaRepository;
+use App\Repository\AnswerRepository;
+use App\Repository\CommentRepository;
 use DateTimeInterface;
 use App\Repository\AccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,12 +22,15 @@ class Admin extends AbstractController
 {
     private IdeaRepository $ideaRepository;
     private AccountRepository $accountRepository;
+    private AnswerRepository $answerRepository;
     private $entityManager;
 
-    public function __construct(IdeaRepository $ideaRepository, AccountRepository $accountRepository, EntityManagerInterface $entityManager)
+    public function __construct(IdeaRepository $ideaRepository, AccountRepository $accountRepository, AnswerRepository $answerRepository, CommentRepository $commentRepository,EntityManagerInterface $entityManager)
     {
         $this->ideaRepository = $ideaRepository;
         $this->accountRepository = $accountRepository;
+        $this->answerRepository = $answerRepository;
+        $this->commentRepository = $commentRepository;
         $this->entityManager = $entityManager;
     }
 
@@ -81,6 +88,7 @@ class Admin extends AbstractController
                 "choice_funding" => $idea->getChoiceFunding(),
                 "funding_details" => $idea->getDetailsFunding(),
                 "team" => $idea->getTeam(),
+
                 "author_id" => $idea->getAuthor()->getId(),
                 "idea_id" => $idea->getId(),
                 "first_name" => $idea->getAuthor()->getGivenName(),
@@ -263,24 +271,20 @@ class Admin extends AbstractController
     }
 
     #[Route("/idea/{id}/comment/{comment_id}/answer")]
-    public function answer(Request $request, $id, $comment_id)
+    public function answer(Request $request, $comment_id, $id)
     {
-        $idea = $this->ideaRepository->find($id);
         $comment = $this->commentRepository->find($comment_id);
         $author = $this->accountRepository->find($_SESSION['account_id']);
-
+        
         if(isset($_POST['send_answer']))
         {
-            $answer = new Comment;
-            $answer->setAnswer($comment);
-            $idea->setComment($request->request->get('answer_comment'));
-            $answer->setAuthorAnswerId($author);
+            $answer = new Answer;
+            $answer->setAnswerContent($request->request->get('answer_comment'));
+            $answer->setAnswerAuthorId($_SESSION['account_id']);
             $answer->setAnswerDateTime(new \DateTime);
-            dd($answer);
             $this->entityManager->persist($answer);
             $this->entityManager->flush();
         }        
-
-       return $this->redirect('/idea/{id}#comments');
+        return $this->redirect('/home');
     }
 }

@@ -45,6 +45,9 @@ class Account
     #[ORM\OneToMany(targetEntity: Role::class, mappedBy: 'account_id')]
     private Collection $role;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $is_author = null;
+
     public function __construct()
     {
         $this->logins = new ArrayCollection();
@@ -265,6 +268,18 @@ class Account
                 $role->setAccountId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isAuthor(): ?bool
+    {
+        return $this->is_author;
+    }
+
+    public function setAuthor(?bool $is_author): static
+    {
+        $this->is_author = $is_author;
 
         return $this;
     }
