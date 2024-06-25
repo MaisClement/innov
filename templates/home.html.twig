@@ -14,19 +14,37 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
 </head>
+<style>
+    @media (prefers-color-scheme: dark) {
+        .logo {
+            background: url("/img/logo_dark.png") center center / cover;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        .logo {
+            background: url("/img/logo.png") center center / cover;
+        }
+    }
+
+    .logo {
+        height: 55px;
+        width: 80px;
+    }
+</style>
 
 <body>
     <nav class="navbar is-fixed-top">
         <div class="navbar-brand">
             <a class="navbar-item" href="/home">
-                <img src="/img/logo.png" alt="Logo APPFE">
+                <div class="logo"></div>
             </a>
-            <a href="#" data-target="modal-js-create-idea" class="navbar-item has-background-link js-modal-trigger">
-                <span class="button is-link">
+            <div class="buttons">
+                <a data-target="modal-js-create-idea" class="button is-rounded is-link js-modal-trigger">
                     <i class="fa-solid fa-lightbulb mr-2"></i>
                     Soumettre une idée
-                </span>
-            </a>
+                </a>
+            </div>
         </div>
         <div class="navbar-end">
             <div class="navbar-item">
@@ -49,19 +67,20 @@
             </div>
         </div>
     </nav>
+    <br>
     <h1 class="title is-3 has-text-centered" style="margin-top: 10px">Bienvenue {{ given_name|escape }} {{
         family_name|escape }} !</h1>
-        <h1 class="subtitle is-6 has-text-centered">Proposez vos idées pour l'association !</h1>
-        {% if is_admin == "true" %}
-        <div class="columns is-centered">
-            <div class="column is-3">
-                <div class="notification is-link">
-                    <h1 class="title is-6" style="text-align: center;">VOUS ÊTES ADMINISTRATEUR !</p>
-                </div>
+    <h1 class="subtitle is-6 has-text-centered">Proposez vos idées pour l'association !</h1>
+    {% if is_admin == "true" %}
+    <div class="columns is-centered">
+        <div class="column is-3">
+            <div class="notification is-link">
+                <h1 class="title is-6" style="text-align: center;">VOUS ÊTES ADMINISTRATEUR !</p>
             </div>
         </div>
-        {% endif %}
-        <br>
+    </div>
+    {% endif %}
+    <br>
     <!-- PARTIE IDEES APPROUVEE -->
     {% if ideas|filter(idea => idea.state_idea == 'in_progress') %}
     <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
@@ -97,7 +116,7 @@
     <!-- PARTIE IDEE REALISEE AVEC SUCCES -->
     {% if ideas|filter(idea => idea.state_idea == 'is_realized') %}
     <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
-        <span class="icon has-text-link ml-5">
+        <span class="icon has-text-success ml-5">
             <i class="fa-solid fa-arrow-right fa-2xl"></i>
         </span>
         <h1 class="title is-3 pl-2">Idées réalisées avec succès</h1>
@@ -107,12 +126,13 @@
     <div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
         {% for idea in ideas|filter(idea => idea.state_idea == 'is_realized') %}
         <a href="/idea/{{ idea.idea_id }}">
-            <div class="card mb-5" style="width: 45vw; border:solid 5px">
+            <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
                 <div class="card-content">
                     <div class="content">
                         <h1 class="title is-5">{{ idea.title_idea }}</h1>
                         <div class="tags has-addons">
-                            <span class="tag is-link">Réalisée avec succès</span>
+                            <span class="tag is-success">Approuvée</span>
+                            <span class="tag">Réalisée avec succès</span>
                         </div>
                         <p>{{ idea.details_idea }}</p>
                         <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name }}
@@ -128,7 +148,7 @@
     <!-- PARTIE IDEES REALISEES SANS SUCCES -->
     {% if ideas|filter(idea => idea.state_idea == 'is_not_realized') %}
     <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
-        <span class="icon has-text-danger-80 ml-5">
+        <span class="icon has-text-success ml-5">
             <i class="fa-solid fa-arrow-right fa-2xl"></i>
         </span>
         <h1 class="title is-3 pl-2">Idées réalisées sans succès</h1>
@@ -138,12 +158,13 @@
     <div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
         {% for idea in ideas|filter(idea => idea.state_idea == 'is_not_realized') %}
         <a href="/idea/{{ idea.idea_id }}">
-            <div class="card mb-5" style="width: 45vw; border:solid #ff99ad 5px">
+            <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
                 <div class="card-content">
                     <div class="content">
                         <h1 class="title is-5">{{ idea.title_idea }}</h1>
                         <div class="tags has-addons">
-                            <span class="tag is-danger is-light">Réalisée sans succès</span>
+                            <span class="tag is-success">Approuvée</span>
+                            <span class="tag">Réalisée sans succès</span>
                         </div>
                         <p>{{ idea.details_idea }}</p>
                         <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name }}
@@ -221,12 +242,15 @@
                             <br><br>
                             <label for="help" class="radio">
                                 <input type="radio" name="mesures" id="help" class="mr-2"
-                                    value="Je serai aidé lors de la réalisation" required="required"><strong>Je serai aidé lors de la
+                                    value="Je serai aidé lors de la réalisation" required="required"><strong>Je serai
+                                    aidé lors de la
                                     réalisation.</strong>
                             </label>
                             <br><br>
                             <label for="no_help" class="radio">
-                                <input type="radio" name="mesures" id="no_help" class="mr-2" value="Je ne serai pas aidé lors de la réalisation (par manque de temps ou de compétences)." required="required"><strong>Je ne serai pas aidé lors de
+                                <input type="radio" name="mesures" id="no_help" class="mr-2"
+                                    value="Je ne serai pas aidé lors de la réalisation (par manque de temps ou de compétences)."
+                                    required="required"><strong>Je ne serai pas aidé lors de
                                     la réalisation (par manque de temps ou de compétences).</strong>
                             </label>
                             <br><br>
@@ -313,7 +337,7 @@
                     <h1 class="title is-3">Ajout d'un fichier</h1>
                     <div class="file has-name">
                         <label class="file-label">
-                            <input class="file-input" type="file" id="file" name="file_idea" multiple/>
+                            <input class="file-input" type="file" id="file" name="file_idea" multiple />
                             <span class="file-cta">
                                 <span class="file-icon">
                                     <i class="fas fa-upload"></i>
@@ -333,8 +357,8 @@
     <script>
         const fileInput = document.getElementById('file');
         const filenamesElement = document.getElementById('filenames');
-    
-        fileInput.addEventListener('change', function() {
+
+        fileInput.addEventListener('change', function () {
             const files = fileInput.files;
             let filenames = ' ';
             for (let i = 0; i < files.length; i++) {

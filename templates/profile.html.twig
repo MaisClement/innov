@@ -14,19 +14,45 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
 </head>
+<style>
+    @media (prefers-color-scheme: dark) {
+        .wallpaper {
+            background: url("/img/back_dark.png") center center / cover;
+        }
+
+        .logo {
+            background: url("/img/logo_dark.png") center center / cover;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        .wallpaper {
+            background: url("/img/back.png") center center / cover;
+        }
+
+        .logo {
+            background: url("/img/logo.png") center center / cover;
+        }
+    }
+
+    .logo {
+        height: 55px;
+        width: 80px;
+    }
+</style>
 
 <body>
     <nav class="navbar is-fixed-top">
         <div class="navbar-brand">
             <a class="navbar-item" href="/home">
-                <img src="/img/logo.png" alt="Logo APPFE">
+                <div class="logo"></div>
             </a>
-            <a href="#" data-target="modal-js-create-idea" class="navbar-item has-background-link js-modal-trigger">
-                <span class="button is-link">
+            <div class="buttons">
+                <a data-target="modal-js-create-idea" class="button is-rounded is-link js-modal-trigger">
                     <i class="fa-solid fa-lightbulb mr-2"></i>
                     Soumettre une idée
-                </span>
-            </a>
+                </a>
+            </div>
         </div>
         <div class="navbar-end">
             <div class="navbar-item">
@@ -133,6 +159,58 @@
                                     <div class="tags has-addons">
                                         <span class="tag is-success">Approuvée</span>
                                         <span class="tag">En cours de réalisation</span>
+                                    </div>
+                                    <p>{{ idea.details_idea }}</p>
+                                    <!-- <p class="is-size-7 m-0">Validée par : <strong>{#  {{ idea.validator_givenname }} {{ idea.validator_familyname }} #}</strong></p>-->
+                                    <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{
+                                            idea.family_name }}
+                                        </strong>
+                                    <p class="is-size-7 m-0">Créée le : <strong>{{ idea.creationDateTime|date("d/m/Y")
+                                            }}</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% for idea in ideas|filter(idea => idea.state_idea == 'is_realized') %}
+                    {% if account_id == idea.author_id %}
+                    <a href="/idea/{{ idea.idea_id }}">
+                        <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
+                            <div class="card-content">
+                                <div class="content">
+                                    <h1 class="title is-5">{{ idea.title_idea }}</h1>
+                                    <div class="tags has-addons">
+                                        <span class="tag is-success">Approuvée</span>
+                                        <span class="tag">Réalisée avec succès</span>
+                                    </div>
+                                    <p>{{ idea.details_idea }}</p>
+                                    <!-- <p class="is-size-7 m-0">Validée par : <strong>{#  {{ idea.validator_givenname }} {{ idea.validator_familyname }} #}</strong></p>-->
+                                    <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{
+                                            idea.family_name }}
+                                        </strong>
+                                    <p class="is-size-7 m-0">Créée le : <strong>{{ idea.creationDateTime|date("d/m/Y")
+                                            }}</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% for idea in ideas|filter(idea => idea.state_idea == 'is_not_realized') %}
+                    {% if account_id == idea.author_id %}
+                    <a href="/idea/{{ idea.idea_id }}">
+                        <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
+                            <div class="card-content">
+                                <div class="content">
+                                    <h1 class="title is-5">{{ idea.title_idea }}</h1>
+                                    <div class="tags has-addons">
+                                        <span class="tag is-success">Approuvée</span>
+                                        <span class="tag">Réalisée sans succès</span>
                                     </div>
                                     <p>{{ idea.details_idea }}</p>
                                     <!-- <p class="is-size-7 m-0">Validée par : <strong>{#  {{ idea.validator_givenname }} {{ idea.validator_familyname }} #}</strong></p>-->

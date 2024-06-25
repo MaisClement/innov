@@ -1,18 +1,15 @@
 <?php
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class Login extends AbstractController
 {
-    public function __construct()
-    {
-       
-    }
+    public function __construct() {}
 
     #[Route('/login')]
     public function login(Request $request)
@@ -31,10 +28,5 @@ class Login extends AbstractController
     {
         unset($_SESSION);
         return $this->redirect('/login');
-        // $success = 'Vous êtes bien déconnecté';
-        // return $this->render('login.html', [
-        //     'error' => $message ?? null,
-        //     'success' => $success,
-        // ]);
     }
 }

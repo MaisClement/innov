@@ -15,19 +15,44 @@
     <script src="https://kit.fontawesome.com/d57b44e8b9.js" crossorigin="anonymous"></script>
 
 </head>
+<style>
+    @media (prefers-color-scheme: dark) {
+        .wallpaper {
+            background: url("/img/back_dark.png") center center / cover;
+        }
 
+        .logo {
+            background: url("/img/logo_dark.png") center center / cover;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        .wallpaper {
+            background: url("/img/back.png") center center / cover;
+        }
+
+        .logo {
+            background: url("/img/logo.png") center center / cover;
+        }
+    }
+
+    .logo {
+        height: 55px;
+        width: 80px;
+    }
+</style>
 <body>
     <nav class="navbar is-fixed-top">
         <div class="navbar-brand">
             <a class="navbar-item" href="/home">
-                <img src="/img/logo.png" alt="Logo APPFE">
+                <div class="logo"></div>
             </a>
-            <a href="#" data-target="modal-js-create-idea" class="navbar-item has-background-link js-modal-trigger">
-                <span class="button is-link">
+            <div class="buttons">
+                <a data-target="modal-js-create-idea" class="button is-rounded is-link js-modal-trigger">
                     <i class="fa-solid fa-lightbulb mr-2"></i>
                     Soumettre une idée
-                </span>
-            </a>
+                </a>
+            </div>
         </div>
         <div class="navbar-end">
             <div class="navbar-item">
@@ -132,7 +157,7 @@
                     <input type="submit" value="Idée réalisée avec succès" class="button is-success">
                 </form>
                 <form action="/idea/{{ idea_id }}/idea_not_realized" method="post">
-                    <input type="submit" value="Idée non réalisée sans succès" class="button is-danger">
+                    <input type="submit" value="Idée réalisée sans succès" class="button is-danger">
                 </form>
                 {% endif %}
                 {% if is_admin == "true" %}
