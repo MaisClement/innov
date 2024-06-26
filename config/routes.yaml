@@ -43,3 +43,11 @@ idea_not_realized:
   path: /idea/{id}/idea_not_realized
   controller: App\Controller\Ideas::notrealizedIdea
   methods: [POST]
+
+vote_liked:
+  path: /idea/{id}/vote_liked
+  controller: App\Controller\Ideas::voteLiked
+
+vote_disliked:
+  path: /idea/{id}/vote_disliked
+  controller: App\Controller\Ideas::voteDisliked

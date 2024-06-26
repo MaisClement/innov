@@ -41,6 +41,7 @@
         width: 80px;
     }
 </style>
+
 <body>
     <nav class="navbar is-fixed-top">
         <div class="navbar-brand">
@@ -119,7 +120,34 @@
                 <h5 class="title is-5 mb-2">{{ choice_funding | escape }} </h5>
                 <p class="is-size-5">{{ funding_details }} </p>
             </div>
-
+            {# {% if is_author == "false" and auhtor_id != user_id %} #}
+            <hr>
+            <h1 class="title is-4">
+                <span class="icon has-text-warning mr-1 mb-1">
+                    <i class="fa-solid fa-arrow-right fa-lg"></i>
+                </span>
+                Vous aimez cette idée?
+            </h1>
+            <div class="columns">
+                <div class="column is-narrow">
+                    <h2 class="subtitle is-6">Votez :</h2>
+                </div>
+                <div class="column">
+                    <a href="/idea/{{ idea_id }}/vote_liked" class="icon-text has-text-primary mr-4">
+                        <span class="icon">
+                            <i class="fa-solid fa-heart fa-lg"></i>
+                        </span>
+                        <span>Oui</span>
+                    </a>
+                    <a href="/idea/{{ idea_id }}/vote_disliked" class="icon-text has-text-danger">
+                        <span class="icon">
+                            <i class="fa-solid fa-heart-crack fa-lg"></i>
+                        </span>
+                        <span>Non</span>
+                    </a>
+                </div>
+            </div>
+            {# {% endif %} #}
             <hr>
             <h1 class="title is-2">Commentaires</h1>
             <br>
@@ -142,11 +170,10 @@
                             <input type="submit" class="button" value="Supprimer">
                         </form>
                         <input type="submit" value="Répondre" class="button js-modal-trigger"
-                        data-target="modal-js-answer">
+                            data-target="modal-js-answer">
                     </div>
                     {% endif %}
                 </div>
-                
                 {% endfor %}
                 <br>
             </div>
@@ -165,7 +192,7 @@
                     <input type="submit" value="Archiver ?" class="button is-warning">
                 </form>
                 <input type="submit" value="Supprimer ?" class="button is-danger js-modal-trigger"
-                data-target="modal-js-delete">
+                    data-target="modal-js-delete">
                 {% endif %}
                 <a href="/home" class="button is-link">
                     Retour à l'accueil
@@ -196,15 +223,16 @@
                     <button class="delete" aria-label="close"></button>
                 </header>
                 {% for comment in comments %}
-                    <form action="/idea/{{ idea_id }}/comment/{{ comment.comment_id }}/answer" method="post">
-                {% endfor %}
+                <form action="/idea/{{ idea_id }}/comment/{{ comment.comment_id }}/answer" method="post">
+                    {% endfor %}
                     <section class="modal-card-body">
                         <h1 class="title is-3">Rédiger votre réponse</h1>
                         <textarea name="answer_comment" id="answer_comment" class="textarea"></textarea>
                     </section>
                     <footer class="modal-card-foot">
                         <div class="buttons">
-                            <button type="submit" id="send_answer" name="send_answer" class="button is-success">Envoyer la réponse</button>
+                            <button type="submit" id="send_answer" name="send_answer" class="button is-success">Envoyer
+                                la réponse</button>
                         </div>
                     </footer>
                 </form>
