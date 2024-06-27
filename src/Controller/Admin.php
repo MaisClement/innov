@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Account;
+use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\Answer;
 use App\Entity\Comment;
 use App\Entity\Idea;
@@ -107,15 +108,15 @@ class Admin extends AbstractController
     }
 
     #[Route('/admin/show_ideas')]
-    public function showidea()
+    public function showidea(PaginatorInterface $paginator, Request $request)
     {
         Functions::checkUserSession($this->accountRepository);
         Functions::checkRoleAdmin();
 
-        $_ideas = $this->ideaRepository->findAll();
+        $data =  $this->ideaRepository->findAll();
 
         $ideas = [];
-        foreach ($_ideas as $idea) {
+        foreach ($data as $idea) {
             $ideas[] = [
                 'title_idea' => $idea->getTitle(),
                 'details_idea' => $idea->getDetails(),
@@ -124,7 +125,7 @@ class Admin extends AbstractController
                 'choice_funding' => $idea->getChoiceFunding(),
                 'funding_details' => $idea->getDetailsFunding(),
                 'team' => $idea->getTeam(),
-                'is_archived' => $idea->isArchived() ? 'true' : 'false',
+                'isarchived' => $idea->isArchived() ? 'true' : 'false',
                 'author_id' => $idea->getAuthor()->getId(),
                 'idea_id' => $idea->getId(),
                 'first_name' => $idea->getAuthor()->getGivenName(),
@@ -134,10 +135,15 @@ class Admin extends AbstractController
             ];
         }
 
-        $data = [
-            'ideas' => $ideas,
-        ];
-        return $this->render('admin/show_ideas.html.twig', $data);
+        $_ideas = $paginator->paginate(
+            $ideas, 
+            $request->query->getInt('page', 1),
+            20
+        );
+
+        return $this->render('admin/show_ideas.html.twig',[ 
+            "ideas" => $_ideas,
+        ]);
     }
 
     #[Route('/admin/show_archived_ideas')]

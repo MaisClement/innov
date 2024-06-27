@@ -67,10 +67,17 @@ class Idea
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'related_idea_id')]
     private Collection $votes;
 
+    /**
+     * @var Collection<int, Files>
+     */
+    #[ORM\OneToMany(targetEntity: Files::class, mappedBy: 'related_idea_id')]
+    private Collection $files;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->votes = new ArrayCollection();
+        $this->files = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -288,6 +295,36 @@ class Idea
             // set the owning side to null (unless already changed)
             if ($vote->getRelatedIdeaId() === $this) {
                 $vote->setRelatedIdeaId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Files>
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(Files $file): static
+    {
+        if (!$this->files->contains($file)) {
+            $this->files->add($file);
+            $file->setRelatedIdeaId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(Files $file): static
+    {
+        if ($this->files->removeElement($file)) {
+            // set the owning side to null (unless already changed)
+            if ($file->getRelatedIdeaId() === $this) {
+                $file->setRelatedIdeaId(null);
             }
         }
 

@@ -52,22 +52,6 @@ class Home extends AbstractController
             ];
         }
 
-        if (isset($_FILES['files_idea']) && $_FILES['files_idea']['error'] === 0) {
-            $fileName = $_FILES['files_idea']['name'];
-            $fileType = $_FILES['files_idea']['type'];
-            $allowed = [
-                'jpg' => 'image/jpeg',
-                'jpeg' => 'image/jpeg',
-                'png' => 'image/png',
-                'pdf' => 'application/pdf',
-                'doc' => 'application/msword',
-                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'ppt' => 'application/vnd.ms-powerpoint',
-                'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-                'xls' => 'application/vnd.ms-excel',
-                'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ];
-        }
         // dd($_SESSION['role']);
         // dd(in_array('admin',$_SESSION['role']) ? 'true' : 'false');
         $data = [

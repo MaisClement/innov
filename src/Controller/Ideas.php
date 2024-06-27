@@ -4,9 +4,11 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Idea;
 use App\Entity\Vote;
+use App\Entity\Files;
 use App\Form\CommentsType;
 use App\Repository\AccountRepository;
 use App\Repository\CommentRepository;
+use App\Repository\FilesRepository;
 use App\Repository\IdeaRepository;
 use App\Repository\VoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,17 +25,19 @@ class Ideas extends AbstractController
     private AccountRepository $accountRepository;
     private IdeaRepository $ideaRepository;
     private VoteRepository $voteRepository;
+    private FilesRepository $filesRepository;
     private CommentRepository $commentRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, VoteRepository $voteRepository, AccountRepository $accountRepository, IdeaRepository $ideaRepository, CommentRepository $commentRepository)
+    public function __construct(EntityManagerInterface $entityManager, FilesRepository $filesRepository, VoteRepository $voteRepository, AccountRepository $accountRepository, IdeaRepository $ideaRepository, CommentRepository $commentRepository)
     {
         $this->entityManager = $entityManager;
         $this->ideaRepository = $ideaRepository;
+        $this->filesRepository = $filesRepository;
         $this->voteRepository = $voteRepository;
         $this->accountRepository = $accountRepository;
         $this->commentRepository = $commentRepository;
     }
-
+    
     #[Route('/idea')]
     public function ideas(Request $request): RedirectResponse
     {
@@ -42,6 +46,7 @@ class Ideas extends AbstractController
         $author = $this->accountRepository->find($_SESSION['account_id']);
 
         $idea = new Idea();
+        
         $idea->setTitle($request->request->get('title_idea'));
         $idea->setDetails($request->request->get('details_idea'));
         $idea->setChoiceMesures($request->request->get('mesures'));
@@ -51,13 +56,34 @@ class Ideas extends AbstractController
         $idea->setAuthor($author);
         $idea->setTeam($request->request->get('team'));
         $idea->setState('waiting_approval');
-        $idea->setArchived(false);
+        $idea->setArchived(false); 
         $idea->setCreationDateTime(new \DateTime());
         $author->setAuthor(true);
-
         $this->entityManager->persist($idea);
-        $this->entityManager->flush();
+        
+        if(isset($_FILES['file_idea'])){
+            dd($_FILES);
+            $file = new Files;
+            $file->setRelatedIdeaId($idea->getId());
+            $file->setUploadDate(new \DateTime());
+            $file->setNameFile($_FILES['file_idea']['name']);
+            $this->entityManager->persist($file);
+            
+            $path = "/home/ahymery/code/innov/upload_files";
+            // $name_file = $path .$file->getId();
+            
+            $files = $this->filesRepository->find($id);
 
+            $tmpFilePath = $file->getId();
+            $name = basename($_FILES['file_idea']['name']);
+            move_uploaded_file($tmpFilePath, $path . "/" . $name);
+            
+
+            $idea->addFile($file);
+        }
+        
+        $this->entityManager->flush();
+        
         return new RedirectResponse('/idea/' . $idea->getId());
     }
     // Récuperer les données de l'idée
@@ -127,8 +153,6 @@ class Ideas extends AbstractController
             ];
         }
 
-        
-
         $data = [
             'title_idea' => $idea->getTitle(),
             'details_idea' => $idea->getDetails(),
@@ -139,7 +163,6 @@ class Ideas extends AbstractController
             'idea_id' => $idea->getId(),
             'team' => $idea->getTeam(),
             'author_id' => $idea->getAuthor()->getId(),
-            'auhtor_id' => $vote->getAuhtor()->getId(),
             'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
             'state' => $idea->getState(),
             'user_id' => $_SESSION['account_id'],
@@ -206,7 +229,7 @@ class Ideas extends AbstractController
         $idea->setArchived(true);
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
-
+        return new RedirectResponse('/home');
     }
 
     #[Route('/idea/{id}/delete')]
@@ -216,6 +239,7 @@ class Ideas extends AbstractController
 
         $idea = $this->ideaRepository->find($id);
         $comments = $idea->getComments();
+        $votes = $idea->getVotes();
 
         foreach ($comments as $comment) {
             $answers = $comment->getAnswers();
@@ -225,9 +249,16 @@ class Ideas extends AbstractController
             $this->entityManager->remove($comment);
         }
 
+        foreach($votes as $vote) {
+            $this->entityManager->remove($vote);
+        }
+
+
+
         $this->entityManager->remove($idea);
         $this->entityManager->flush();
 
+        return $this->redirect('/home');
     }
 
     #[Route('/idea/{id}/comment/{comment_id}/delete')]
