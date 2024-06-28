@@ -120,7 +120,7 @@
                 <h5 class="title is-5 mb-2">{{ choice_funding | escape }} </h5>
                 <p class="is-size-5">{{ funding_details }} </p>
             </div>
-            {# {% if is_author == "false" and auhtor_id != user_id %} #}
+            {% if is_author == "false" and auhtor_id != user_id %}
             <hr>
             <h1 class="title is-4">
                 <span class="icon has-text-warning mr-1 mb-1">
@@ -147,7 +147,7 @@
                     </a>
                 </div>
             </div>
-            {# {% endif %} #}
+            {% endif %}
             <hr>
             <h1 class="title is-2">Commentaires</h1>
             <br>
@@ -170,10 +170,16 @@
                             <input type="submit" class="button" value="Supprimer">
                         </form>
                         <input type="submit" value="Répondre" class="button js-modal-trigger"
-                            data-target="modal-js-answer">
+                        data-target="modal-js-answer">
                     </div>
-                    {% endif %}
                 </div>
+                    {% endif %}
+                    {% for answer in answers %}
+                    <div class="box">
+                        <h1 class="title is-4 mb-2">{{ answer.author_answer_givenname }} {{ answer.author_answer_familyname }} </h1>
+                        <p class="subtitle is-4"> {{ answer.answer_content }} </p>
+                    </div> 
+                    {% endfor %}
                 {% endfor %}
                 <br>
             </div>

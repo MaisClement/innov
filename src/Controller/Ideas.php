@@ -2,15 +2,17 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Files;
 use App\Entity\Idea;
 use App\Entity\Vote;
-use App\Entity\Files;
 use App\Form\CommentsType;
 use App\Repository\AccountRepository;
 use App\Repository\CommentRepository;
+use App\Repository\AnswerRepository;
 use App\Repository\FilesRepository;
 use App\Repository\IdeaRepository;
 use App\Repository\VoteRepository;
+use App\Service\Functions;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTimeInterface;
-use App\Service\Functions;
 
 class Ideas extends AbstractController
 {
@@ -27,8 +28,9 @@ class Ideas extends AbstractController
     private VoteRepository $voteRepository;
     private FilesRepository $filesRepository;
     private CommentRepository $commentRepository;
+    private AnswerRepository $answerRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, FilesRepository $filesRepository, VoteRepository $voteRepository, AccountRepository $accountRepository, IdeaRepository $ideaRepository, CommentRepository $commentRepository)
+    public function __construct(EntityManagerInterface $entityManager, FilesRepository $filesRepository, VoteRepository $voteRepository, AnswerRepository $answerRepository, AccountRepository $accountRepository, IdeaRepository $ideaRepository, CommentRepository $commentRepository)
     {
         $this->entityManager = $entityManager;
         $this->ideaRepository = $ideaRepository;
@@ -36,8 +38,9 @@ class Ideas extends AbstractController
         $this->voteRepository = $voteRepository;
         $this->accountRepository = $accountRepository;
         $this->commentRepository = $commentRepository;
+        $this->answerRepository = $answerRepository;
     }
-    
+
     #[Route('/idea')]
     public function ideas(Request $request): RedirectResponse
     {
@@ -46,7 +49,7 @@ class Ideas extends AbstractController
         $author = $this->accountRepository->find($_SESSION['account_id']);
 
         $idea = new Idea();
-        
+
         $idea->setTitle($request->request->get('title_idea'));
         $idea->setDetails($request->request->get('details_idea'));
         $idea->setChoiceMesures($request->request->get('mesures'));
@@ -56,34 +59,47 @@ class Ideas extends AbstractController
         $idea->setAuthor($author);
         $idea->setTeam($request->request->get('team'));
         $idea->setState('waiting_approval');
-        $idea->setArchived(false); 
+        $idea->setArchived(false);
         $idea->setCreationDateTime(new \DateTime());
         $author->setAuthor(true);
         $this->entityManager->persist($idea);
-        
-        if(isset($_FILES['file_idea'])){
-            dd($_FILES);
+
+        $allowed_files = [
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'pdf' => 'application/pdf',
+            'ppt' => 'application/vnd.ms-powerpoint',
+            'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'doc' => 'application/msword',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'xls' => 'application/vnd.ms-excel',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ];
+
+        if (isset($_FILES['file_idea']) && in_array($_FILES['file_idea']['type'], $allowed_files)) {
+            
+            if (filesize($_FILES['file_idea']['tmp_name']) > 10000000) {
+                dd('Le fichier est trop lourd !');
+            }
+
+            if (!in_array($_FILES['file_idea']['type'], $allowed_files)) {
+                dd("Le fichier n'a pas le bon type");
+            }
+
             $file = new Files;
             $file->setRelatedIdeaId($idea->getId());
             $file->setUploadDate(new \DateTime());
             $file->setNameFile($_FILES['file_idea']['name']);
-            $this->entityManager->persist($file);
-            
-            $path = "/home/ahymery/code/innov/upload_files";
-            // $name_file = $path .$file->getId();
-            
-            $files = $this->filesRepository->find($id);
-
-            $tmpFilePath = $file->getId();
-            $name = basename($_FILES['file_idea']['name']);
-            move_uploaded_file($tmpFilePath, $path . "/" . $name);
-            
-
             $idea->addFile($file);
+            $this->entityManager->persist($file);
+            $this->entityManager->flush();
+            $path = '../upload_files';
+            $tmpFilePath = $_FILES['file_idea']['tmp_name'];
+            $name = basename($_FILES['file_idea']['name']);
+            move_uploaded_file($tmpFilePath, $path . '/' . $file->getId());
         }
-        
-        $this->entityManager->flush();
-        
+
         return new RedirectResponse('/idea/' . $idea->getId());
     }
     // Récuperer les données de l'idée
@@ -96,7 +112,7 @@ class Ideas extends AbstractController
     public function display_idea(Request $request, $id)
     {
         Functions::checkUserSession($this->accountRepository);
-        
+
         // Affichage de l'idée
 
         $idea = $this->ideaRepository->find($id);
@@ -125,11 +141,12 @@ class Ideas extends AbstractController
                 'validator_familyname' => $idea->getValidator()->getFamilyName(),
             ];
         }
-
-        // Commentaires de l'idée 
-
+        
+        
+        // Commentaires de l'idée
+        
         $author = $this->accountRepository->find($_SESSION['account_id']);
-
+        
         if (isset($_POST['send_comment'])) {
             $comment = new Comment;
             $comment->setMessage($request->request->get('content_commentary'));
@@ -139,7 +156,7 @@ class Ideas extends AbstractController
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
         }
-
+        
         $comments = $idea->getComments();
         $_comments = [];
         foreach ($comments as $commentary) {
@@ -150,6 +167,17 @@ class Ideas extends AbstractController
                 'author_familyname' => $commentary->getAuthor()->getFamilyName(),
                 'content_comment' => $commentary->getMessage(),
                 'create_comment' => $commentary->getCreationDateTime(),
+            ];
+        }
+        
+        $answer = $this->answerRepository->findAll();
+        $answers = [];
+        foreach($answer as $_answer) {
+            $answers[] = [
+                'author_answer_givenname' => $_answer->getAnswerAuthorId()->getGivenName(),
+                'author_answer_familyname' => $_answer->getAnswerAuthorId()->getFamilyName(),
+                'answer_content' => $_answer->getAnswerContent(),
+                'related_comment_id' => $_answer->getRelatedCommentId(),
             ];
         }
 
@@ -169,6 +197,7 @@ class Ideas extends AbstractController
             'is_author' => $author->isAuthor() ? 'true' : 'false',
             'ideas' => $ideas,
             'comments' => $_comments,
+            'answers' => $answers,
         ];
 
         return $this->render('/idea/recap_idea.html.twig', $data);
@@ -240,6 +269,7 @@ class Ideas extends AbstractController
         $idea = $this->ideaRepository->find($id);
         $comments = $idea->getComments();
         $votes = $idea->getVotes();
+        $files = $idea->getFiles();
 
         foreach ($comments as $comment) {
             $answers = $comment->getAnswers();
@@ -249,11 +279,13 @@ class Ideas extends AbstractController
             $this->entityManager->remove($comment);
         }
 
-        foreach($votes as $vote) {
+        foreach ($votes as $vote) {
             $this->entityManager->remove($vote);
         }
 
-
+        foreach($files as $file) {
+            $this->entityManager->remove($file);
+        }
 
         $this->entityManager->remove($idea);
         $this->entityManager->flush();
@@ -264,14 +296,12 @@ class Ideas extends AbstractController
     #[Route('/idea/{id}/comment/{comment_id}/delete')]
     public function deleteComment(Request $request, $id, $comment_id): RedirectResponse
     {
-        new Functions();
-        $this->functions->checkUserSession();
-
         $comment = $this->commentRepository->find($comment_id);
         $idea = $this->ideaRepository->find($id);
         $comment->setRelatedIdea($idea);
         $this->entityManager->remove($comment);
         $this->entityManager->flush();
+        return new RedirectResponse('/home');
     }
 
     #[Route('/idea/{id}/idea_realized')]
@@ -284,6 +314,7 @@ class Ideas extends AbstractController
         $idea->setState('is_realized');
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
+        return new RedirectResponse('/home');
     }
 
     #[Route('/idea/{id}/idea_not_realized')]
@@ -296,6 +327,8 @@ class Ideas extends AbstractController
         $idea->setState('is_not_realized');
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
+        return new RedirectResponse('/home');
+
     }
 
     #[Route('/idea/{id}/vote_liked')]
@@ -309,6 +342,7 @@ class Ideas extends AbstractController
         $vote->setRelatedIdeaId($idea);
         $this->entityManager->persist($vote);
         $this->entityManager->flush();
+        return $this->redirect('/home');
     }
 
     #[Route('/idea/{id}/vote_disliked')]

@@ -302,10 +302,12 @@ class Admin extends AbstractController
             $answer = new Answer;
             $answer->setAnswerContent($request->request->get('answer_comment'));
             $answer->setAnswerAuthorId($_SESSION['account_id']);
+            $answer->setRelatedCommentId($comment);
             $answer->setAnswerDateTime(new \DateTime);
             $this->entityManager->persist($answer);
             $this->entityManager->flush();
         }
+        
         return $this->redirect('/home');
     }
 }
