@@ -19,6 +19,10 @@ class Vote
     #[ORM\Column]
     private ?int $value = null;
 
+    #[ORM\ManyToOne(inversedBy: 'votes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Idea $related_idea_id = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +48,18 @@ class Vote
     public function setValue(int $value): static
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    public function getRelatedIdeaId(): ?Idea
+    {
+        return $this->related_idea_id;
+    }
+
+    public function setRelatedIdeaId(?Idea $related_idea_id): static
+    {
+        $this->related_idea_id = $related_idea_id;
 
         return $this;
     }

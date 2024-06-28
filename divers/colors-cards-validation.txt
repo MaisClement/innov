@@ -1,5 +1,5 @@
 vert - approuvé : rgb(72,199,142)
-rouge - non approuvé : rgb(255,102,133)
+rouge - non approuvé ou réalisée sans succès : rgb(255,102,133)
 jaune - en cours d'approbation : rgb(255,183,15)
 
 Code html des tags 

@@ -61,7 +61,7 @@
     <h1 class="title is-1 m-5" style="text-align: center;">Gestion des idées</h1>
     <hr>
     {% if ideas == null %}
-    <h1 class="title is-2 has-text-danger-50" style="text-align: center;">C'est vide ici ! Aucune idée à été créer !</h1>
+    <h1 class="title is-2 has-text-danger-50" style="text-align: center;">C'est vide ici ! Aucune idée à été créée !</h1>
     {% endif %}
     <div class="columns is-centered">
         <div class="column is-4">
@@ -80,13 +80,14 @@
                         <div class="content">
                             <h1 class="title is-5">{{ idea.title_idea }}</h1>
                             <div class="tags has-addons">
-                                <span class="tag is-success">Approuvé</span>
+                                <span class="tag is-success">Approuvée</span>
                                 <span class="tag">En cours de réalisation</span>
                             </div>
                             <p>{{ idea.details_idea }}</p>
-                            <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                            
+                            <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name }}
                                 </strong>
-                            <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y")
+                            <p class="is-size-7 m-0">Créée le : <strong>{{ idea.creationDateTime|date("d/m/Y")
                                     }}</strong>
                             </p>
                         </div>
@@ -124,9 +125,10 @@
                                 <span class="tag is-warning">En attente d'approbation</span>
                             </div>
                             <p>{{ idea.details_idea }}</p>
-                            <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
                                 </strong>
-                            <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y")
+                            <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                                </strong>
+                            <p class="is-size-7 m-0">Créée le : <strong>{{ idea.creationDateTime|date("d/m/Y")
                                     }}</strong>
                             </p>
                         </div>
@@ -161,13 +163,13 @@
                         <div class="content">
                             <h1 class="title is-5">{{ idea.title_idea }}</h1>
                             <div class="tags has-addons">
-                                <span class="tag is-danger">Non approuvé</span>
+                                <span class="tag is-danger">Non approuvée</span>
                                 <span class="tag">Non réalisable</span>
                             </div>
                             <p>{{ idea.details_idea }}</p>
-                            <p class="is-size-7 m-0">Proposé par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                            <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name }}
                                 </strong>
-                            <p class="is-size-7 m-0">Créer le : <strong>{{ idea.creationDateTime|date("d/m/Y")
+                            <p class="is-size-7 m-0">Créée le : <strong>{{ idea.creationDateTime|date("d/m/Y")
                                     }}</strong>
                             </p>
                         </div>

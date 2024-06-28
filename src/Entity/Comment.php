@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,14 +28,23 @@ class Comment
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $creationDateTime = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $answer = null;
+    /**
+     * @var Collection<int, Answer>
+     */
+    #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'author')]
+    private Collection $answer;
 
-    #[ORM\ManyToOne]
-    private ?Account $author_answer_id = null;
+    /**
+     * @var Collection<int, Answer>
+     */
+    #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'related_comment_id')]
+    private Collection $answers;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $answer_date_time = null;
+    public function __construct()
+    {
+        $this->answer = new ArrayCollection();
+        $this->answers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -88,40 +99,42 @@ class Comment
         return $this;
     }
 
-    public function getAnswer(): ?string
+    /**
+     * @return Collection<int, Answer>
+     */
+    public function getAnswer(): Collection
     {
         return $this->answer;
     }
 
-    public function setAnswer(?string $answer): static
+    public function addAnswer(Answer $answer): static
     {
-        $this->answer = $answer;
+        if (!$this->answer->contains($answer)) {
+            $this->answer->add($answer);
+            $answer->setAuthor($this);
+        }
 
         return $this;
     }
 
-    public function getAuthorAnswerId(): ?Account
+    public function removeAnswer(Answer $answer): static
     {
-        return $this->author_answer_id;
-    }
-
-    public function setAuthorAnswerId(?Account $author_answer_id): static
-    {
-        $this->author_answer_id = $author_answer_id;
+        if ($this->answer->removeElement($answer)) {
+            // set the owning side to null (unless already changed)
+            if ($answer->getAuthor() === $this) {
+                $answer->setAuthor(null);
+            }
+        }
 
         return $this;
     }
 
-    public function getAnswerDateTime(): ?\DateTimeInterface
+    /**
+     * @return Collection<int, Answer>
+     */
+    public function getAnswers(): Collection
     {
-        return $this->answer_date_time;
-    }
-
-    public function setAnswerDateTime(?\DateTimeInterface $answer_date_time): static
-    {
-        $this->answer_date_time = $answer_date_time;
-
-        return $this;
+        return $this->answers;
     }
     
 }
