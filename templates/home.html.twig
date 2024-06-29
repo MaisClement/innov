@@ -353,19 +353,6 @@
         </div>
     </div>
     <!-- FIN MODAL-->
-    <script>
-        const fileInput = document.getElementById('file');
-        const filenamesElement = document.getElementById('filenames');
-
-        fileInput.addEventListener('change', function () {
-            const files = fileInput.files;
-            let filenames = ' ';
-            for (let i = 0; i < files.length; i++) {
-                filenames += `${files[i].name} `;
-            }
-            filenamesElement.textContent = `${filenames}`;
-        });
-    </script>
 </body>
 
 </html>

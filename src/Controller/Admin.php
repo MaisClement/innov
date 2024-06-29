@@ -1,16 +1,18 @@
 <?php
 namespace App\Controller;
 
-use App\Entity\Account;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Entity\Account;
 use App\Entity\Answer;
 use App\Entity\Comment;
 use App\Entity\Idea;
 use App\Entity\Role;
+use App\Entity\Files;
 use App\Repository\AccountRepository;
 use App\Repository\AnswerRepository;
 use App\Repository\CommentRepository;
 use App\Repository\IdeaRepository;
+use App\Repository\FilesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,12 +27,14 @@ class Admin extends AbstractController
     private IdeaRepository $ideaRepository;
     private AccountRepository $accountRepository;
     private AnswerRepository $answerRepository;
+    private FilesRepository $filesRepository;
     private $entityManager;
     private Functions $functions;
 
-    public function __construct(Functions $functions, IdeaRepository $ideaRepository, AccountRepository $accountRepository, AnswerRepository $answerRepository, CommentRepository $commentRepository, EntityManagerInterface $entityManager)
+    public function __construct(Functions $functions,FilesRepository $filesRepository, IdeaRepository $ideaRepository, AccountRepository $accountRepository, AnswerRepository $answerRepository, CommentRepository $commentRepository, EntityManagerInterface $entityManager)
     {
         $this->ideaRepository = $ideaRepository;
+        $this->filesRepository = $filesRepository;
         $this->accountRepository = $accountRepository;
         $this->answerRepository = $answerRepository;
         $this->commentRepository = $commentRepository;
@@ -114,7 +118,7 @@ class Admin extends AbstractController
         Functions::checkRoleAdmin();
 
         $data =  $this->ideaRepository->findAll();
-
+        
         $ideas = [];
         foreach ($data as $idea) {
             $ideas[] = [
@@ -134,15 +138,25 @@ class Admin extends AbstractController
                 'state_idea' => $idea->getState(),
             ];
         }
-
+        
+        
         $_ideas = $paginator->paginate(
             $ideas, 
             $request->query->getInt('page', 1),
             20
         );
-
+        
+        $files = $this->filesRepository->findAll();
+        $_files = [];
+        foreach ($files as $file) {
+            $_files[] = [
+                "file_id" => $file,
+            ];
+        }
+        
         return $this->render('admin/show_ideas.html.twig',[ 
             "ideas" => $_ideas,
+            "files" => $_files,
         ]);
     }
 
@@ -310,4 +324,5 @@ class Admin extends AbstractController
         
         return $this->redirect('/home');
     }
-}
+
+} 

@@ -49,7 +49,6 @@ class Ideas extends AbstractController
         $author = $this->accountRepository->find($_SESSION['account_id']);
 
         $idea = new Idea();
-
         $idea->setTitle($request->request->get('title_idea'));
         $idea->setDetails($request->request->get('details_idea'));
         $idea->setChoiceMesures($request->request->get('mesures'));
@@ -80,11 +79,11 @@ class Ideas extends AbstractController
         if (isset($_FILES['file_idea']) && in_array($_FILES['file_idea']['type'], $allowed_files)) {
             
             if (filesize($_FILES['file_idea']['tmp_name']) > 10000000) {
-                dd('Le fichier est trop lourd !');
+                echo "<script>alert('Le fichier est trop lourd')</script>";
             }
 
             if (!in_array($_FILES['file_idea']['type'], $allowed_files)) {
-                dd("Le fichier n'a pas le bon type");
+                echo "<script>alert('Le fichier n'a pas le bon type')</script>";
             }
 
             $file = new Files;
@@ -116,7 +115,6 @@ class Ideas extends AbstractController
         // Affichage de l'idée
 
         $idea = $this->ideaRepository->find($id);
-        $vote = $this->voteRepository->find($id);
         $ideas = [];
         foreach ($idea as $_idea) {
             $ideas[] = [
@@ -141,12 +139,24 @@ class Ideas extends AbstractController
                 'validator_familyname' => $idea->getValidator()->getFamilyName(),
             ];
         }
-        
-        
+        $like = 0;
+        $dislike = 0;
+        $vote_value = -1;
+        $votes = $idea->getVotes();
+        foreach($votes as $vote) {
+            if($vote->getValue() == 1) {
+                $like++;
+            } elseif($vote->getValue() == 0){
+                $dislike++;
+            }
+            
+            if($vote->getAuhtor()->getId() == $_SESSION['account_id']) {
+                $vote_value = $vote->getValue();
+            }
+        }
         // Commentaires de l'idée
         
         $author = $this->accountRepository->find($_SESSION['account_id']);
-        
         if (isset($_POST['send_comment'])) {
             $comment = new Comment;
             $comment->setMessage($request->request->get('content_commentary'));
@@ -174,10 +184,8 @@ class Ideas extends AbstractController
         $answers = [];
         foreach($answer as $_answer) {
             $answers[] = [
-                'author_answer_givenname' => $_answer->getAnswerAuthorId()->getGivenName(),
-                'author_answer_familyname' => $_answer->getAnswerAuthorId()->getFamilyName(),
                 'answer_content' => $_answer->getAnswerContent(),
-                'related_comment_id' => $_answer->getRelatedCommentId(),
+                'related_comment_id' => $_answer->getRelatedCommentId()->getId(),
             ];
         }
 
@@ -196,6 +204,9 @@ class Ideas extends AbstractController
             'user_id' => $_SESSION['account_id'],
             'is_author' => $author->isAuthor() ? 'true' : 'false',
             'ideas' => $ideas,
+            'count_like' => $like,
+            'count_dislike' => $dislike,
+            'vote_value' => $vote_value,
             'comments' => $_comments,
             'answers' => $answers,
         ];
@@ -336,13 +347,19 @@ class Ideas extends AbstractController
     {
         $vote_auhtor = $this->accountRepository->find($_SESSION['account_id']);
         $idea = $this->ideaRepository->find($id);
-        $vote = new Vote;
-        $vote->setAuhtor($vote_auhtor);
-        $vote->setValue(1);
-        $vote->setRelatedIdeaId($idea);
-        $this->entityManager->persist($vote);
-        $this->entityManager->flush();
-        return $this->redirect('/home');
+        $_vote = $this->voteRepository->findOneBy(['related_idea_id' => $id, 'auhtor' => $_SESSION['account_id']]);
+        if($_vote == null){
+            $vote = new Vote;
+            $vote->setAuhtor($vote_auhtor);
+            $vote->setValue(1);
+            $vote->setRelatedIdeaId($idea);
+            $this->entityManager->persist($vote);
+            $this->entityManager->flush();
+        } else {
+            $this->entityManager->remove($_vote);
+            $this->entityManager->flush();
+        }
+        return $this->redirect('/idea/'. $id);
     }
 
     #[Route('/idea/{id}/vote_disliked')]
@@ -350,11 +367,17 @@ class Ideas extends AbstractController
     {
         $vote_auhtor = $this->accountRepository->find($_SESSION['account_id']);
         $idea = $this->ideaRepository->find($id);
-        $vote = new Vote;
-        $vote->setAuhtor($vote_auhtor);
-        $vote->setValue(0);
-        $vote->setRelatedIdeaId($idea);
-        $this->entityManager->persist($vote);
+        $_vote = $this->voteRepository->findOneBy(['related_idea_id' => $id, 'auhtor' => $_SESSION['account_id']]);
+        if($_vote == null){
+            $vote = new Vote;
+            $vote->setAuhtor($vote_auhtor);
+            $vote->setValue(0);
+            $vote->setRelatedIdeaId($idea);
+            $this->entityManager->persist($vote);
+        } else {
+            $this->entityManager->remove($_vote);
+        }
         $this->entityManager->flush();
+        return $this->redirect('/idea/'. $id);
     }
 }
