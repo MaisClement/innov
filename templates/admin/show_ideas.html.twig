@@ -85,7 +85,6 @@
             </tr>
         </thead>
         {% for idea in ideas|filter(idea => idea.isarchived != "true") %}
-        {% for file in files %}
         <tbody>
             <tr>
                 <td><a href="/admin/modify_ideas/{{ idea.idea_id }}">{{ idea.idea_id }}</a></td>
@@ -100,7 +99,6 @@
                 <td>{{ idea.first_name }} {{ idea.family_name }}</td>
                 <td><a href="#">Télécharger</a></td>
             </tr>
-            {% endfor %}
             {% endfor %}
             {% endif %}
         </tbody>

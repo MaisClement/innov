@@ -58,7 +58,7 @@ class Profile extends AbstractController
                 'comment_id' => $commentary->getId(),
                 'author_givenname' => $commentary->getAuthor()->getGivenName(),
                 'author_familyname' => $commentary->getAuthor()->getFamilyName(),
-                'comment_idea_id' => $commentary->getRelatedIdea(),
+                'comment_idea_id' => $commentary->getRelatedIdea()->getTitle(),
                 'content_comment' => $commentary->getMessage(),
                 'create_comment' => $commentary->getCreationDateTime(),
             ];

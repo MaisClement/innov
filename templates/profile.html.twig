@@ -107,9 +107,9 @@
             <hr>
             {% for comment in comments %}
             <div class="columns is-centered">
-                <div class="column is-half">
+                <div class="column is-8">
                     <div class="box">
-                        <h1 class="title is-5 mb-2">{{ comment.author_givenname }} {{ comment.author_familyname }}</h1>
+                        <h1 class="title is-5 mb-2">Commentaire sur idée : {{ comment.comment_idea_id }} </h1>
                         <p class="subtitle is-4">{{ comment.content_comment }}</p>
                     </div>
                 </div>
@@ -149,7 +149,7 @@
                 </div>
                 <div class="column is-6">
                     <h1 class="title is-5" style="text-align: center;">Mes idées approuvées</h1>
-                    {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress') %}
+                    {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress' and 'is_realized' and 'is_not_realized') %}
                     {% if account_id == idea.author_id %}
                     <a href="/idea/{{ idea.idea_id }}">
                         <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
