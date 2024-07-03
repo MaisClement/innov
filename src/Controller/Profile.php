@@ -44,6 +44,9 @@ class Profile extends AbstractController
                 'first_name' => $idea->getAuthor()->getGivenName(),
                 'family_name' => $idea->getAuthor()->getFamilyName(),
                 'creationDateTime' => $idea->getCreationDateTime(),
+                'validator_id' => $idea->getValidator() != null ? $idea->getValidator()->getId() : "",
+                'validator_givenname' => $idea->getValidator() != null ? $idea->getValidator()->getGivenName() : "",
+                'validator_familyname' => $idea->getValidator() != null ? $idea->getValidator()->getFamilyName() : "",
                 'state_idea' => $idea->getState(),
                 'user_id' => $_SESSION['account_id'],
             ];

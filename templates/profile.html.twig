@@ -149,7 +149,8 @@
                 </div>
                 <div class="column is-6">
                     <h1 class="title is-5" style="text-align: center;">Mes idées approuvées</h1>
-                    {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress' and 'is_realized' and 'is_not_realized') %}
+                    {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress' and 'is_realized' and
+                    'is_not_realized') %}
                     {% if account_id == idea.author_id %}
                     <a href="/idea/{{ idea.idea_id }}">
                         <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
@@ -161,7 +162,8 @@
                                         <span class="tag">En cours de réalisation</span>
                                     </div>
                                     <p>{{ idea.details_idea }}</p>
-                                    <!-- <p class="is-size-7 m-0">Validée par : <strong>{#  {{ idea.validator_givenname }} {{ idea.validator_familyname }} #}</strong></p>-->
+                                    <p class="is-size-7 m-0">Validée par : <strong> {{ idea.validator_givenname }} {{
+                                            idea.validator_familyname }}</strong></p>
                                     <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{
                                             idea.family_name }}
                                         </strong>
@@ -187,7 +189,8 @@
                                         <span class="tag">Réalisée avec succès</span>
                                     </div>
                                     <p>{{ idea.details_idea }}</p>
-                                    <!-- <p class="is-size-7 m-0">Validée par : <strong>{#  {{ idea.validator_givenname }} {{ idea.validator_familyname }} #}</strong></p>-->
+                                    <p class="is-size-7 m-0">Validée par : <strong> {{ idea.validator_givenname }} {{
+                                            idea.validator_familyname }} </strong></p>
                                     <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{
                                             idea.family_name }}
                                         </strong>
@@ -213,7 +216,8 @@
                                         <span class="tag">Réalisée sans succès</span>
                                     </div>
                                     <p>{{ idea.details_idea }}</p>
-                                    <!-- <p class="is-size-7 m-0">Validée par : <strong>{#  {{ idea.validator_givenname }} {{ idea.validator_familyname }} #}</strong></p>-->
+                                    <p class="is-size-7 m-0">Validée par : <strong> {{ idea.validator_givenname }} {{
+                                            idea.validator_familyname }} </strong></p>
                                     <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{
                                             idea.family_name }}
                                         </strong>

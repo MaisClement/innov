@@ -7,8 +7,8 @@ use App\Entity\Idea;
 use App\Entity\Vote;
 use App\Form\CommentsType;
 use App\Repository\AccountRepository;
-use App\Repository\CommentRepository;
 use App\Repository\AnswerRepository;
+use App\Repository\CommentRepository;
 use App\Repository\FilesRepository;
 use App\Repository\IdeaRepository;
 use App\Repository\VoteRepository;
@@ -77,13 +77,12 @@ class Ideas extends AbstractController
         ];
 
         if (isset($_FILES['file_idea']) && in_array($_FILES['file_idea']['type'], $allowed_files)) {
-            
             if (filesize($_FILES['file_idea']['tmp_name']) > 10000000) {
-                echo "<script>alert('Le fichier est trop lourd')</script>";
+                dd('Le fichier est trop lourd');
             }
 
             if (!in_array($_FILES['file_idea']['type'], $allowed_files)) {
-                echo "<script>alert('Le fichier n'a pas le bon type')</script>";
+                dd('Le fichier n\'a pas le bon type');
             }
 
             $file = new Files;
@@ -143,19 +142,19 @@ class Ideas extends AbstractController
         $dislike = 0;
         $vote_value = -1;
         $votes = $idea->getVotes();
-        foreach($votes as $vote) {
-            if($vote->getValue() == 1) {
+        foreach ($votes as $vote) {
+            if ($vote->getValue() == 1) {
                 $like++;
-            } elseif($vote->getValue() == 0){
+            } elseif ($vote->getValue() == 0) {
                 $dislike++;
             }
-            
-            if($vote->getAuhtor()->getId() == $_SESSION['account_id']) {
+
+            if ($vote->getAuhtor()->getId() == $_SESSION['account_id']) {
                 $vote_value = $vote->getValue();
             }
         }
         // Commentaires de l'idée
-        
+
         $author = $this->accountRepository->find($_SESSION['account_id']);
         if (isset($_POST['send_comment'])) {
             $comment = new Comment;
@@ -166,7 +165,7 @@ class Ideas extends AbstractController
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
         }
-        
+
         $comments = $idea->getComments();
         $_comments = [];
         foreach ($comments as $commentary) {
@@ -179,10 +178,10 @@ class Ideas extends AbstractController
                 'create_comment' => $commentary->getCreationDateTime(),
             ];
         }
-        
+
         $answer = $this->answerRepository->findAll();
         $answers = [];
-        foreach($answer as $_answer) {
+        foreach ($answer as $_answer) {
             $answers[] = [
                 'answer_content' => $_answer->getAnswerContent(),
                 'related_comment_id' => $_answer->getRelatedCommentId()->getId(),
@@ -203,6 +202,9 @@ class Ideas extends AbstractController
             'state' => $idea->getState(),
             'user_id' => $_SESSION['account_id'],
             'is_author' => $author->isAuthor() ? 'true' : 'false',
+            'validator_id' => $idea->getValidator() != null ? $idea->getValidator()->getId() : '',
+            'validator_givenname' => $idea->getValidator() != null ? $idea->getValidator()->getGivenName() : '',
+            'validator_familyname' => $idea->getValidator() != null ? $idea->getValidator()->getFamilyName() : '',
             'ideas' => $ideas,
             'count_like' => $like,
             'count_dislike' => $dislike,
@@ -218,9 +220,10 @@ class Ideas extends AbstractController
     public function validateIdea(Request $request, $id): RedirectResponse
     {
         Functions::checkUserSession($this->accountRepository);
+        Functions::checkRoleAdmin();
 
         $idea = $this->ideaRepository->find($id);
-        $validatorId = $this->accountRepository->find($id);
+        $validatorId = $this->accountRepository->find($_SESSION['account_id']);
         $idea->setValidator($validatorId);
         $idea->setState('in_progress');
         $this->entityManager->persist($idea);
@@ -233,6 +236,7 @@ class Ideas extends AbstractController
     public function refusedIdea(Request $request, $id): RedirectResponse
     {
         Functions::checkUserSession($this->accountRepository);
+        Functions::checkRoleAdmin();
 
         $idea = $this->ideaRepository->find($id);
 
@@ -247,6 +251,7 @@ class Ideas extends AbstractController
     public function waiting(Request $request, $id): RedirectResponse
     {
         Functions::checkUserSession($this->accountRepository);
+        Functions::checkRoleAdmin();
 
         $idea = $this->ideaRepository->find($id);
 
@@ -263,19 +268,21 @@ class Ideas extends AbstractController
     public function archivedIdea(Request $request, $id): RedirectResponse
     {
         Functions::checkUserSession($this->accountRepository);
+        Functions::checkRoleAdmin();
 
         $idea = $this->ideaRepository->find($id);
 
         $idea->setArchived(true);
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
-        return new RedirectResponse('/home');
+        return new RedirectResponse('/idea/' .$id);
     }
 
     #[Route('/idea/{id}/delete')]
     public function deleteIdea(Request $request, $id)
     {
         Functions::checkUserSession($this->accountRepository);
+        Functions::checkRoleAdmin();
 
         $idea = $this->ideaRepository->find($id);
         $comments = $idea->getComments();
@@ -294,7 +301,7 @@ class Ideas extends AbstractController
             $this->entityManager->remove($vote);
         }
 
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $this->entityManager->remove($file);
         }
 
@@ -307,48 +314,59 @@ class Ideas extends AbstractController
     #[Route('/idea/{id}/comment/{comment_id}/delete')]
     public function deleteComment(Request $request, $id, $comment_id): RedirectResponse
     {
+        Functions::checkUserSession($this->accountRepository);
+        Functions::checkRoleAdmin();
+
         $comment = $this->commentRepository->find($comment_id);
         $idea = $this->ideaRepository->find($id);
+        
+        foreach ($comment as $comments) {
+            $answers = $comments->getAnswers();
+            foreach ($answers as $answer) {
+                $this->entityManager->remove($answer);
+            }
+            $this->entityManager->remove($comment);
+        }
+
         $comment->setRelatedIdea($idea);
         $this->entityManager->remove($comment);
         $this->entityManager->flush();
-        return new RedirectResponse('/home');
+        return new RedirectResponse('/idea/' .$id);
     }
 
     #[Route('/idea/{id}/idea_realized')]
     public function realizedIdea(Request $request, $id): RedirectResponse
     {
-        new Functions();
-        $this->functions->checkUserSession();
+        Functions::checkUserSession($this->accountRepository);
 
         $idea = $this->ideaRepository->find($id);
         $idea->setState('is_realized');
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
-        return new RedirectResponse('/home');
+        return new RedirectResponse('/idea/' . $id);
     }
 
     #[Route('/idea/{id}/idea_not_realized')]
     public function notrealizedIdea(Request $request, $id): RedirectResponse
     {
-        new Functions();
-        $this->functions->checkUserSession();
+        Functions::checkUserSession($this->accountRepository);
 
         $idea = $this->ideaRepository->find($id);
         $idea->setState('is_not_realized');
         $this->entityManager->persist($idea);
         $this->entityManager->flush();
-        return new RedirectResponse('/home');
-
+        return new RedirectResponse('/idea/' . $id);
     }
 
     #[Route('/idea/{id}/vote_liked')]
     public function voteLiked(Request $request, $id)
     {
+        Functions::checkUserSession($this->accountRepository);
+
         $vote_auhtor = $this->accountRepository->find($_SESSION['account_id']);
         $idea = $this->ideaRepository->find($id);
         $_vote = $this->voteRepository->findOneBy(['related_idea_id' => $id, 'auhtor' => $_SESSION['account_id']]);
-        if($_vote == null){
+        if ($_vote == null) {
             $vote = new Vote;
             $vote->setAuhtor($vote_auhtor);
             $vote->setValue(1);
@@ -359,16 +377,18 @@ class Ideas extends AbstractController
             $this->entityManager->remove($_vote);
             $this->entityManager->flush();
         }
-        return $this->redirect('/idea/'. $id);
+        return $this->redirect('/idea/' . $id);
     }
 
     #[Route('/idea/{id}/vote_disliked')]
     public function voteDisliked(Request $request, $id)
     {
+        Functions::checkUserSession($this->accountRepository);
+
         $vote_auhtor = $this->accountRepository->find($_SESSION['account_id']);
         $idea = $this->ideaRepository->find($id);
         $_vote = $this->voteRepository->findOneBy(['related_idea_id' => $id, 'auhtor' => $_SESSION['account_id']]);
-        if($_vote == null){
+        if ($_vote == null) {
             $vote = new Vote;
             $vote->setAuhtor($vote_auhtor);
             $vote->setValue(0);
@@ -378,6 +398,6 @@ class Ideas extends AbstractController
             $this->entityManager->remove($_vote);
         }
         $this->entityManager->flush();
-        return $this->redirect('/idea/'. $id);
+        return $this->redirect('/idea/' . $id);
     }
 }
