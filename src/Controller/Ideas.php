@@ -62,7 +62,7 @@ class Ideas extends AbstractController
         $idea->setCreationDateTime(new \DateTime());
         $author->setAuthor(true);
         $this->entityManager->persist($idea);
-
+        
         $allowed_files = [
             'jpg' => 'image/jpeg',
             'jpeg' => 'image/jpeg',
@@ -75,29 +75,35 @@ class Ideas extends AbstractController
             'xls' => 'application/vnd.ms-excel',
             'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ];
-
+        
         if (isset($_FILES['file_idea']) && in_array($_FILES['file_idea']['type'], $allowed_files)) {
             if (filesize($_FILES['file_idea']['tmp_name']) > 10000000) {
-                dd('Le fichier est trop lourd');
+                throw new \Exception('Le fichier est trop lourd');
             }
-
+            
             if (!in_array($_FILES['file_idea']['type'], $allowed_files)) {
-                dd('Le fichier n\'a pas le bon type');
+                throw new \Exception('Le fichier n\'a pas le bon type');
             }
-
+            
+            
             $file = new Files;
+            $idea->setHasFile(true);
             $file->setRelatedIdeaId($idea->getId());
             $file->setUploadDate(new \DateTime());
-            $file->setNameFile($_FILES['file_idea']['name']);
             $idea->addFile($file);
+            $file->setNameFile($_FILES['file_idea']['name']);
             $this->entityManager->persist($file);
             $this->entityManager->flush();
             $path = '../upload_files';
             $tmpFilePath = $_FILES['file_idea']['tmp_name'];
             $name = basename($_FILES['file_idea']['name']);
             move_uploaded_file($tmpFilePath, $path . '/' . $file->getId());
+        } else {
+            $idea->setHasFile(false);
+            $this->entityManager->persist($idea);
+            $this->entityManager->flush();
         }
-
+        
         return new RedirectResponse('/idea/' . $idea->getId());
     }
     // Récuperer les données de l'idée

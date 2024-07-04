@@ -61,9 +61,6 @@ class Admin extends AbstractController
                 'team' => $_idea->getTeam(),
                 'author_id' => $_idea->getAuthor()->getId(),
                 'idea_id' => $_idea->getId(),
-                // 'validator_id' => $idea->getValidator() != null ? $idea->getValidator()->getId() : "",
-                //'validator_givenname' => $idea->getValidator() != null ? $idea->getValidator()->getGivenName() : "",
-                // 'validator_familyname' => $idea->getValidator() != null ? $idea->getValidator()->getFamilyName() : "",
                 'first_name' => $_idea->getAuthor()->getGivenName(),
                 'family_name' => $_idea->getAuthor()->getFamilyName(),
                 'creationDateTime' => $_idea->getCreationDateTime(),
@@ -141,6 +138,7 @@ class Admin extends AbstractController
                 'first_name' => $idea->getAuthor()->getGivenName(),
                 'family_name' => $idea->getAuthor()->getFamilyName(),
                 'creationDateTime' => $idea->getCreationDateTime(),
+                'has_file' => $idea->hasFile() ? 'true' : 'false',
                 'state_idea' => $idea->getState(),
             ];
         }
@@ -156,7 +154,8 @@ class Admin extends AbstractController
         $_files = [];
         foreach ($files as $file) {
             $_files[] = [
-                "file_id" => $file,
+                'file_id' => $file->getId(),
+                'related_idea_id' => $file->getRelatedIdeaId()->getId(),
             ];
         }
         
@@ -328,7 +327,7 @@ class Admin extends AbstractController
             $this->entityManager->flush();
         }
         
-        return $this->redirect('/home');
+        return $this->redirect('/idea/' . $id);
     }
 
 } 

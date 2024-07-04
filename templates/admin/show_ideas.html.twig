@@ -97,7 +97,11 @@
                 <td>{{ idea.funding_details }}</td>
                 <td>{{ idea.team }}</td>
                 <td>{{ idea.first_name }} {{ idea.family_name }}</td>
-                <td><a href="#">Télécharger</a></td>
+                {% for file in files|filter(file => file.related_idea_id == idea.idea_id) %}
+                {% if idea.has_file == "true" %}
+                <td><a href="/download/{{ file.file_id }}">Télécharger</a></td>
+                {% endif %}
+                {% endfor %}
             </tr>
             {% endfor %}
             {% endif %}
