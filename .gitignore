@@ -29,3 +29,4 @@ compose.override.yaml
 composer.lock
 phpunit.xml.dist
 symfony.lock
+upload_files/

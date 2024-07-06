@@ -75,34 +75,45 @@ class Ideas extends AbstractController
             'xls' => 'application/vnd.ms-excel',
             'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ];
-        
-        if (isset($_FILES['file_idea']) && in_array($_FILES['file_idea']['type'], $allowed_files)) {
-            if (filesize($_FILES['file_idea']['tmp_name']) > 10000000) {
-                throw new \Exception('Le fichier est trop lourd');
+
+
+        $num_files = count($_FILES['file_idea']['name']);
+
+        foreach($_FILES['file_idea']['name'] as $i => $fileName) {
+            if($num_files > 3) {
+                throw new \Exception('Le nombre maximum de fichier à été dépassé ! (maximum 3 fichiers/idées)');
             }
-            
-            if (!in_array($_FILES['file_idea']['type'], $allowed_files)) {
-                throw new \Exception('Le fichier n\'a pas le bon type');
-            }
-            
-            
-            $file = new Files;
-            $idea->setHasFile(true);
-            $file->setRelatedIdeaId($idea->getId());
-            $file->setUploadDate(new \DateTime());
-            $idea->addFile($file);
-            $file->setNameFile($_FILES['file_idea']['name']);
-            $this->entityManager->persist($file);
-            $this->entityManager->flush();
-            $path = '../upload_files';
-            $tmpFilePath = $_FILES['file_idea']['tmp_name'];
-            $name = basename($_FILES['file_idea']['name']);
-            move_uploaded_file($tmpFilePath, $path . '/' . $file->getId());
-        } else {
-            $idea->setHasFile(false);
+        }
+
+        for($i = 0; $i < $num_files; $i++) {
+
+            if (isset($_FILES['file_idea']) && in_array($_FILES['file_idea']['type'][$i], $allowed_files)) {
+                if (filesize($_FILES['file_idea']['tmp_name'][$i]) > 10000000) {
+                    throw new \Exception('Le fichier est trop lourd');
+                }
+                
+                if (!in_array($_FILES['file_idea']['type'][$i], $allowed_files)) {
+                    throw new \Exception('Le fichier n\'a pas le bon type');
+                }
+                
+                $file = new Files;
+                $idea->setHasFile(true);
+                $file->setRelatedIdeaId($idea);
+                $file->setUploadDate(new \DateTime());
+                $idea->addFile($file);
+                $file->setNameFile($_FILES['file_idea']['name'][$i]);
+                $this->entityManager->persist($file);
+                $this->entityManager->flush();
+                $path = '../upload_files';
+                $tmpFilePath = $_FILES['file_idea']['tmp_name'][$i];
+                $name = basename($_FILES['file_idea']['name'][$i]);
+                move_uploaded_file($tmpFilePath, $path . '/' . $file->getId());
+            } else {
+                $idea->setHasFile(false);
             $this->entityManager->persist($idea);
             $this->entityManager->flush();
         }
+    }
         
         return new RedirectResponse('/idea/' . $idea->getId());
     }
@@ -191,6 +202,8 @@ class Ideas extends AbstractController
             $answers[] = [
                 'answer_content' => $_answer->getAnswerContent(),
                 'related_comment_id' => $_answer->getRelatedCommentId()->getId(),
+                'author_givenname' => $_answer->getAnswerAuthorId()->getGivenName(),
+                'author_familyname' => $_answer->getAnswerAuthorId()->getFamilyName(),
             ];
         }
 
@@ -406,4 +419,5 @@ class Ideas extends AbstractController
         $this->entityManager->flush();
         return $this->redirect('/idea/' . $id);
     }
+
 }

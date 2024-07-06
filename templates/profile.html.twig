@@ -109,7 +109,7 @@
             <div class="columns is-centered">
                 <div class="column is-8">
                     <div class="box">
-                        <h1 class="title is-5 mb-2">Commentaire sur idée : {{ comment.comment_idea_id }} </h1>
+                        <h1 class="title is-5 mb-2">Commentaire sur idée : <a href="/idea/{{ comment.comment_idea_id }}"> {{ comment.comment_idea_title }} </a> </h1>
                         <p class="subtitle is-4">{{ comment.content_comment }}</p>
                     </div>
                 </div>
@@ -361,12 +361,12 @@
                     <h1 class="title is-3">Ajout d'un fichier</h1>
                     <div class="file">
                         <label class="file-label">
-                            <input class="file-input" type="file" id="file" name="file_idea" />
+                            <input class="file-input" type="file" id="file" name="file_idea[]" multiple/>
                             <span class="file-cta">
                                 <span class="file-icon">
                                     <i class="fas fa-upload"></i>
                                 </span>
-                                <span class="file-label"> Choisissez un fichier</span>
+                                <span class="file-label"> Choisissez un ou plusieurs fichier(s) (3 fichiers maximum)</span>
                             </span>
                         </label>
                     </div>

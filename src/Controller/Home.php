@@ -77,4 +77,45 @@ class Home extends AbstractController
     {
         return $this->render('errors/error404.html');
     }
+
+    #[Route('/ideas/{state}')]
+    public function allIdeas($state) 
+    {
+        Functions::checkUserSession($this->accountRepository);
+
+        $_ideas = $this->ideaRepository->findAll();
+
+        $ideas = [];
+        foreach ($_ideas as $idea) {
+            
+            if($idea->getState() == $state) {
+                $ideas[] = array(
+                    'title_idea' => $idea->getTitle(),
+                    'details_idea' => $idea->getDetails(),
+                    'choice_mesures' => $idea->getChoiceMesures(),
+                    'details_mesures' => $idea->getDetailsMesures(),
+                    'choice_funding' => $idea->getChoiceFunding(),
+                    'funding_details' => $idea->getDetailsFunding(),
+                    'team' => $idea->getTeam(),
+                    'validator_id' => $idea->getValidator() != null ? $idea->getValidator()->getId() : "",
+                    'validator_givenname' => $idea->getValidator() != null ? $idea->getValidator()->getGivenName() : "",
+                    'validator_familyname' => $idea->getValidator() != null ? $idea->getValidator()->getFamilyName() : "",
+                    'author_id' => $idea->getAuthor()->getId(),
+                    'idea_id' => $idea->getId(),
+                    'first_name' => $idea->getAuthor()->getGivenName(),
+                    'family_name' => $idea->getAuthor()->getFamilyName(),
+                    'creationDateTime' => $idea->getCreationDateTime(),
+                    'state_idea' => $idea->getState(),
+                    'is_archived' => $idea->isArchived() ? 'true' : 'false',
+                );
+            }
+        }
+                
+        $data = [
+            'ideas' => $ideas,
+            'is_admin' => in_array('admin', $_SESSION['role']) ? 'true' : 'false',
+        ];
+
+        return $this->render('/idea/all_ideas.html.twig', $data);
+    }
 }
