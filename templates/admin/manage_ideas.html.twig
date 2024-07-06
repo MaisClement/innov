@@ -61,7 +61,8 @@
     <h1 class="title is-1 m-5" style="text-align: center;">Gestion des idées</h1>
     <hr>
     {% if ideas == null %}
-    <h1 class="title is-2 has-text-danger-50" style="text-align: center;">C'est vide ici ! Aucune idée à été créée !</h1>
+    <h1 class="title is-2 has-text-danger-50" style="text-align: center;">C'est vide ici ! Aucune idée à été créée !
+    </h1>
     {% endif %}
     <div class="columns is-centered">
         <div class="column is-4">
@@ -84,8 +85,11 @@
                                 <span class="tag">En cours de réalisation</span>
                             </div>
                             <p>{{ idea.details_idea }}</p>
-                            
-                            <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                            <p class="is-size-7 m-0">Validée par : <strong> {{ idea.validator_givenname }} {{
+                                    idea.validator_familyname }}
+                                </strong>
+                            <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name
+                                    }}
                                 </strong>
                             <p class="is-size-7 m-0">Créée le : <strong>{{ idea.creationDateTime|date("d/m/Y")
                                     }}</strong>
@@ -96,7 +100,8 @@
             </a>
             <div class="buttons is-left">
                 <form action="{{ path('idea_refuse', {'id': idea.idea_id}) }}" method="post">
-                    <input type="submit" value="Changer d'avis ? (Refuser finalement ?)" id="idea_refuse" class="button is-danger">
+                    <input type="submit" value="Changer d'avis ? (Refuser finalement ?)" id="idea_refuse"
+                        class="button is-danger">
                 </form>
                 <form action="{{ path('idea_wait_approve', {'id': idea.idea_id}) }}" method="post">
                     <input type="submit" value="Réfléchir ?" id="idea_wait" class="button is-warning">
@@ -125,8 +130,9 @@
                                 <span class="tag is-warning">En attente d'approbation</span>
                             </div>
                             <p>{{ idea.details_idea }}</p>
-                                </strong>
-                            <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                            </strong>
+                            <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name
+                                    }}
                                 </strong>
                             <p class="is-size-7 m-0">Créée le : <strong>{{ idea.creationDateTime|date("d/m/Y")
                                     }}</strong>
@@ -167,7 +173,8 @@
                                 <span class="tag">Non réalisable</span>
                             </div>
                             <p>{{ idea.details_idea }}</p>
-                            <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name }}
+                            <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name
+                                    }}
                                 </strong>
                             <p class="is-size-7 m-0">Créée le : <strong>{{ idea.creationDateTime|date("d/m/Y")
                                     }}</strong>
@@ -178,7 +185,8 @@
             </a>
             <div class="buttons is-left">
                 <form action="{{ path('idea_validate', {'id': idea.idea_id}) }}" method="post">
-                    <input type="submit" value="Changer d'avis ? (Valider finalement ?)" id="valid_idea" class="button is-success">
+                    <input type="submit" value="Changer d'avis ? (Valider finalement ?)" id="valid_idea"
+                        class="button is-success">
                 </form>
                 <form action="{{ path('idea_wait_approve', {'id': idea.idea_id}) }}" method="post">
                     <input type="submit" value="Restaurer ?" id="wait_idea" class="button is-warning">

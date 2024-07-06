@@ -73,6 +73,9 @@ class Idea
     #[ORM\OneToMany(targetEntity: Files::class, mappedBy: 'related_idea_id')]
     private Collection $files;
 
+    #[ORM\Column]
+    private ?bool $has_file = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -327,6 +330,18 @@ class Idea
                 $file->setRelatedIdeaId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function hasFile(): ?bool
+    {
+        return $this->has_file;
+    }
+
+    public function setHasFile(bool $has_file): static
+    {
+        $this->has_file = $has_file;
 
         return $this;
     }

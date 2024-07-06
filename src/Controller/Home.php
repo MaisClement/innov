@@ -6,6 +6,7 @@ use App\Entity\Role;
 use App\Repository\AccountRepository;
 use App\Repository\IdeaRepository;
 use App\Service\Functions;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,8 +42,9 @@ class Home extends AbstractController
                 'choice_funding' => $idea->getChoiceFunding(),
                 'funding_details' => $idea->getDetailsFunding(),
                 'team' => $idea->getTeam(),
-                'validator_givenname' => $idea->getValidator(),
-                'validator_familyname' => $idea->getValidator(),
+                'validator_id' => $idea->getValidator() != null ? $idea->getValidator()->getId() : "",
+                'validator_givenname' => $idea->getValidator() != null ? $idea->getValidator()->getGivenName() : "",
+                'validator_familyname' => $idea->getValidator() != null ? $idea->getValidator()->getFamilyName() : "",
                 'author_id' => $idea->getAuthor()->getId(),
                 'idea_id' => $idea->getId(),
                 'first_name' => $idea->getAuthor()->getGivenName(),

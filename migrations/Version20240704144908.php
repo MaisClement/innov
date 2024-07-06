@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240628145233 extends AbstractMigration
+final class Version20240704144908 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -24,7 +24,7 @@ final class Version20240628145233 extends AbstractMigration
         $this->addSql('CREATE TABLE answer (id INT AUTO_INCREMENT NOT NULL, answer_content LONGTEXT DEFAULT NULL, answer_author_id INT NOT NULL, answer_date_time DATETIME NOT NULL, related_comment_id_id INT DEFAULT NULL, INDEX IDX_DADD4A253E8CCC39 (related_comment_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE comment (id INT AUTO_INCREMENT NOT NULL, message LONGTEXT NOT NULL, creation_date_time DATETIME NOT NULL, author_id INT DEFAULT NULL, related_idea_id INT DEFAULT NULL, INDEX IDX_9474526CF675F31B (author_id), INDEX IDX_9474526C647625D8 (related_idea_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE files (id INT AUTO_INCREMENT NOT NULL, upload_date DATETIME NOT NULL, name_file VARCHAR(255) NOT NULL, related_idea_id_id INT DEFAULT NULL, INDEX IDX_6354059B44EA532 (related_idea_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
-        $this->addSql('CREATE TABLE idea (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, details LONGTEXT NOT NULL, state VARCHAR(255) NOT NULL, creation_datetime DATETIME NOT NULL, choice_mesures LONGTEXT NOT NULL, details_mesures LONGTEXT NOT NULL, choice_funding LONGTEXT NOT NULL, details_funding LONGTEXT NOT NULL, team VARCHAR(255) NOT NULL, files_idea VARCHAR(255) DEFAULT NULL, is_archived TINYINT(1) NOT NULL, author_id INT NOT NULL, validator_id INT DEFAULT NULL, INDEX IDX_A8BCA45F675F31B (author_id), INDEX IDX_A8BCA45B0644AEC (validator_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
+        $this->addSql('CREATE TABLE idea (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, details LONGTEXT NOT NULL, state VARCHAR(255) NOT NULL, creation_datetime DATETIME NOT NULL, choice_mesures LONGTEXT NOT NULL, details_mesures LONGTEXT NOT NULL, choice_funding LONGTEXT NOT NULL, details_funding LONGTEXT NOT NULL, team VARCHAR(255) NOT NULL, files_idea VARCHAR(255) DEFAULT NULL, is_archived TINYINT(1) NOT NULL, has_file TINYINT(1) NOT NULL, author_id INT NOT NULL, validator_id INT DEFAULT NULL, INDEX IDX_A8BCA45F675F31B (author_id), INDEX IDX_A8BCA45B0644AEC (validator_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE login (id INT AUTO_INCREMENT NOT NULL, ip VARCHAR(255) NOT NULL, datetime DATETIME NOT NULL, account_id_id INT NOT NULL, INDEX IDX_AA08CB1049CB4726 (account_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE managers (id INT AUTO_INCREMENT NOT NULL, family_name VARCHAR(255) NOT NULL, given_name VARCHAR(255) NOT NULL, team_id_id INT NOT NULL, INDEX IDX_A949E006B842D717 (team_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE role (id INT AUTO_INCREMENT NOT NULL, role VARCHAR(255) NOT NULL, account_id_id INT NOT NULL, INDEX IDX_57698A6A49CB4726 (account_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');

@@ -40,6 +40,18 @@
         height: 55px;
         width: 80px;
     }
+    .vote {
+        transition: all .5;
+    }
+    .vote {
+        filter:grayscale(1)
+    }
+    .vote:hover {
+        filter:grayscale(.5)
+    }
+    .vote.selected {
+        filter:grayscale(0)
+    }
 </style>
 
 <body>
@@ -120,7 +132,6 @@
                 <h5 class="title is-5 mb-2">{{ choice_funding | escape }} </h5>
                 <p class="is-size-5">{{ funding_details }} </p>
             </div>
-            {% if is_author == "false" and auhtor_id != user_id %}
             <hr>
             <h1 class="title is-4">
                 <span class="icon has-text-warning mr-1 mb-1">
@@ -133,21 +144,20 @@
                     <h2 class="subtitle is-6">Votez :</h2>
                 </div>
                 <div class="column">
-                    <a href="/idea/{{ idea_id }}/vote_liked" class="icon-text has-text-primary mr-4">
+                    <a href="/idea/{{ idea_id }}/vote_liked" id="" class="vote {{ vote_value == 1 ? 'selected' }} icon-text has-text-primary mr-4">
                         <span class="icon">
                             <i class="fa-solid fa-heart fa-lg"></i>
                         </span>
-                        <span>Oui</span>
+                        <span>{{ count_like }}</span>
                     </a>
-                    <a href="/idea/{{ idea_id }}/vote_disliked" class="icon-text has-text-danger">
+                    <a href="/idea/{{ idea_id }}/vote_disliked" class="vote {{ vote_value == 0 ? 'selected' }} icon-text has-text-danger">
                         <span class="icon">
                             <i class="fa-solid fa-heart-crack fa-lg"></i>
                         </span>
-                        <span>Non</span>
+                        <span>{{ count_dislike }}</span>
                     </a>
                 </div>
             </div>
-            {% endif %}
             <hr>
             <h1 class="title is-2">Commentaires</h1>
             <br>
@@ -158,7 +168,6 @@
                     class="button is-success">
             </form>
             <hr>
-            <h1 class="title is-2" id="comments">Liste des commentaires</h1>
             <div class="container">
                 {% for comment in comments %}
                 <div class="box">
@@ -170,20 +179,19 @@
                             <input type="submit" class="button" value="Supprimer">
                         </form>
                         <input type="submit" value="Répondre" class="button js-modal-trigger"
-                        data-target="modal-js-answer">
+                            data-target="modal-js-answer">
                     </div>
                 </div>
-                    {% endif %}
-                    {% for answer in answers %}
-                    <div class="box">
-                        <h1 class="title is-4 mb-2">{{ answer.author_answer_givenname }} {{ answer.author_answer_familyname }} </h1>
-                        <p class="subtitle is-4"> {{ answer.answer_content }} </p>
-                    </div> 
-                    {% endfor %}
+                {% endif %}
+                {% for answer in answers|filter(answer => answer.related_comment_id == comment.comment_id) %}
+                <div class="box ml-5" style="border: solid #4258ff 3px;">
+                    <p class="subtitle is-4"> {{ answer.answer_content }} </p>
+                </div>
+                {% endfor %}
                 {% endfor %}
                 <br>
+
             </div>
-            <hr>
             <div class="buttons">
                 {% if is_author == "true" and author_id == user_id and state == "in_progress" %}
                 <form action="/idea/{{ idea_id }}/idea_realized" method="post">
@@ -244,6 +252,149 @@
                 </form>
             </div>
         </div>
+
+        <div class="modal" id="modal-js-create-idea">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title"><strong>Soumettre une idée</strong></p>
+                <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <form method="post" action="/idea" enctype="multipart/form-data">
+                    <h1 class="title is-4">Intitulé de l'idée</h1>
+                    <input type="text" class="input is-medium" name="title_idea" id="title_idea" required="required">
+                    <br><br>
+                    <h1 class="title is-4">Détails</h1>
+                    <textarea class="textarea" placeholder="Décrivez plus en détails votre idée" name="details_idea"
+                        id="details_idea"></textarea>
+                    <hr>
+                    <h1 class="title is-4">Réalisation</h1>
+                    <p class="is-size-6">Donnez des détails sur la réalisation de votre idée.</p>
+                    <br>
+                    <h3 class="title is-5">Quelles mesures prendrez vous ?</h3>
+                    <div class="control">
+                        <div class="radio">
+                            <label for="alone" class="radio">
+                                <input type="radio" name="mesures" id="alone" class="mr-2"
+                                    value="Je suis en mesure de réaliser ce projet par moi-même"
+                                    required="required"><strong>Je suis en mesure de
+                                    réaliser ce projet
+                                    par moi-même.</strong>
+                            </label>
+                            <br><br>
+                            <label for="help" class="radio">
+                                <input type="radio" name="mesures" id="help" class="mr-2"
+                                    value="Je serai aidé lors de la réalisation" required="required"><strong>Je serai
+                                    aidé lors de la
+                                    réalisation.</strong>
+                            </label>
+                            <br><br>
+                            <label for="no_help" class="radio">
+                                <input type="radio" name="mesures" id="no_help" class="mr-2"
+                                    value="Je ne serai pas aidé lors de la réalisation (par manque de temps ou de compétences)."
+                                    required="required"><strong>Je ne serai pas aidé lors de
+                                    la réalisation (par manque de temps ou de compétences).</strong>
+                            </label>
+                            <br><br>
+                        </div>
+                        <textarea class="textarea" placeholder="Quelques détails..." name="details_mesures"
+                            id="details_mesures"></textarea>
+                        <hr>
+                        <h1 class="title is-4">Financement</h1>
+                        <h3 class="title is-5">Combien ?</h3>
+                        <div class="radio">
+                            <label for="less_hundred" class="radio">
+                                <input type="radio" name="funding" id="less_hundred" class="mr-2" value="Moins de 100€"
+                                    required="required"><strong>Moins de 100€</strong> Pour rien ou presque rien
+                            </label>
+                            <br><br>
+                            <label for="less_thousand" class="radio">
+                                <input type="radio" name="funding" id="less_thousand" class="mr-2"
+                                    value="Moins de 1000€" required="required"><strong>Moins de
+                                    1000€</strong>
+                            </label>
+                            <br><br>
+                            <label for="less_five_thousand" class="radio">
+                                <input type="radio" name="funding" id="less_five_thousand" class="mr-2"
+                                    value="Moins de 5000€" required="required"><strong>Moins de
+                                    5000€</strong>
+                            </label>
+                            <br><br>
+                            <label for="more_five_thousand" class="radio">
+                                <input type="radio" name="funding" id="more_five_thousand" class="mr-2"
+                                    value="Plus de 5000€" required="required"><strong>Plus de
+                                    5000€</strong> On a besoin de
+                                l'oncle Picsou
+                            </label>
+                            <br><br>
+                        </div>
+                        <textarea id="funding_details" name="funding_details" class="textarea"
+                            placeholder="Quelques détails.."></textarea>
+                    </div>
+                    <hr>
+                    <h1 class="title is-4">A qui envoyer ce projet ?</h1>
+                    <p class="is-size-5"><strong>Indiquez à quelle équipe s'adresse cette demande.</strong></p>
+                    <br>
+                    <label for="finance" class="radio">
+                        <input type="radio" name="team" id="finance" value="Soutien Financier" required="required">
+                        <strong>Soutien Financier</strong> (Responsable : Romain Bernardot)
+                    </label>
+                    <br><br>
+                    <label for="digital" class="radio">
+                        <input type="radio" name="team" id="digital" value="Numérique / R&D">
+                        <strong>Numérique / R&D</strong> (Responsable : Clément Fresse)
+                    </label>
+                    <br><br>
+                    <label for="maintenance" class="radio">
+                        <input type="radio" name="team" id="maintenance" value="Maintenance">
+                        <strong>Maintenance</strong> (Responsable : Lancelot Gerber)
+                    </label>
+                    <br><br>
+                    <label for="annexes" class="radio">
+                        <input type="radio" name="team" id="annexes" value="Projets Annexes">
+                        <strong>Projets Annexes</strong> (Responsable : Fabien Laurent)
+                    </label>
+                    <br><br>
+                    <label for="communication" class="radio">
+                        <input type="radio" name="team" id="communication" value="Communication">
+                        <strong>Communication</strong> (Responsable : Hugo Bernardo)
+                    </label>
+                    <br><br>
+                    <label for="circulation" class="radio">
+                        <input type="radio" name="team" id="circulation" value="Circulations">
+                        <strong>Circulations</strong> (Responsable : Arthur Perrin)
+                    </label>
+                    <br><br>
+                    <label for="organisation" class="radio">
+                        <input type="radio" name="team" id="organisation" value="Organisation">
+                        <strong>Organisation</strong> (Responsable : Arthur Perrin)
+                    </label>
+                    <br><br>
+                    <label for="other" class="radio">
+                        <input type="radio" name="team" id="other" value="Autre / Je ne sais pas">
+                        <strong>Autre / Je ne sais pas</strong>
+                    </label>
+                    <br>
+                    <hr>
+                    <h1 class="title is-3">Ajout d'un fichier</h1>
+                    <div class="file">
+                        <label class="file-label">
+                            <input class="file-input" type="file" id="file" name="file_idea" />
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label"> Choisissez un fichier</span>
+                            </span>
+                        </label>
+                    </div>
+                    <hr>
+                    <input class="button is-success" type="submit" value="Envoyer" name="envoyer">
+                </form>
+            </section>
+        </div>
+    </div>
 </body>
 
 </html>

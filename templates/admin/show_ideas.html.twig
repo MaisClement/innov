@@ -81,12 +81,13 @@
                 <th>Détails des besoins financiers</th>
                 <th>Équipe choisi</th>
                 <th>Nom/Prénom de l'auteur</th>
+                <th>Fichiers</th>
             </tr>
         </thead>
         {% for idea in ideas|filter(idea => idea.isarchived != "true") %}
         <tbody>
             <tr>
-                <td><a href="/admin/modify_ideas/{{ idea.idea_id}}">{{ idea.idea_id }}</a></td>
+                <td><a href="/admin/modify_ideas/{{ idea.idea_id }}">{{ idea.idea_id }}</a></td>
                 <td>{{ idea.title_idea }}</td>
                 <td>{{ idea.details_idea }}</td>
                 <td>{{ idea.state_idea }}</td>
@@ -96,6 +97,11 @@
                 <td>{{ idea.funding_details }}</td>
                 <td>{{ idea.team }}</td>
                 <td>{{ idea.first_name }} {{ idea.family_name }}</td>
+                {% for file in files|filter(file => file.related_idea_id == idea.idea_id) %}
+                {% if idea.has_file == "true" %}
+                <td><a href="/download/{{ file.file_id }}">Télécharger</a></td>
+                {% endif %}
+                {% endfor %}
             </tr>
             {% endfor %}
             {% endif %}

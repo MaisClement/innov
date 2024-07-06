@@ -44,6 +44,9 @@ class Profile extends AbstractController
                 'first_name' => $idea->getAuthor()->getGivenName(),
                 'family_name' => $idea->getAuthor()->getFamilyName(),
                 'creationDateTime' => $idea->getCreationDateTime(),
+                'validator_id' => $idea->getValidator() != null ? $idea->getValidator()->getId() : "",
+                'validator_givenname' => $idea->getValidator() != null ? $idea->getValidator()->getGivenName() : "",
+                'validator_familyname' => $idea->getValidator() != null ? $idea->getValidator()->getFamilyName() : "",
                 'state_idea' => $idea->getState(),
                 'user_id' => $_SESSION['account_id'],
             ];
@@ -58,7 +61,7 @@ class Profile extends AbstractController
                 'comment_id' => $commentary->getId(),
                 'author_givenname' => $commentary->getAuthor()->getGivenName(),
                 'author_familyname' => $commentary->getAuthor()->getFamilyName(),
-                'comment_idea_id' => $commentary->getRelatedIdea(),
+                'comment_idea_id' => $commentary->getRelatedIdea()->getTitle(),
                 'content_comment' => $commentary->getMessage(),
                 'create_comment' => $commentary->getCreationDateTime(),
             ];
