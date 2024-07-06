@@ -74,6 +74,7 @@
                 <th>Détails des besoins financiers</th>
                 <th>Équipe choisi</th>
                 <th>Nom/Prénom de l'auteur</th>
+                <th>Fichiers</th>
             </tr>
         </thead>
         <tbody>
@@ -89,6 +90,16 @@
                 <td>{{ idea.funding_details }}</td>
                 <td>{{ idea.team }}</td>
                 <td>{{ idea.first_name }} {{ idea.family_name }}</td>
+                <td>
+                    {% set fileCount = files|filter(file => file.related_idea_id == idea.idea_id)|length %}
+                    {% if fileCount == 1 %}
+                        {% for file in files|filter(file => file.related_idea_id == idea.idea_id) %}
+                            <a href="/download/{{ file.file_id }}">Télécharger</a>
+                        {% endfor %}
+                    {% elseif fileCount > 1 %}
+                        <a href="/download_all/{{ idea.idea_id }}">Télécharger tous les fichiers</a>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
             {% else %}

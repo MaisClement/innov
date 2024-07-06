@@ -48,6 +48,12 @@ class Account
     #[ORM\Column(nullable: true)]
     private ?bool $is_author = null;
 
+    /**
+     * @var Collection<int, Answer>
+     */
+    #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'answer_author_id')]
+    private Collection $answers;
+
     public function __construct()
     {
         $this->logins = new ArrayCollection();
@@ -56,6 +62,7 @@ class Account
         $this->votes = new ArrayCollection();
         $this->role = new ArrayCollection();
         $this->user = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -280,6 +287,36 @@ class Account
     public function setAuthor(?bool $is_author): static
     {
         $this->is_author = $is_author;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Answer>
+     */
+    public function getAnswers(): Collection
+    {
+        return $this->answers;
+    }
+
+    public function addAnswer(Answer $answer): static
+    {
+        if (!$this->answers->contains($answer)) {
+            $this->answers->add($answer);
+            $answer->setAnswerAuthorId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnswer(Answer $answer): static
+    {
+        if ($this->answers->removeElement($answer)) {
+            // set the owning side to null (unless already changed)
+            if ($answer->getAnswerAuthorId() === $this) {
+                $answer->setAnswerAuthorId(null);
+            }
+        }
 
         return $this;
     }

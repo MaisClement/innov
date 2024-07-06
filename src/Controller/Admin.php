@@ -193,8 +193,19 @@ class Admin extends AbstractController
             ];
         }
 
+        $files = $this->filesRepository->findAll();
+        $_files = [];
+        foreach ($files as $file) {
+            $_files[] = [
+                'file_id' => $file->getId(),
+                'related_idea_id' => $file->getRelatedIdeaId()->getId(),
+            ];
+        }
+
         $data = [
             'ideas' => $ideas,
+            "files" => $_files,
+
         ];
         return $this->render('admin/show_ideas_archived.html.twig', $data);
     }
@@ -308,19 +319,19 @@ class Admin extends AbstractController
         return $this->redirect('/admin/show_profiles');
     }
 
-    #[Route('/idea/{id}/comment/{comment_id}/answer')]
-    public function answer(Request $request, $comment_id, $id)
+    #[Route('/idea/{id}/comment/answer')]
+    public function answer(Request $request, $id)
     {
         Functions::checkUserSession($this->accountRepository);
         Functions::checkRoleAdmin();
 
-        $comment = $this->commentRepository->find($comment_id);
+        $comment = $this->commentRepository->find($request->request->get('comment_id'));
         $author = $this->accountRepository->find($_SESSION['account_id']);
 
         if (isset($_POST['send_answer'])) {
             $answer = new Answer;
             $answer->setAnswerContent($request->request->get('answer_comment'));
-            $answer->setAnswerAuthorId($_SESSION['account_id']);
+            $answer->setAnswerAuthorId($author);
             $answer->setRelatedCommentId($comment);
             $answer->setAnswerDateTime(new \DateTime);
             $this->entityManager->persist($answer);

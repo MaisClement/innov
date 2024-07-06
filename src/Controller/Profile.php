@@ -59,9 +59,10 @@ class Profile extends AbstractController
         foreach ($comments as $commentary) {
             $_comments[] = [
                 'comment_id' => $commentary->getId(),
+                'comment_idea_id' => $commentary->getRelatedIdea()->getId(),
                 'author_givenname' => $commentary->getAuthor()->getGivenName(),
                 'author_familyname' => $commentary->getAuthor()->getFamilyName(),
-                'comment_idea_id' => $commentary->getRelatedIdea()->getTitle(),
+                'comment_idea_title' => $commentary->getRelatedIdea()->getTitle(),
                 'content_comment' => $commentary->getMessage(),
                 'create_comment' => $commentary->getCreationDateTime(),
             ];

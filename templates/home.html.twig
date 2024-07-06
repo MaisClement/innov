@@ -91,7 +91,7 @@
     <br>
     {% endif %}
     <div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
-        {% for idea in ideas|filter(idea => idea.state_idea == 'is_realized') %}
+        {% for idea in ideas|filter(idea => idea.state_idea == 'is_realized')|slice(0,3) %}
         <a href="/idea/{{ idea.idea_id }}">
             <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
                 <div class="card-content">
@@ -115,6 +115,10 @@
         </a>
         {% endfor %}
     </div>
+    {% if ideas|filter(idea => idea.state_idea == 'is_realized')|length > 0 %}
+    <p><a href="/ideas/is_realized" class="button is-link is-rounded ml-6 mb-4">Voir l'ensemble des idées réalisées avec
+            succès</a></p>
+    {% endif %}
     <br>
     <!-- PARTIE IDEES APPROUVEE -->
     {% if ideas|filter(idea => idea.state_idea == 'in_progress') %}
@@ -127,7 +131,7 @@
     <br>
     {% endif %}
     <div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
-        {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress') %}
+        {% for idea in ideas|filter(idea => idea.state_idea == 'in_progress')|slice(0,3) %}
         <a href="/idea/{{ idea.idea_id }}">
             <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
                 <div class="card-content">
@@ -151,6 +155,10 @@
         </a>
         {% endfor %}
     </div>
+    {% if ideas|filter(idea => idea.state_idea == 'in_progress')|length > 0 %}
+    <p><a href="/ideas/in_progress" class="button is-link is-rounded ml-6 mb-4">Voir l'ensemble des idées en cours de
+            réalisation</a></p>
+    {% endif %}
     <!-- PARTIE IDEES REALISEES SANS SUCCES -->
     {% if ideas|filter(idea => idea.state_idea == 'is_not_realized') %}
     <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
@@ -162,7 +170,7 @@
     <br>
     {% endif %}
     <div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
-        {% for idea in ideas|filter(idea => idea.state_idea == 'is_not_realized') %}
+        {% for idea in ideas|filter(idea => idea.state_idea == 'is_not_realized')|slice(0,3) %}
         <a href="/idea/{{ idea.idea_id }}">
             <div class="card mb-5" style="width: 45vw; border:solid rgb(72,199,142) 5px">
                 <div class="card-content">
@@ -174,8 +182,8 @@
                         </div>
                         <p>{{ idea.details_idea }}</p>
                         <p class="is-size-7 m-0">Validée par : <strong> {{ idea.validator_givenname }} {{
-                            idea.validator_familyname }}
-                        </strong>
+                                idea.validator_familyname }}
+                            </strong>
                         <p class="is-size-7 m-0">Proposée par : <strong> {{ idea.first_name }} {{ idea.family_name }}
                             </strong>
                         <p class="is-size-7 m-0">Créée le : <strong>{{ idea.creationDateTime|date("d/m/Y") }}</strong>
@@ -186,6 +194,10 @@
         </a>
         {% endfor %}
     </div>
+    {% if ideas|filter(idea => idea.state_idea == 'is_not_realized')|length > 0 %}
+    <p><a href="/ideas/is_not_realized" class="button is-link is-rounded ml-6 mb-4">Voir l'ensemble des idées réalisées
+            sans succès</a></p>
+    {% endif %}
     <!-- PARTIE IDEES EN ATTENTE D'APPROBATION -->
     {% if ideas|filter(idea => idea.state_idea == 'waiting_approval')|length > 0 %}
     <div class="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-baseline">
@@ -197,7 +209,7 @@
     <br>
     {% endif %}
     <div class="is-flex is-flex-direction-row is-justify-content-space-around is-align-items-stretch is-flex-wrap-wrap">
-        {% for idea in ideas|filter(idea => idea.state_idea == 'waiting_approval') %}
+        {% for idea in ideas|filter(idea => idea.state_idea == 'waiting_approval')|slice(0,3) %}
         <a href="/idea/{{ idea.idea_id }}">
             <div class="card mb-5" style="width: 45vw; border:solid #ffb70f 5px">
                 <div class="card-content">
@@ -217,6 +229,11 @@
         </a>
         {% endfor %}
     </div>
+    {% if ideas|filter(idea => idea.state_idea == 'waiting_approval')|length > 0 %}
+    <p><a href="/ideas/waiting_approval" class="button is-link is-rounded ml-6 mb-3 mt-1">Voir l'ensemble des idées en
+            attente d'approbation</a></p>
+    {% endif %}
+    
     <!-- CRÉATIONS DE MODALS-->
     <!-- MODAL DE CRÉATION DE L'IDÉE -->
     <div class="modal" id="modal-js-create-idea">
@@ -346,12 +363,13 @@
                     <h1 class="title is-3">Ajout d'un fichier</h1>
                     <div class="file">
                         <label class="file-label">
-                            <input class="file-input" type="file" id="file_idea" name="file_idea" />
+                            <input class="file-input" type="file" id="file_idea" name="file_idea[]" multiple />
                             <span class="file-cta">
                                 <span class="file-icon">
                                     <i class="fas fa-upload"></i>
                                 </span>
-                                <span class="file-label"> Choisissez 1 fichier</span>
+                                <span class="file-label"> Choisissez un ou plusieurs fichier(s) (3 fichiers
+                                    maximum)</span>
                             </span>
                         </label>
                     </div>
